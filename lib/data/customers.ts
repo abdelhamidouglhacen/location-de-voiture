@@ -1,0 +1,55 @@
+import type { Customer } from "@/types";
+import { daysFromNow } from "./dates";
+
+type CustomerSeed = [nom: string, email: string, tel: string, nationalite: string, age: number, piece: string];
+
+const seeds: CustomerSeed[] = [
+  ["Yassine El Amrani", "client@demo.ma", "06 12 45 78 90", "Marocaine", 32, "CIN JB412867"],
+  ["Salma Bennani", "salma.bennani@gmail.com", "06 61 23 48 17", "Marocaine", 28, "CIN BE908214"],
+  ["Mehdi Ouazzani", "m.ouazzani@outlook.fr", "07 02 88 14 63", "Marocaine", 41, "CIN J563120"],
+  ["Claire Dubois", "claire.dubois@orange.fr", "+33 6 72 41 09 55", "Française", 36, "Passeport 21FR77412"],
+  ["Thomas Lefèvre", "t.lefevre@free.fr", "+33 6 18 90 33 27", "Française", 45, "Passeport 19FR30258"],
+  ["Imane Tazi", "imane.tazi@gmail.com", "06 70 15 92 04", "Marocaine", 26, "CIN BK221905"],
+  ["Hans Müller", "hans.mueller@web.de", "+49 151 2847 3302", "Allemande", 52, "Passeport C4KJ81P29"],
+  ["Karim Idrissi", "karim.idrissi@gmail.com", "06 55 31 87 20", "Marocaine", 38, "CIN JA774561"],
+  ["Sophie Martin", "sophie.martin@gmail.com", "+33 7 81 22 64 19", "Française", 30, "Passeport 22FR10934"],
+  ["Omar Chraibi", "o.chraibi@yahoo.fr", "06 48 09 72 35", "Marocaine", 47, "CIN BH119034"],
+  ["Laura García", "laura.garcia@gmail.com", "+34 612 488 903", "Espagnole", 29, "Passeport PAB812044"],
+  ["Hamza Alaoui", "hamza.alaoui@gmail.com", "07 61 34 90 12", "Marocaine", 24, "CIN JC981276"],
+  ["James Carter", "j.carter@gmail.com", "+44 7700 918 245", "Britannique", 44, "Passeport 533917402"],
+  ["Nadia Berrada", "nadia.berrada@gmail.com", "06 63 20 57 81", "Marocaine", 35, "CIN BE450318"],
+  ["Ayoub Fassi", "ayoub.fassi@hotmail.com", "06 29 84 16 73", "Marocaine", 22, "CIN JE605214"],
+  ["Emma Janssen", "emma.janssen@gmail.com", "+31 6 4829 1057", "Néerlandaise", 33, "Passeport NX8K2LP41"],
+  ["Rachid Benjelloun", "r.benjelloun@gmail.com", "06 61 77 03 48", "Marocaine", 55, "CIN B302871"],
+  ["Giulia Rossi", "giulia.rossi@libero.it", "+39 347 218 9054", "Italienne", 31, "Passeport YA4418927"],
+  ["Soufiane Kabbaj", "soufiane.kabbaj@gmail.com", "07 08 42 19 66", "Marocaine", 27, "CIN JD338190"],
+  ["Pierre Moreau", "pierre.moreau@sfr.fr", "+33 6 45 12 80 73", "Française", 58, "Passeport 18FR66091"],
+  ["Khadija Amrani", "khadija.amrani@gmail.com", "06 52 90 41 27", "Marocaine", 39, "CIN JB187342"],
+  ["Lucas Petit", "lucas.petit@gmail.com", "+32 470 81 29 44", "Belge", 34, "Passeport EM305718"],
+  ["Anas Lahlou", "anas.lahlou@gmail.com", "06 44 18 63 09", "Marocaine", 30, "CIN BK540921"],
+  ["Olivia Brown", "olivia.brown@gmail.com", "+44 7911 402 673", "Britannique", 27, "Passeport 548120739"],
+  ["Youssef Naciri", "y.naciri@gmail.com", "06 67 05 38 92", "Marocaine", 43, "CIN J710456"],
+  ["Meryem Sqalli", "meryem.sqalli@gmail.com", "07 60 27 84 15", "Marocaine", 25, "CIN BE772043"],
+  ["Julien Bernard", "julien.bernard@gmail.com", "+33 6 09 74 52 18", "Française", 40, "Passeport 20FR48375"],
+  ["Zineb Cherkaoui", "zineb.cherkaoui@gmail.com", "06 38 51 26 70", "Marocaine", 29, "CIN JC205887"],
+  ["Ahmed Mansouri", "ahmed.mansouri@gmail.com", "06 71 49 83 26", "Marocaine", 50, "CIN J409318"],
+  ["Sarah Cohen", "sarah.cohen@gmail.com", "+33 7 66 30 91 42", "Française", 37, "Passeport 21FR90213"],
+];
+
+export const customers: Customer[] = seeds.map(([nomComplet, email, telephone, nationalite, age, pieceIdentite], i) => ({
+  id: `c${i + 1}`,
+  nomComplet,
+  email,
+  telephone,
+  nationalite,
+  age,
+  pieceIdentite,
+  numeroPermis: `${nationalite === "Marocaine" ? "MA" : "EU"}-${(482913 + i * 7919).toString().slice(0, 6)}`,
+  expirationPermis: daysFromNow(i === 9 ? -20 : i === 22 ? 12 : 400 + i * 37),
+  nombreLocations: 0,
+  totalDepense: 0,
+  listeNoire: i === 14,
+  raisonListeNoire: i === 14 ? "Véhicule rendu avec dommages non déclarés." : undefined,
+  notes: i === 3 ? "Cliente fidèle, préfère les SUV automatiques." : "",
+  creeLe: daysFromNow(-200 + i * 5),
+}));
