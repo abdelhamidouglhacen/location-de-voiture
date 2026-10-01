@@ -49,12 +49,12 @@ export function Hero() {
 
       <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_400px] lg:gap-16 lg:py-8">
         <div className="max-w-xl">
-          <p data-hero-anim data-hero-label className="inline-flex items-center gap-3 text-sm font-medium text-gold">
-            <span className="h-px w-8 bg-gold" aria-hidden />
+          <p data-hero-anim data-hero-label className="inline-flex items-center gap-3 text-sm font-medium text-accent">
+            <span className="h-px w-8 bg-accent" aria-hidden />
             Location de voitures à Agadir
           </p>
           <h1 id="hero-title" data-hero-anim data-hero-title className="mt-6 font-display text-5xl leading-[1.02] font-semibold tracking-[-0.035em] text-white sm:text-6xl xl:text-7xl">
-            Best <span className="text-gold">Car</span> For Rent
+            Best <span className="text-accent">Car</span> For Rent
           </h1>
           <p data-hero-anim data-hero-sub className="mt-6 max-w-md text-lg leading-relaxed text-white/75">
             Conduisez le meilleur, louez avec nous. Voitures récentes, livrées à l&apos;aéroport ou à votre hôtel, jour et nuit.
@@ -63,7 +63,7 @@ export function Hero() {
             <GoogleRating />
           </div>
           <div data-hero-anim data-hero-cta className="mt-8 lg:hidden">
-            <Button variant="gold" size="lg" onClick={() => setSearchOpen(true)} className="w-full sm:w-auto">
+            <Button variant="accent" size="lg" onClick={() => setSearchOpen(true)} className="w-full sm:w-auto">
               <CalendarDays className="size-4.5" aria-hidden />
               Réserver
             </Button>

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { LogoMark } from "@/components/site/Logo";
 import { BUSINESS } from "@/lib/constants";
 import { formatDate, formatDateTime, formatMAD } from "@/lib/format";
 import type { PriceBreakdown } from "@/lib/price";
@@ -31,7 +31,7 @@ export function Receipt({ reference, car, driver, depart, retour, lieuDepart, li
     <article className="print-area rounded-[20px] border border-line bg-surface p-6 sm:p-8" aria-label="Récapitulatif de la demande">
       <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line pb-6">
         <div className="flex items-center gap-4">
-          <Image src="/hg-self-drive-logo.png" alt="HG SELF DRIVE" width={56} height={56} className="rounded-full" />
+          <LogoMark size={56} />
           <div className="text-sm">
             <p className="font-display font-semibold tracking-[0.06em]">{BUSINESS.name}</p>
             <p className="text-muted">{BUSINESS.address}</p>

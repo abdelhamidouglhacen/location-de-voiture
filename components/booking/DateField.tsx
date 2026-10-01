@@ -59,7 +59,7 @@ export function DateField({ id, label, value, onChange, minDate, error, align = 
           !value && "text-muted",
         )}
       >
-        <CalendarDays className="size-4 shrink-0 text-gold-deep" aria-hidden />
+        <CalendarDays className="size-4 shrink-0 text-accent-deep" aria-hidden />
         <span className="truncate tabular-nums">{value ? formatDate(value) : hideLabel ? label : "Choisir"}</span>
       </button>
       {error && (

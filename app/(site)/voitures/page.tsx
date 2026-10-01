@@ -6,7 +6,7 @@ import { cars } from "@/lib/data/cars";
 
 export const metadata: Metadata = {
   title: "Nos voitures",
-  description: "Toute la flotte HG SELF DRIVE à Agadir : économiques, citadines, SUV, voitures de luxe et vans, dès 250 MAD par jour.",
+  description: "Toute la flotte AZUR DRIVE à Agadir : économiques, citadines, SUV, voitures de luxe et vans, dès 250 MAD par jour.",
 };
 
 export default function CarsPage() {

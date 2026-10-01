@@ -5,10 +5,10 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { ChartTooltip } from "./chart";
 
 /**
- * Brand neutrals and golds, alternating light and dark between neighbours.
+ * Brand neutrals and blues, alternating light and dark between neighbours.
  * The shades are close, so the legend carries the names and values.
  */
-const COLORS = ["#121212", "#E3D3A6", "#86661C", "#A1A1AA", "#C9A24A"];
+const COLORS = ["#121212", "#BCD6FB", "#1A56C9", "#A1A1AA", "#4B9BFF"];
 const SIZE = 176;
 const GAP = 12;
 

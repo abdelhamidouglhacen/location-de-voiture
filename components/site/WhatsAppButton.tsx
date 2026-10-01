@@ -4,7 +4,7 @@ import { whatsappLink } from "@/lib/constants";
 export function WhatsAppButton() {
   return (
     <a
-      href={whatsappLink("Bonjour HG SELF DRIVE, je souhaite louer une voiture.")}
+      href={whatsappLink("Bonjour AZUR DRIVE, je souhaite louer une voiture.")}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Nous écrire sur WhatsApp"

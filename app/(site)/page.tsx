@@ -48,7 +48,7 @@ export default function HomePage() {
           <ul className="mx-auto grid max-w-7xl gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
             {promises.map(({ Icon, title, text }) => (
               <li key={title} className="flex gap-4 bg-surface px-4 py-7 sm:px-6">
-                <Icon className="mt-0.5 size-5 shrink-0 text-gold-deep" strokeWidth={1.75} aria-hidden />
+                <Icon className="mt-0.5 size-5 shrink-0 text-accent-deep" strokeWidth={1.75} aria-hidden />
                 <div>
                   <h2 className="font-medium">{title}</h2>
                   <p className="mt-1 text-sm text-muted">{text}</p>
@@ -131,9 +131,9 @@ export default function HomePage() {
                 <a
                   key={p.href}
                   href={p.href}
-                  className="inline-flex items-center gap-3 font-display text-2xl font-semibold tabular-nums transition hover:text-gold-deep sm:text-3xl"
+                  className="inline-flex items-center gap-3 font-display text-2xl font-semibold tabular-nums transition hover:text-accent-deep sm:text-3xl"
                 >
-                  <Phone className="size-5 text-gold-deep" aria-hidden />
+                  <Phone className="size-5 text-accent-deep" aria-hidden />
                   {p.label}
                 </a>
               ))}
@@ -141,7 +141,7 @@ export default function HomePage() {
                 href={whatsappLink("Bonjour, j'ai besoin d'une voiture rapidement.")}
                 target="_blank"
                 rel="noopener noreferrer"
-                variant="gold"
+                variant="accent"
                 className="mt-2"
               >
                 <WhatsAppIcon className="size-4.5" />

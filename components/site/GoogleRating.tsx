@@ -21,7 +21,7 @@ export function GoogleRating() {
       </span>
       <span className="font-display text-3xl leading-none font-semibold text-white tabular-nums">{String(rating).replace(".", ",")}</span>
       <span className="flex flex-col gap-1">
-        <span className="flex gap-0.5 text-gold" aria-hidden>
+        <span className="flex gap-0.5 text-amber-400" aria-hidden>
           {Array.from({ length: 5 }, (_, i) =>
             i < full ? (
               <Star key={i} className="size-4 fill-current" />

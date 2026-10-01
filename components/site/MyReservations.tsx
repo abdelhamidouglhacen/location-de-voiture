@@ -133,7 +133,7 @@ function BookingCard({ booking: b, phase, onRemove }: { booking: SavedBooking; p
 
         <dl className="grid gap-4 text-sm sm:grid-cols-2">
           <div className="flex gap-3">
-            <CalendarDays className="mt-0.5 size-4 shrink-0 text-gold-deep" aria-hidden />
+            <CalendarDays className="mt-0.5 size-4 shrink-0 text-accent-deep" aria-hidden />
             <div>
               <dt className="text-muted">Dates ({b.jours} jour{b.jours > 1 ? "s" : ""})</dt>
               <dd className="font-medium tabular-nums">
@@ -142,7 +142,7 @@ function BookingCard({ booking: b, phase, onRemove }: { booking: SavedBooking; p
             </div>
           </div>
           <div className="flex gap-3">
-            <MapPin className="mt-0.5 size-4 shrink-0 text-gold-deep" aria-hidden />
+            <MapPin className="mt-0.5 size-4 shrink-0 text-accent-deep" aria-hidden />
             <div>
               <dt className="text-muted">Retrait / retour</dt>
               <dd className="font-medium">

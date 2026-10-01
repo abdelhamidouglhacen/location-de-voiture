@@ -64,7 +64,7 @@ function build(seed: BookingSeed, index: number): Booking {
 
   return {
     id: `b${index + 1}`,
-    reference: `HG-2026-${String(101 + index).padStart(4, "0")}`,
+    reference: `AZ-2026-${String(101 + index).padStart(4, "0")}`,
     clientId: seed.clientId,
     voitureId: seed.voitureId,
     lieuDepartId,

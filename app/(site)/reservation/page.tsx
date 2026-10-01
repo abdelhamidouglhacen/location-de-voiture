@@ -9,7 +9,7 @@ import { locations } from "@/lib/data/locations";
 
 export const metadata: Metadata = {
   title: "Réservation",
-  description: "Envoyez votre demande de location de voiture à HG SELF DRIVE, Agadir.",
+  description: "Envoyez votre demande de location de voiture à AZUR DRIVE, Agadir.",
   robots: { index: false },
 };
 

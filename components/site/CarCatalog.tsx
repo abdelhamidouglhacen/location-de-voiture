@@ -140,13 +140,13 @@ function SearchSummary({ search, onClear }: { search: RentalSearch; onClear: () 
           <p className="font-medium tabular-nums">{formatDateTime(search.depart)}</p>
           <p className="truncate text-sm text-muted">{placeName(search.lieuDepart)}</p>
         </div>
-        <ArrowRight className="hidden size-4 shrink-0 text-gold-deep sm:block" aria-hidden />
+        <ArrowRight className="hidden size-4 shrink-0 text-accent-deep sm:block" aria-hidden />
         <div className="min-w-0">
           <p className="text-xs font-medium text-muted">Destination</p>
           <p className="font-medium tabular-nums">{formatDateTime(search.retour)}</p>
           <p className="truncate text-sm text-muted">{placeName(search.lieuRetour)}</p>
         </div>
-        <p className="rounded-full bg-gold-soft px-3 py-1 text-sm font-medium text-gold-deep tabular-nums">
+        <p className="rounded-full bg-accent-soft px-3 py-1 text-sm font-medium text-accent-deep tabular-nums">
           {days} jour{days > 1 ? "s" : ""}
         </p>
         <div className="ml-auto flex gap-2">

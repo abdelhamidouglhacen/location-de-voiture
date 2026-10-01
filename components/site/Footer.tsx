@@ -58,23 +58,23 @@ export function Footer() {
             {BUSINESS.phones.map((p) => (
               <li key={p.href}>
                 <a href={p.href} className="inline-flex items-center gap-2.5 tabular-nums transition hover:text-ink">
-                  <Phone className="size-4 text-gold-deep" aria-hidden />
+                  <Phone className="size-4 text-accent-deep" aria-hidden />
                   {p.label}
                 </a>
               </li>
             ))}
             <li>
               <a href={`mailto:${BUSINESS.email}`} className="inline-flex items-center gap-2.5 transition hover:text-ink">
-                <Mail className="size-4 text-gold-deep" aria-hidden />
+                <Mail className="size-4 text-accent-deep" aria-hidden />
                 {BUSINESS.email}
               </a>
             </li>
             <li className="flex items-start gap-2.5">
-              <MapPin className="mt-0.5 size-4 shrink-0 text-gold-deep" aria-hidden />
+              <MapPin className="mt-0.5 size-4 shrink-0 text-accent-deep" aria-hidden />
               {BUSINESS.address}
             </li>
             <li className="flex items-start gap-2.5">
-              <Clock className="mt-0.5 size-4 shrink-0 text-gold-deep" aria-hidden />
+              <Clock className="mt-0.5 size-4 shrink-0 text-accent-deep" aria-hidden />
               Ouvert 24h/24, 7j/7, jours fériés compris
             </li>
           </ul>
@@ -87,7 +87,7 @@ export function Footer() {
       </div>
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-muted sm:flex-row sm:px-6">
-          <p>© {new Date().getFullYear()} HG SELF DRIVE. Tous droits réservés.</p>
+          <p>© {new Date().getFullYear()} AZUR DRIVE. Tous droits réservés.</p>
           <p>{BUSINESS.tagline}</p>
         </div>
       </div>

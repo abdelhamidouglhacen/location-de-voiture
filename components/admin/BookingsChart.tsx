@@ -11,8 +11,8 @@ export function BookingsChart({ data, height = 280 }: { data: { label: string; t
           <CartesianGrid {...gridProps} />
           <XAxis dataKey="label" {...axisProps} minTickGap={16} tickFormatter={(m: string) => m.replace(".", "")} />
           <YAxis {...axisProps} allowDecimals={false} width={48} />
-          <Tooltip content={(p) => <ChartTooltip {...p} unit="reservations" />} cursor={{ fill: "#C9A24A", fillOpacity: 0.08 }} />
-          <Bar animationDuration={800} dataKey="total" name="Réservations" fill="#86661C" radius={[6, 6, 0, 0]} maxBarSize={36} />
+          <Tooltip content={(p) => <ChartTooltip {...p} unit="reservations" />} cursor={{ fill: "#4B9BFF", fillOpacity: 0.08 }} />
+          <Bar animationDuration={800} dataKey="total" name="Réservations" fill="#1A56C9" radius={[6, 6, 0, 0]} maxBarSize={36} />
         </BarChart>
       </ResponsiveContainer>
     </div>

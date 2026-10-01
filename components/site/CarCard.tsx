@@ -24,7 +24,7 @@ export function CarCard({ car, priority, search }: { car: Car; priority?: boolea
         />
       </Link>
       <div className="flex flex-1 flex-col p-5">
-        <p className="text-xs font-medium tracking-[0.12em] text-gold-deep uppercase">{car.categorie}</p>
+        <p className="text-xs font-medium tracking-[0.12em] text-accent-deep uppercase">{car.categorie}</p>
         <h3 className="mt-1.5 font-display text-lg font-semibold tracking-tight">
           <Link href={`/voitures/${car.id}`} className="hover:text-ink-2">
             {name}

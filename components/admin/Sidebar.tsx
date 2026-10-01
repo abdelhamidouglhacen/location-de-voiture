@@ -29,7 +29,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                     active ? "bg-sand font-medium text-ink" : "text-muted hover:bg-paper hover:text-ink",
                   )}
                 >
-                  <Icon className={cn("size-4.5 shrink-0", active && "text-gold-deep")} strokeWidth={1.75} aria-hidden />
+                  <Icon className={cn("size-4.5 shrink-0", active && "text-accent-deep")} strokeWidth={1.75} aria-hidden />
                   {label}
                 </Link>
               </li>

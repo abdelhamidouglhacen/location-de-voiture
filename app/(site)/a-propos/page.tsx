@@ -11,7 +11,7 @@ import { locations } from "@/lib/data/locations";
 
 export const metadata: Metadata = {
   title: "À propos",
-  description: "HG SELF DRIVE, agence de location de voitures à Agadir : une flotte récente, un service 24h/24 et la livraison à l'aéroport ou à l'hôtel.",
+  description: "AZUR DRIVE, agence de location de voitures à Agadir : une flotte récente, un service 24h/24 et la livraison à l'aéroport ou à l'hôtel.",
 };
 
 const values = [
@@ -42,7 +42,7 @@ export default function AboutPage() {
           <FadeUp className="relative aspect-[4/3] overflow-hidden rounded-[28px] bg-sand">
             <Image
               src="/cars/mercedes-classe-c-2.jpg"
-              alt="Mercedes Classe C de la flotte HG SELF DRIVE"
+              alt="Mercedes Classe C de la flotte AZUR DRIVE"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"
@@ -52,7 +52,7 @@ export default function AboutPage() {
             <SectionHeading title="Conduisez le meilleur, louez avec nous" />
             <div className="mt-6 space-y-4 text-[17px] leading-relaxed text-muted">
               <p>
-                HG SELF DRIVE est une agence de location de voitures installée au centre-ville d&apos;Agadir. Nous louons des citadines, des SUV, des voitures
+                AZUR DRIVE est une agence de location de voitures installée au centre-ville d&apos;Agadir. Nous louons des citadines, des SUV, des voitures
                 de luxe et des vans, pour quelques jours ou plusieurs semaines.
               </p>
               <p>
@@ -67,7 +67,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-y border-line bg-surface" aria-label="HG SELF DRIVE en chiffres">
+      <section className="border-y border-line bg-surface" aria-label="AZUR DRIVE en chiffres">
         <FadeUp>
           <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-line lg:grid-cols-4">
             {stats.map((s) => (
@@ -86,7 +86,7 @@ export default function AboutPage() {
           <StaggerGroup className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
             {values.map(({ Icon, title, text }) => (
               <div key={title} className="flex gap-5">
-                <span className="grid size-11 shrink-0 place-items-center rounded-full bg-gold-soft text-gold-deep">
+                <span className="grid size-11 shrink-0 place-items-center rounded-full bg-accent-soft text-accent-deep">
                   <Icon className="size-5" strokeWidth={1.75} aria-hidden />
                 </span>
                 <div>
@@ -98,7 +98,7 @@ export default function AboutPage() {
           </StaggerGroup>
           <FadeUp className="mt-16 flex flex-col items-start gap-4 rounded-[20px] border border-line bg-surface p-8 sm:flex-row sm:items-center sm:justify-between">
             <p className="flex items-center gap-3 text-lg">
-              <MapPin className="size-5 text-gold-deep" aria-hidden />
+              <MapPin className="size-5 text-accent-deep" aria-hidden />
               Passez nous voir au centre-ville d&apos;Agadir, ou appelez-nous.
             </p>
             <Button href="/contact" variant="outline">

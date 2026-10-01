@@ -77,7 +77,7 @@ export default async function CarDetailsPage({ params }: Props) {
               <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-[20px] border border-line bg-line sm:grid-cols-4">
                 {specs.map(({ Icon, label, value }) => (
                   <li key={label} className="bg-surface p-5">
-                    <Icon className="size-4.5 text-gold-deep" strokeWidth={1.75} aria-hidden />
+                    <Icon className="size-4.5 text-accent-deep" strokeWidth={1.75} aria-hidden />
                     <p className="mt-4 text-xs text-muted">{label}</p>
                     <p className="mt-0.5 font-medium">{value}</p>
                   </li>
@@ -94,7 +94,7 @@ export default async function CarDetailsPage({ params }: Props) {
               <ul className="mt-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
                 {car.equipements.map((e) => (
                   <li key={e} className="flex items-center gap-3 text-ink-2">
-                    <Check className="size-4 shrink-0 text-gold-deep" aria-hidden />
+                    <Check className="size-4 shrink-0 text-accent-deep" aria-hidden />
                     {e}
                   </li>
                 ))}
@@ -158,7 +158,7 @@ export default async function CarDetailsPage({ params }: Props) {
               Une question ?
             </Button>
             <p className="mt-5 flex items-center justify-center gap-2 text-xs text-muted">
-              <ShieldCheck className="size-4 text-gold-deep" aria-hidden />
+              <ShieldCheck className="size-4 text-accent-deep" aria-hidden />
               Annulation gratuite jusqu&apos;à 48h avant le départ
             </p>
           </div>

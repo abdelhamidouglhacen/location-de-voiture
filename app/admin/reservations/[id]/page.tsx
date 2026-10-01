@@ -20,7 +20,7 @@ import type { EtatVehicule, StatutReservation } from "@/types";
 
 interface Action {
   label: string;
-  variant: "primary" | "outline" | "danger" | "gold";
+  variant: "primary" | "outline" | "danger" | "accent";
   title: string;
   text: string;
   toast: string;
@@ -108,7 +108,7 @@ const ACTIONS: Record<StatutReservation, Action[]> = {
 
 const MARK_PAID: Action = {
   label: "Marquer payé",
-  variant: "gold",
+  variant: "accent",
   title: "Le client a payé ?",
   text: "À faire quand le client a réglé le montant total de la location.",
   toast: "Paiement enregistré.",
@@ -266,7 +266,7 @@ export default function BookingDetailsPage() {
           <ol className="relative space-y-4 border-l border-line pl-5">
             {b.historique.map((h, i) => (
               <li key={i} className="relative">
-                <span className={cn("absolute top-1.5 -left-[25px] size-2.5 rounded-full ring-4 ring-surface", i === b.historique.length - 1 ? "bg-gold-deep" : "bg-line")} aria-hidden />
+                <span className={cn("absolute top-1.5 -left-[25px] size-2.5 rounded-full ring-4 ring-surface", i === b.historique.length - 1 ? "bg-accent-deep" : "bg-line")} aria-hidden />
                 <p className="text-sm font-medium">{h.statut}</p>
                 <p className="text-xs text-muted tabular-nums">{formatDateTime(h.date)}</p>
               </li>

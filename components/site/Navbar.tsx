@@ -72,7 +72,7 @@ export function Navbar() {
           </ul>
           <div className="hidden items-center gap-3 lg:flex">
             <a href={BUSINESS.phones[0].href} className="mr-2 hidden items-center gap-2 text-[15px] font-medium text-ink tabular-nums xl:inline-flex">
-              <Phone className="size-4 text-gold-deep" aria-hidden />
+              <Phone className="size-4 text-accent-deep" aria-hidden />
               {BUSINESS.phones[0].label}
             </a>
             <Link
@@ -83,7 +83,7 @@ export function Navbar() {
                 isActive("/mes-reservations") ? "border-ink bg-surface text-ink" : "border-line bg-surface text-ink hover:border-ink/40",
               )}
             >
-              <CalendarCheck className="size-4 text-gold-deep" aria-hidden />
+              <CalendarCheck className="size-4 text-accent-deep" aria-hidden />
               Mes réservations
             </Link>
             {/* <Button href="/voitures">Réserver</Button> */}
@@ -116,7 +116,7 @@ export function Navbar() {
                   href={l.href}
                   onClick={() => setMenuOpen(false)}
                   aria-current={isActive(l.href) ? "page" : undefined}
-                  className={cn("block py-4 font-display text-3xl font-medium tracking-tight", isActive(l.href) ? "text-gold-deep" : "text-ink")}
+                  className={cn("block py-4 font-display text-3xl font-medium tracking-tight", isActive(l.href) ? "text-accent-deep" : "text-ink")}
                 >
                   {l.label}
                 </Link>

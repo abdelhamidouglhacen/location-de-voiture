@@ -23,7 +23,7 @@ export interface ReserveCar {
 interface Props {
   car: ReserveCar;
   label?: string;
-  variant?: "primary" | "outline" | "gold";
+  variant?: "primary" | "outline" | "accent";
   size?: "sm" | "md" | "lg";
   className?: string;
   initial?: { depart: Date; retour: Date };
@@ -114,7 +114,7 @@ export function ReserveDialog({ car, label = "Réserver", variant = "primary", s
 
         <div className="mt-4 grid gap-4 border-t border-line pt-5 sm:grid-cols-[1fr_1fr_1fr] sm:items-end">
           <div className="flex items-center gap-3 text-sm sm:col-span-1">
-            <CalendarDays className="size-5 shrink-0 text-gold-deep" aria-hidden />
+            <CalendarDays className="size-5 shrink-0 text-accent-deep" aria-hidden />
             <span>
               <span className="block text-muted">Période</span>
               <span className="font-medium">

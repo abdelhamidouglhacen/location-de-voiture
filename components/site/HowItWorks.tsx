@@ -18,7 +18,7 @@ export function HowItWorks() {
       const steps = gsap.utils.toArray<HTMLElement>("[data-step]");
       const mm = gsap.matchMedia();
 
-      // Desktop: the section stays pinned while the gold line runs from step 1 to step 3.
+      // Desktop: the section stays pinned while the accent line runs from step 1 to step 3.
       mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
         const tl = gsap.timeline({
           defaults: { ease: "none" },
@@ -53,7 +53,7 @@ export function HowItWorks() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHeading className="mx-auto text-center md:mx-0 md:text-left" id="etapes-titre" title="Réserver en trois gestes" text="Aucun compte à créer. Vous choisissez, vous datez, vous envoyez." />
         <ol data-steps className="relative mt-16 grid gap-12 md:grid-cols-3 md:gap-10">
-          <span data-step-line className="absolute top-5 left-5 hidden h-0.5 origin-left -translate-y-1/2 rounded-full bg-gold md:block" style={{ right: "calc((100% - 5rem) / 3 - 1.25rem)" }} aria-hidden />
+          <span data-step-line className="absolute top-5 left-5 hidden h-0.5 origin-left -translate-y-1/2 rounded-full bg-accent md:block" style={{ right: "calc((100% - 5rem) / 3 - 1.25rem)" }} aria-hidden />
           {steps.map((s, i) => (
             <li key={s.title} data-step className="relative text-center md:text-left">
               <span data-step-number className="relative mx-auto grid size-10 md:mx-0 place-items-center rounded-full border border-line bg-surface font-display text-sm font-semibold tabular-nums" aria-hidden>

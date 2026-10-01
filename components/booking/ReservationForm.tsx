@@ -109,7 +109,7 @@ export function ReservationForm({ car, search, extras, locations }: Props) {
       return;
     }
     const summary: RequestSummary = {
-      reference: `HG-${Date.now().toString(36).toUpperCase().slice(-6)}`,
+      reference: `AZ-${Date.now().toString(36).toUpperCase().slice(-6)}`,
       car,
       driver,
       depart,
@@ -147,8 +147,8 @@ export function ReservationForm({ car, search, extras, locations }: Props) {
     return (
       <div ref={doneRef} className="mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
         <div className="no-print text-center">
-          <div className="mx-auto grid size-24 place-items-center rounded-full bg-gold-soft">
-            <CircleCheck className="size-14 text-gold-deep" strokeWidth={1.5} aria-hidden />
+          <div className="mx-auto grid size-24 place-items-center rounded-full bg-accent-soft">
+            <CircleCheck className="size-14 text-accent-deep" strokeWidth={1.5} aria-hidden />
           </div>
           <h1 className="mt-8 font-display text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Demande prête !</h1>
           <p className="mx-auto mt-4 max-w-lg text-lg text-muted">
@@ -160,7 +160,7 @@ export function ReservationForm({ car, search, extras, locations }: Props) {
           <Receipt {...sent} />
         </div>
         <div className="no-print mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <Button href={whatsappLink(whatsappMessage(sent))} target="_blank" rel="noopener noreferrer" variant="gold">
+          <Button href={whatsappLink(whatsappMessage(sent))} target="_blank" rel="noopener noreferrer" variant="accent">
             <WhatsAppIcon className="size-4" />
             Rouvrir WhatsApp
           </Button>
@@ -221,7 +221,7 @@ export function ReservationForm({ car, search, extras, locations }: Props) {
                 <a href="/conditions" target="_blank" className="font-medium underline underline-offset-2">
                   conditions de location
                 </a>{" "}
-                de HG SELF DRIVE.
+                de AZUR DRIVE.
               </>
             }
           />

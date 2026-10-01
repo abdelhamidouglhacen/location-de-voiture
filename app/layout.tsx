@@ -8,10 +8,10 @@ const sora = Sora({ subsets: ["latin"], variable: "--font-sora", display: "swap"
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: SITE_TITLE, template: "%s | HG SELF DRIVE" },
+  title: { default: SITE_TITLE, template: "%s | AZUR DRIVE" },
   description:
     "Location de voitures à Agadir, 24h/24 et 7j/7. Citadines, SUV, voitures de luxe et vans, livraison à l'aéroport Al Massira et à votre hôtel.",
-  openGraph: { locale: "fr_MA", siteName: "HG SELF DRIVE", type: "website" },
+  openGraph: { locale: "fr_MA", siteName: "AZUR DRIVE", type: "website" },
 };
 
 export const viewport: Viewport = { themeColor: "#FAFAF9", colorScheme: "light" };

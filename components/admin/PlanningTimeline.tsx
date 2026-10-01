@@ -43,7 +43,7 @@ export function PlanningTimeline({ cars, bookings, start, days }: Props) {
                 key={d.toISOString()}
                 className={cn(
                   "border-l border-line py-2 text-center text-xs",
-                  isSameDay(d, today) ? "bg-gold/15 font-semibold text-gold-deep" : "text-muted",
+                  isSameDay(d, today) ? "bg-accent/15 font-semibold text-accent-deep" : "text-muted",
                 )}
               >
                 <span className="block capitalize">{format(d, days > 7 ? "EEEEE" : "EEE", { locale: fr })}</span>
@@ -66,7 +66,7 @@ export function PlanningTimeline({ cars, bookings, start, days }: Props) {
               <div className="relative flex-1">
                 <div className="absolute inset-0 grid" style={{ gridTemplateColumns: `repeat(${days}, minmax(0, 1fr))` }} aria-hidden>
                   {dayList.map((d) => (
-                    <div key={d.toISOString()} className={cn("border-l border-line", isWeekend(d) && "bg-paper", isSameDay(d, today) && "bg-gold-soft/60")} />
+                    <div key={d.toISOString()} className={cn("border-l border-line", isWeekend(d) && "bg-paper", isSameDay(d, today) && "bg-accent-soft/60")} />
                   ))}
                 </div>
                 {car.statut === "En maintenance" && (

@@ -5,7 +5,7 @@ import { BUSINESS } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Conditions de location",
-  description: "Conditions générales de location HG SELF DRIVE : âge minimum, permis, caution, carburant, annulation et assurance.",
+  description: "Conditions générales de location AZUR DRIVE : âge minimum, permis, caution, carburant, annulation et assurance.",
 };
 
 const sections = [
@@ -86,7 +86,7 @@ export default function ConditionsPage() {
                 <ul className="mt-4 space-y-3 text-[15px] leading-relaxed text-muted">
                   {s.items.map((item) => (
                     <li key={item} className="flex gap-3">
-                      <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-gold-deep" aria-hidden />
+                      <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-accent-deep" aria-hidden />
                       {item}
                     </li>
                   ))}

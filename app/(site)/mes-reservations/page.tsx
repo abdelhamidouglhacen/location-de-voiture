@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/site/PageHeader";
 
 export const metadata: Metadata = {
   title: "Mes réservations",
-  description: "Retrouvez les voitures que vous avez réservées chez HG SELF DRIVE, avec leurs dates et le prix estimé.",
+  description: "Retrouvez les voitures que vous avez réservées chez AZUR DRIVE, avec leurs dates et le prix estimé.",
   robots: { index: false },
 };
 

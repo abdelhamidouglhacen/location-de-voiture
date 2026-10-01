@@ -31,7 +31,7 @@ export function ExtrasList({ extras, selected, days, onToggle }: Props) {
             <label
               key={extra.id}
               className={cn(
-                "relative flex cursor-pointer gap-4 rounded-2xl border bg-surface p-5 transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gold-deep",
+                "relative flex cursor-pointer gap-4 rounded-2xl border bg-surface p-5 transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent-deep",
                 checked ? "border-ink ring-1 ring-ink" : "border-line hover:border-ink/30",
               )}
             >

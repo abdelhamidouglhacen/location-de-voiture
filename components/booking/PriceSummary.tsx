@@ -20,7 +20,7 @@ export function PriceSummary({ car, price, extras, depart, retour, action }: Pro
         <Image src={car.images[0]} alt="" fill sizes="360px" className="object-cover" />
       </div>
       <div className="p-5">
-        <p className="text-xs font-medium tracking-[0.12em] text-gold-deep uppercase">{car.categorie}</p>
+        <p className="text-xs font-medium tracking-[0.12em] text-accent-deep uppercase">{car.categorie}</p>
         <h2 className="mt-1 font-display text-lg font-semibold tracking-tight">
           {car.marque} {car.modele}
         </h2>

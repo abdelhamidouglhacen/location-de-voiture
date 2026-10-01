@@ -1,6 +1,6 @@
-# HG SELF DRIVE: location de voitures à Agadir
+# AZUR DRIVE: location de voitures à Agadir
 
-Frontend-only website for the HG SELF DRIVE car rental business, plus a minimal admin dashboard. The whole interface is in French and in light mode. There is no backend, no API, no database and no login.
+Frontend-only website for the AZUR DRIVE car rental business, plus a minimal admin dashboard. The whole interface is in French and in light mode. There is no backend, no API, no database and no login.
 
 ## Stack
 
@@ -46,7 +46,7 @@ components/admin/      Sidebar, charts, planning timeline
 components/ui/         Button, Input, Select, Modal, Tabs, Table…
 lib/data/              fleet (cars.ts), options, locations, sample admin data
 lib/                   price, format, validation, constants (phones, WhatsApp, e-mail)
-public/hg-self-drive-logo.png        brand logo (also app/icon.png for the favicon)
+components/site/Logo.tsx              brand logo (SVG mark + name), also app/icon.svg for the favicon
 public/cars/           car photos + credits.json
 ```
 
@@ -54,6 +54,5 @@ To change the fleet or prices, edit `lib/data/cars.ts`. Business details (phones
 
 ## Notes
 
-- The logo file provided is 81 × 81 px. Replace `public/hg-self-drive-logo.png` and `app/icon.png` with a larger version (512 px or more) for sharp rendering.
 - The car photos come from Wikimedia Commons (free licenses, attribution required). Credits are in `public/cars/credits.json`. Replace them with your own fleet photos when you can.
 # location-de-voiture

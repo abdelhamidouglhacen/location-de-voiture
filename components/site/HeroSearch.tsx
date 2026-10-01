@@ -27,7 +27,7 @@ function IconSelect({ id, label, value, onChange, options, icon }: SelectProps) 
       <label htmlFor={id} className="sr-only">
         {label}
       </label>
-      <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-gold-deep">{icon}</span>
+      <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-accent-deep">{icon}</span>
       <select
         id={id}
         value={value}
@@ -82,7 +82,7 @@ export function HeroSearch({ variant = "card" }: { variant?: "card" | "sheet" })
   const leg = (key: "depart" | "retour", title: string, value: Leg, set: (v: Leg) => void) => (
     <fieldset className="min-w-0">
       <legend className="mb-2.5 flex items-center gap-2 text-sm font-semibold">
-        <span className={key === "depart" ? "size-2 rounded-full bg-gold" : "size-2 rounded-full border-2 border-gold"} aria-hidden />
+        <span className={key === "depart" ? "size-2 rounded-full bg-accent" : "size-2 rounded-full border-2 border-accent"} aria-hidden />
         {title}
       </legend>
       <div className={cn("grid gap-2.5", !sheet && "grid-cols-[1fr_128px]")}>

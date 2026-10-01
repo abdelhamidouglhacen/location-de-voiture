@@ -3,7 +3,7 @@
 
 /*
  * Design tokens. Light theme only.
- * One accent (the logo gold) on warm-neutral paper. Radius rule: buttons are pills,
+ * One accent (the logo blue) on warm-neutral paper. Radius rule: buttons are pills,
  * cards are 20px, fields are 12px.
  */
 @theme {
@@ -14,9 +14,9 @@
   --color-ink: #121212;
   --color-ink-2: #3a3a3c;
   --color-muted: #6b6b70;
-  --color-gold: #c9a24a;
-  --color-gold-deep: #86661c;
-  --color-gold-soft: #f7f0de;
+  --color-accent: #4b9bff;
+  --color-accent-deep: #1a56c9;
+  --color-accent-soft: #e9f1ff;
 
   --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
@@ -38,12 +38,12 @@
     -webkit-font-smoothing: antialiased;
   }
   :focus-visible {
-    outline: 2px solid var(--color-gold-deep);
+    outline: 2px solid var(--color-accent-deep);
     outline-offset: 2px;
     border-radius: 8px;
   }
   ::selection {
-    background: var(--color-gold-soft);
+    background: var(--color-accent-soft);
     color: var(--color-ink);
   }
 }
@@ -82,14 +82,14 @@
 /* react-day-picker */
 .rdp-root {
   --rdp-accent-color: var(--color-ink);
-  --rdp-accent-background-color: var(--color-gold-soft);
-  --rdp-range_middle-background-color: var(--color-gold-soft);
+  --rdp-accent-background-color: var(--color-accent-soft);
+  --rdp-range_middle-background-color: var(--color-accent-soft);
   --rdp-range_middle-color: var(--color-ink);
   --rdp-range_start-date-background-color: var(--color-ink);
   --rdp-range_end-date-background-color: var(--color-ink);
   --rdp-range_start-color: #fff;
   --rdp-range_end-color: #fff;
-  --rdp-today-color: var(--color-gold-deep);
+  --rdp-today-color: var(--color-accent-deep);
   --rdp-day-height: 42px;
   --rdp-day-width: 42px;
   --rdp-day_button-height: 40px;

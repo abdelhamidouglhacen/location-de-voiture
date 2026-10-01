@@ -17,7 +17,7 @@ export function Testimonials() {
         <StaggerGroup className="-mx-4 mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-4">
           {reviews.map((r) => (
             <figure key={r.name} className="flex w-[82%] shrink-0 snap-start flex-col rounded-[20px] border border-line bg-surface p-6 md:w-auto">
-              <div className="flex gap-0.5 text-gold" aria-label="5 étoiles sur 5">
+              <div className="flex gap-0.5 text-amber-400" aria-label="5 étoiles sur 5">
                 {Array.from({ length: 5 }, (_, i) => (
                   <Star key={i} className="size-4.5 fill-current" aria-hidden />
                 ))}

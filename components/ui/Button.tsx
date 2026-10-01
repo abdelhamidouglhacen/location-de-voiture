@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 
-type Variant = "primary" | "gold" | "outline" | "ghost" | "danger";
+type Variant = "primary" | "accent" | "outline" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
   primary: "bg-ink text-white hover:bg-ink-2",
-  gold: "bg-gold text-ink hover:brightness-105",
+  accent: "bg-accent text-ink hover:brightness-105",
   outline: "border border-line bg-surface text-ink hover:border-ink/40",
   ghost: "text-ink hover:bg-sand",
   danger: "bg-red-600 text-white hover:bg-red-700",

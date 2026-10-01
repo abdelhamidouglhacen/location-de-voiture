@@ -9,7 +9,7 @@ import { BUSINESS } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Contactez HG SELF DRIVE à Agadir par téléphone, WhatsApp ou e-mail, 24h/24 et 7j/7.",
+  description: "Contactez AZUR DRIVE à Agadir par téléphone, WhatsApp ou e-mail, 24h/24 et 7j/7.",
 };
 
 const cards = [
@@ -35,7 +35,7 @@ export default function ContactPage() {
           <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             {cards.map(({ Icon, title, lines }) => (
               <div key={title} className="flex gap-4 rounded-[20px] border border-line bg-surface p-5">
-                <span className="grid size-11 shrink-0 place-items-center rounded-full bg-gold-soft text-gold-deep">
+                <span className="grid size-11 shrink-0 place-items-center rounded-full bg-accent-soft text-accent-deep">
                   <Icon className="size-5" aria-hidden />
                 </span>
                 <div>
@@ -57,7 +57,7 @@ export default function ContactPage() {
           </StaggerGroup>
           <div>
             <p className="mb-3 flex items-center gap-2 text-sm font-medium">
-              <MapPin className="size-4 text-gold-deep" aria-hidden />
+              <MapPin className="size-4 text-accent-deep" aria-hidden />
               {BUSINESS.address}
             </p>
             <MapEmbed className="h-72" />

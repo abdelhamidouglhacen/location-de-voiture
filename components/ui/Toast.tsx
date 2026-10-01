@@ -17,7 +17,7 @@ const ToastContext = createContext<((message: string, tone?: Tone) => void) | nu
 const icons = {
   success: <CheckCircle2 className="size-5 text-emerald-600" aria-hidden />,
   error: <XCircle className="size-5 text-red-600" aria-hidden />,
-  info: <Info className="size-5 text-gold-deep" aria-hidden />,
+  info: <Info className="size-5 text-accent-deep" aria-hidden />,
 };
 
 function ToastView({ toast, onClose }: { toast: ToastItem; onClose: () => void }) {
