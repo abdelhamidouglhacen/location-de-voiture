@@ -18,9 +18,9 @@ import { CarCard } from "./CarCard";
 import { activeFilterCount, CarFilters, emptyFilters, type Filters } from "./CarFilters";
 
 const SORTS = [
-  { value: "prix-asc", label: "Prix croissant" },
-  { value: "prix-desc", label: "Prix décroissant" },
-  { value: "recentes", label: "Plus récentes" },
+  { value: "prix-asc", label: "Price: low to high" },
+  { value: "prix-desc", label: "Price: high to low" },
+  { value: "recentes", label: "Newest first" },
 ];
 
 function applyFilters(cars: Car[], f: Filters) {
@@ -54,20 +54,20 @@ export function CarCatalog({ cars }: { cars: Car[] }) {
 
   const marques = useMemo(() => [...new Set(cars.map((c) => c.marque))].sort(), [cars]);
   // With searched dates, cars in maintenance can't be booked, so they are hidden.
-  const bookable = useMemo(() => (search ? cars.filter((c) => c.statut !== "En maintenance") : cars), [cars, search]);
+  const bookable = useMemo(() => (search ? cars.filter((c) => c.statut !== "In maintenance") : cars), [cars, search]);
   const results = useMemo(() => sortCars(applyFilters(bookable, filters), sort), [bookable, filters, sort]);
   const count = activeFilterCount(filters);
 
   return (
     <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[260px_1fr] lg:py-16">
-      <aside className="hidden lg:block" aria-label="Filtres">
+      <aside className="hidden lg:block" aria-label="Filters">
         <div className="sticky top-24 max-h-[calc(100dvh-7rem)] overflow-y-auto overscroll-contain pr-3 pb-6 [scrollbar-width:thin]">
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="font-display text-base font-semibold">Filtres</h2>
+            <h2 className="font-display text-base font-semibold">Filters</h2>
             {count > 0 && (
               <button type="button" onClick={() => setFilters(emptyFilters)} className="inline-flex items-center gap-1 text-sm text-muted hover:text-ink">
                 <X className="size-3.5" aria-hidden />
-                Effacer
+                Clear
               </button>
             )}
           </div>
@@ -79,14 +79,14 @@ export function CarCatalog({ cars }: { cars: Car[] }) {
         {search && <SearchSummary search={search} onClear={() => router.replace("/voitures", { scroll: false })} />}
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
           <p className="text-[15px] text-muted" aria-live="polite">
-            <strong className="font-semibold text-ink">{results.length}</strong> voiture{results.length > 1 ? "s" : ""}
+            <strong className="font-semibold text-ink">{results.length}</strong> car{results.length > 1 ? "s" : ""}
           </p>
           <div className="flex items-end gap-3">
             <Button variant="outline" className="lg:hidden" onClick={() => setFiltersOpen(true)}>
               <SlidersHorizontal className="size-4" aria-hidden />
-              Filtres{count > 0 && ` (${count})`}
+              Filters{count > 0 && ` (${count})`}
             </Button>
-            <Select id="tri" label="Trier par" options={SORTS} value={sort} onChange={(e) => setSort(e.target.value)} wrapperClassName="w-48" />
+            <Select id="tri" label="Sort by" options={SORTS} value={sort} onChange={(e) => setSort(e.target.value)} wrapperClassName="w-48" />
           </div>
         </div>
 
@@ -94,9 +94,9 @@ export function CarCatalog({ cars }: { cars: Car[] }) {
           {results.length === 0 ? (
             <div className="rounded-[20px] border border-line bg-surface">
               <EmptyState
-                title="Aucune voiture ne correspond"
-                text="Élargissez votre budget ou retirez quelques filtres. Vous pouvez aussi nous appeler."
-                action={<Button onClick={() => setFilters(emptyFilters)}>Effacer les filtres</Button>}
+                title="No cars match"
+                text="Widen your budget or remove a few filters. You can also call us."
+                action={<Button onClick={() => setFilters(emptyFilters)}>Clear filters</Button>}
               />
             </div>
           ) : (
@@ -112,13 +112,13 @@ export function CarCatalog({ cars }: { cars: Car[] }) {
       <Modal
         open={filtersOpen}
         onClose={() => setFiltersOpen(false)}
-        title="Filtres"
+        title="Filters"
         footer={
           <>
             <Button variant="outline" onClick={() => setFilters(emptyFilters)}>
-              Effacer
+              Clear
             </Button>
-            <Button onClick={() => setFiltersOpen(false)}>Voir {results.length} voitures</Button>
+            <Button onClick={() => setFiltersOpen(false)}>Show {results.length} cars</Button>
           </>
         }
       >
@@ -133,29 +133,29 @@ const placeName = (id?: string) => locations.find((l) => l.id === id)?.nom ?? lo
 function SearchSummary({ search, onClear }: { search: RentalSearch; onClear: () => void }) {
   const days = calculateDays(search.depart, search.retour);
   return (
-    <section aria-label="Votre recherche" className="mb-8 rounded-[20px] border border-line bg-surface p-5">
+    <section aria-label="Your search" className="mb-8 rounded-[20px] border border-line bg-surface p-5">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
         <div className="min-w-0">
-          <p className="text-xs font-medium text-muted">Départ</p>
+          <p className="text-xs font-medium text-muted">Pick-up</p>
           <p className="font-medium tabular-nums">{formatDateTime(search.depart)}</p>
           <p className="truncate text-sm text-muted">{placeName(search.lieuDepart)}</p>
         </div>
         <ArrowRight className="hidden size-4 shrink-0 text-accent-deep sm:block" aria-hidden />
         <div className="min-w-0">
-          <p className="text-xs font-medium text-muted">Destination</p>
+          <p className="text-xs font-medium text-muted">Return</p>
           <p className="font-medium tabular-nums">{formatDateTime(search.retour)}</p>
           <p className="truncate text-sm text-muted">{placeName(search.lieuRetour)}</p>
         </div>
         <p className="rounded-full bg-accent-soft px-3 py-1 text-sm font-medium text-accent-deep tabular-nums">
-          {days} jour{days > 1 ? "s" : ""}
+          {days} day{days > 1 ? "s" : ""}
         </p>
         <div className="ml-auto flex gap-2">
           <Link href="/#recherche" className="inline-flex h-9 items-center rounded-full border border-line px-4 text-sm font-medium hover:border-ink/40">
-            Modifier
+            Edit
           </Link>
           <button type="button" onClick={onClear} className="inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-sm text-muted hover:text-ink">
             <X className="size-3.5" aria-hidden />
-            Effacer
+            Clear
           </button>
         </div>
       </div>

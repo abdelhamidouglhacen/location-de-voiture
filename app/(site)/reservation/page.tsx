@@ -8,8 +8,8 @@ import { extras } from "@/lib/data/extras";
 import { locations } from "@/lib/data/locations";
 
 export const metadata: Metadata = {
-  title: "Réservation",
-  description: "Envoyez votre demande de location de voiture à AZUR DRIVE, Agadir.",
+  title: "Booking",
+  description: "Send your car rental request to AZUR DRIVE, Agadir.",
   robots: { index: false },
 };
 
@@ -19,20 +19,20 @@ interface Props {
 
 export default async function ReservationPage({ searchParams }: Props) {
   const { voiture, depart, retour, lieuDepart, lieuRetour } = await searchParams;
-  const car = cars.find((c) => c.id === voiture && c.statut !== "En maintenance");
+  const car = cars.find((c) => c.id === voiture && c.statut !== "In maintenance");
 
   return (
     <>
       <PageHeader
-        title="Votre demande"
-        text={car ? `${car.marque} ${car.modele}. Complétez vos informations, nous vous rappelons pour confirmer.` : undefined}
-        crumbs={[{ href: "/voitures", label: "Nos voitures" }, { label: "Réservation" }]}
+        title="Your request"
+        text={car ? `${car.marque} ${car.modele}. Fill in your details and we will call you back to confirm.` : undefined}
+        crumbs={[{ href: "/voitures", label: "Our cars" }, { label: "Booking" }]}
       />
       {car ? (
         <ReservationEntry car={car} depart={depart} retour={retour} lieuDepart={lieuDepart} lieuRetour={lieuRetour} extras={extras} locations={locations} />
       ) : (
         <div className="mx-auto max-w-xl px-4 py-16">
-          <EmptyState title="Choisissez d'abord une voiture" text="Parcourez la flotte et cliquez sur « Réserver » sur la voiture qui vous plaît." action={<Button href="/voitures">Voir nos voitures</Button>} />
+          <EmptyState title="Choose a car first" text="Browse the fleet and click “Book” on the car you like." action={<Button href="/voitures">See our cars</Button>} />
         </div>
       )}
     </>

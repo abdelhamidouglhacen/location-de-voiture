@@ -41,21 +41,21 @@ interface Props {
 
 function whatsappMessage(s: RequestSummary) {
   return [
-    `Bonjour ${BUSINESS.name}, voici ma demande de réservation (${s.reference}) :`,
+    `Hello ${BUSINESS.name}, here is my booking request (${s.reference}):`,
     ``,
-    `Voiture : ${s.car.marque} ${s.car.modele}`,
-    `Départ : ${formatDateTime(s.depart)}, ${s.lieuDepart}`,
-    `Retour : ${formatDateTime(s.retour)}, ${s.lieuRetour}`,
-    `Options : ${s.options.map((o) => o.nom).join(", ") || "aucune"}`,
-    `Total estimé : ${formatMAD(s.price.total)}`,
+    `Car: ${s.car.marque} ${s.car.modele}`,
+    `Pick-up: ${formatDateTime(s.depart)}, ${s.lieuDepart}`,
+    `Return: ${formatDateTime(s.retour)}, ${s.lieuRetour}`,
+    `Extras: ${s.options.map((o) => o.nom).join(", ") || "none"}`,
+    `Estimated total: ${formatMAD(s.price.total)}`,
     ``,
-    `Conducteur : ${s.driver.nomComplet}, ${s.driver.age} ans`,
-    `Téléphone : ${s.driver.telephone}`,
-    `E-mail : ${s.driver.email}`,
-    `CIN / passeport : ${s.driver.pieceIdentite}`,
-    `Permis : ${s.driver.numeroPermis} (expire le ${s.driver.expirationPermis})`,
-    s.driver.numeroVol ? `Vol : ${s.driver.numeroVol}` : null,
-    s.driver.remarques ? `Remarques : ${s.driver.remarques}` : null,
+    `Driver: ${s.driver.nomComplet}, ${s.driver.age} years old`,
+    `Phone: ${s.driver.telephone}`,
+    `Email: ${s.driver.email}`,
+    `ID card / passport: ${s.driver.pieceIdentite}`,
+    `Licence: ${s.driver.numeroPermis} (expires ${s.driver.expirationPermis})`,
+    s.driver.numeroVol ? `Flight: ${s.driver.numeroVol}` : null,
+    s.driver.remarques ? `Notes: ${s.driver.remarques}` : null,
   ]
     .filter((line) => line !== null)
     .join("\n");
@@ -103,7 +103,7 @@ export function ReservationForm({ car, search, extras, locations }: Props) {
     e.preventDefault();
     const found = validateDriver(driver);
     setErrors(found);
-    setTermsError(accepted ? undefined : "Vous devez accepter les conditions de location.");
+    setTermsError(accepted ? undefined : "You must accept the rental terms.");
     if (hasErrors(found) || !accepted) {
       document.querySelector<HTMLElement>("[aria-invalid='true'], #resa-conditions")?.focus();
       return;
@@ -150,10 +150,10 @@ export function ReservationForm({ car, search, extras, locations }: Props) {
           <div className="mx-auto grid size-24 place-items-center rounded-full bg-accent-soft">
             <CircleCheck className="size-14 text-accent-deep" strokeWidth={1.5} aria-hidden />
           </div>
-          <h1 className="mt-8 font-display text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Demande prête !</h1>
+          <h1 className="mt-8 font-display text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Request ready!</h1>
           <p className="mx-auto mt-4 max-w-lg text-lg text-muted">
-            Merci {driver.nomComplet.split(" ")[0]}. Votre demande s&apos;est ouverte dans WhatsApp : appuyez sur « Envoyer » pour la transmettre à l&apos;agence. Nous vous
-            rappelons pour confirmer.
+            Thank you {driver.nomComplet.split(" ")[0]}. Your request has opened in WhatsApp: press “Send” to pass it on to the agency. We will
+            call you back to confirm.
           </p>
         </div>
         <div className="mt-10">
@@ -162,19 +162,19 @@ export function ReservationForm({ car, search, extras, locations }: Props) {
         <div className="no-print mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Button href={whatsappLink(whatsappMessage(sent))} target="_blank" rel="noopener noreferrer" variant="accent">
             <WhatsAppIcon className="size-4" />
-            Rouvrir WhatsApp
+            Reopen WhatsApp
           </Button>
           <Button onClick={() => window.print()} variant="outline">
             <Printer className="size-4" aria-hidden />
-            Imprimer
+            Print
           </Button>
           <Button href="/mes-reservations" variant="outline">
             <CalendarCheck className="size-4" aria-hidden />
-            Mes réservations
+            My bookings
           </Button>
           <Button href="/" variant="outline">
             <Home className="size-4" aria-hidden />
-            Accueil
+            Home
           </Button>
         </div>
       </div>
@@ -184,14 +184,14 @@ export function ReservationForm({ car, search, extras, locations }: Props) {
   return (
     <form onSubmit={submit} noValidate className="mx-auto grid max-w-7xl gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_360px] lg:py-14">
       <div className="min-w-0 space-y-12">
-        <Section title="Retrait et retour" text="Où souhaitez-vous récupérer et rendre la voiture ?">
+        <Section title="Pick-up and return" text="Where would you like to collect and return the car?">
           <div className="grid gap-5 sm:grid-cols-2">
-            <Select id="resa-lieu-depart" label="Lieu de départ" options={locationOptions} value={lieuDepart} onChange={(e) => setLieuDepart(e.target.value)} />
-            <Select id="resa-lieu-retour" label="Lieu de retour" options={locationOptions} value={lieuRetour} onChange={(e) => setLieuRetour(e.target.value)} />
+            <Select id="resa-lieu-depart" label="Pick-up place" options={locationOptions} value={lieuDepart} onChange={(e) => setLieuDepart(e.target.value)} />
+            <Select id="resa-lieu-retour" label="Return place" options={locationOptions} value={lieuRetour} onChange={(e) => setLieuRetour(e.target.value)} />
           </div>
         </Section>
 
-        <Section title="Vos informations" text="Elles figureront sur le contrat de location.">
+        <Section title="Your details" text="They will appear on the rental contract.">
           <DriverForm
             value={driver}
             errors={errors}
@@ -202,7 +202,7 @@ export function ReservationForm({ car, search, extras, locations }: Props) {
           />
         </Section>
 
-        <Section title="Options" text="Facultatif. Le total se met à jour tout de suite.">
+        <Section title="Extras" text="Optional. The total updates straight away.">
           <ExtrasList extras={extras} selected={options} days={days} onToggle={(id) => setOptions(options.includes(id) ? options.filter((o) => o !== id) : [...options, id])} />
         </Section>
 
@@ -217,32 +217,32 @@ export function ReservationForm({ car, search, extras, locations }: Props) {
             }}
             label={
               <>
-                J&apos;accepte les{" "}
+                I accept the{" "}
                 <a href="/conditions" target="_blank" className="font-medium underline underline-offset-2">
-                  conditions de location
+                  rental terms
                 </a>{" "}
-                de AZUR DRIVE.
+                of AZUR DRIVE.
               </>
             }
           />
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-sm text-sm text-muted">Votre demande s&apos;ouvrira dans WhatsApp, prête à être envoyée à l&apos;agence. Aucun paiement en ligne.</p>
+            <p className="max-w-sm text-sm text-muted">Your request will open in WhatsApp, ready to send to the agency. No online payment.</p>
             <Button type="submit" size="lg">
               <Send className="size-4" aria-hidden />
-              Envoyer ma demande
+              Send my request
             </Button>
           </div>
         </div>
       </div>
 
-      <aside className="lg:sticky lg:top-24 lg:self-start" aria-label="Résumé de la réservation">
+      <aside className="lg:sticky lg:top-24 lg:self-start" aria-label="Booking summary">
         <PriceSummary
           car={car}
           price={price}
           extras={selected}
           depart={depart}
           retour={retour}
-          action={<ReserveDialog car={{ id: car.id, name, prixParJour: car.prixParJour }} initial={{ depart, retour }} places={{ lieuDepart, lieuRetour }} label="Modifier les dates" variant="outline" className="w-full" />}
+          action={<ReserveDialog car={{ id: car.id, name, prixParJour: car.prixParJour }} initial={{ depart, retour }} places={{ lieuDepart, lieuRetour }} label="Change dates" variant="outline" className="w-full" />}
         />
       </aside>
     </form>

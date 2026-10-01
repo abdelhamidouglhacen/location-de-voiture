@@ -22,18 +22,18 @@ export const metadata: Metadata = { title: { absolute: SITE_TITLE } };
 const FEATURED = ["mercedes-gle", "range-rover-evoque", "hyundai-tucson", "dacia-duster", "renault-clio", "vw-t-roc"];
 
 const promises = [
-  { Icon: Clock, title: "Service 24h/24", text: "Départ ou retour à toute heure, tous les jours." },
-  { Icon: Plane, title: "Livraison aéroport", text: "Votre voiture vous attend à Al Massira." },
-  { Icon: BadgeCheck, title: "Sans frais cachés", text: "Prix annoncé, prix payé. Kilométrage illimité." },
-  { Icon: CarFront, title: "Voitures récentes", text: "Modèles 2022 à 2024, entretenus et nettoyés." },
+  { Icon: Clock, title: "24/7 service", text: "Pick-up or return at any hour, every day." },
+  { Icon: Plane, title: "Airport delivery", text: "Your car is waiting for you at Al Massira." },
+  { Icon: BadgeCheck, title: "No hidden fees", text: "The price you see is the price you pay. Unlimited mileage." },
+  { Icon: CarFront, title: "Recent cars", text: "2022 to 2024 models, serviced and cleaned." },
 ];
 
 const categories = [
-  { name: "Luxe", image: "/cars/mercedes-gle-2.jpg", text: "Mercedes, Range Rover, BMW", className: "md:col-span-2 md:row-span-2" },
+  { name: "Luxury", image: "/cars/mercedes-gle-2.jpg", text: "Mercedes, Range Rover, BMW", className: "md:col-span-2 md:row-span-2" },
   { name: "SUV", image: "/cars/hyundai-tucson-3.jpg", text: "Tucson, Sportage, Duster" },
-  { name: "Citadine", image: "/cars/renault-clio-2.jpg", text: "Clio, 208, Yaris" },
-  { name: "Économique", image: "/cars/dacia-sandero-3.jpg", text: "Dès 250 MAD / jour" },
-  { name: "Van", image: "/cars/peugeot-rifter-2.jpg", text: "7 à 9 places" },
+  { name: "City", image: "/cars/renault-clio-2.jpg", text: "Clio, 208, Yaris" },
+  { name: "Economy", image: "/cars/dacia-sandero-3.jpg", text: "From 250 MAD / day" },
+  { name: "Van", image: "/cars/peugeot-rifter-2.jpg", text: "7 to 9 seats" },
 ];
 
 export default function HomePage() {
@@ -43,7 +43,7 @@ export default function HomePage() {
     <>
       <Hero />
 
-      <section aria-label="Nos engagements" className="border-y border-line bg-surface">
+      <section aria-label="Our commitments" className="border-y border-line bg-surface">
         <FadeUp>
           <ul className="mx-auto grid max-w-7xl gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
             {promises.map(({ Icon, title, text }) => (
@@ -62,9 +62,9 @@ export default function HomePage() {
       <section className="py-20 sm:py-28" aria-labelledby="vedette-titre">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <SectionHeading id="vedette-titre" title="La flotte du moment" text="Cliquez sur « Réserver », choisissez vos dates, c'est tout." />
+            <SectionHeading id="vedette-titre" title="Featured cars" text="Click “Book”, choose your dates, and you're done." />
             <Button href="/voitures" variant="outline">
-              Toute la flotte
+              View all cars
               <ArrowUpRight className="size-4" aria-hidden />
             </Button>
           </div>
@@ -82,7 +82,7 @@ export default function HomePage() {
 
       <section className="pb-20 sm:pb-28" aria-labelledby="categories-titre">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <SectionHeading id="categories-titre" title="Une voiture pour chaque trajet" text="Du centre-ville aux pistes de l'Anti-Atlas." />
+          <SectionHeading id="categories-titre" title="A car for every trip" text="From the city centre to the tracks of the Anti-Atlas." />
           <StaggerGroup className="mt-12 grid auto-rows-[220px] gap-4 md:auto-rows-[240px] md:grid-cols-4">
             {categories.map((c) => (
               <Link
@@ -122,9 +122,9 @@ export default function HomePage() {
           <div className="grid gap-8 rounded-[28px] border border-line bg-surface p-8 sm:p-12 lg:grid-cols-[1.2fr_1fr] lg:items-center">
             <div>
               <h2 id="cta-titre" className="font-display text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
-                Besoin d&apos;une voiture maintenant ?
+                Need a car right now?
               </h2>
-              <p className="mt-3 max-w-md text-muted">Appelez-nous, on répond jour et nuit. Livraison possible en moins d&apos;une heure à Agadir.</p>
+              <p className="mt-3 max-w-md text-muted">Call us, we answer day and night. Delivery in under an hour in Agadir.</p>
             </div>
             <div className="flex flex-col gap-3 lg:items-end">
               {BUSINESS.phones.map((p) => (
@@ -138,14 +138,14 @@ export default function HomePage() {
                 </a>
               ))}
               <Button
-                href={whatsappLink("Bonjour, j'ai besoin d'une voiture rapidement.")}
+                href={whatsappLink("Hello, I need a car quickly.")}
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="accent"
                 className="mt-2"
               >
                 <WhatsAppIcon className="size-4.5" />
-                Écrire sur WhatsApp
+                Message us on WhatsApp
               </Button>
             </div>
           </div>

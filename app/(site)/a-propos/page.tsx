@@ -10,64 +10,64 @@ import { cars } from "@/lib/data/cars";
 import { locations } from "@/lib/data/locations";
 
 export const metadata: Metadata = {
-  title: "À propos",
-  description: "AZUR DRIVE, agence de location de voitures à Agadir : une flotte récente, un service 24h/24 et la livraison à l'aéroport ou à l'hôtel.",
+  title: "About",
+  description: "AZUR DRIVE, a car rental agency in Agadir: a recent fleet, 24/7 service and delivery to the airport or your hotel.",
 };
 
 const values = [
   {
     Icon: Clock,
-    title: "Disponibles à toute heure",
-    text: "Un vol qui arrive à 3h du matin ne devrait pas être un problème. Nous répondons au téléphone jour et nuit.",
+    title: "Available at any hour",
+    text: "A flight landing at 3 a.m. should not be a problem. We answer the phone day and night.",
   },
-  { Icon: HandCoins, title: "Des prix clairs", text: "Le prix annoncé est le prix payé. Pas de supplément surprise au comptoir." },
-  { Icon: Sparkles, title: "Des voitures soignées", text: "Chaque voiture est lavée, vérifiée et remise avec le plein avant chaque location." },
-  { Icon: KeyRound, title: "Une remise simple", text: "À l'agence, à l'aéroport Al Massira, à la Marina ou devant votre hôtel." },
+  { Icon: HandCoins, title: "Clear prices", text: "The price you see is the price you pay. No surprise charges at the counter." },
+  { Icon: Sparkles, title: "Well-kept cars", text: "Every car is washed, checked and handed over with a full tank before each rental." },
+  { Icon: KeyRound, title: "Easy handover", text: "At the agency, at Al Massira airport, at the Marina or in front of your hotel." },
 ];
 
 export default function AboutPage() {
   const stats = [
-    { value: `${cars.length}`, label: "voitures récentes" },
-    { value: "24h/24", label: "7 jours sur 7" },
-    { value: `${locations.length}`, label: "points de remise" },
-    { value: "21 ans", label: "âge minimum" },
+    { value: `${cars.length}`, label: "recent cars" },
+    { value: "24/7", label: "every day of the week" },
+    { value: `${locations.length}`, label: "pick-up points" },
+    { value: "21", label: "minimum age" },
   ];
 
   return (
     <>
-      <PageHeader title="À propos" text="Une agence de location à Agadir, pensée pour les voyageurs comme pour les Gadiris." crumbs={[{ label: "À propos" }]} />
+      <PageHeader title="About" text="A rental agency in Agadir, built for travellers and locals alike." crumbs={[{ label: "About" }]} />
 
       <section className="py-20 sm:py-24">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
           <FadeUp className="relative aspect-[4/3] overflow-hidden rounded-[28px] bg-sand">
             <Image
               src="/cars/mercedes-classe-c-2.jpg"
-              alt="Mercedes Classe C de la flotte AZUR DRIVE"
+              alt="Mercedes C-Class from the AZUR DRIVE fleet"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"
             />
           </FadeUp>
           <div>
-            <SectionHeading title="Conduisez le meilleur, louez avec nous" />
+            <SectionHeading title="Drive the best, rent with us" />
             <div className="mt-6 space-y-4 text-[17px] leading-relaxed text-muted">
               <p>
-                AZUR DRIVE est une agence de location de voitures installée au centre-ville d&apos;Agadir. Nous louons des citadines, des SUV, des voitures
-                de luxe et des vans, pour quelques jours ou plusieurs semaines.
+                AZUR DRIVE is a car rental agency based in Agadir city centre. We rent city cars, SUVs, luxury cars
+                and vans, for a few days or several weeks.
               </p>
               <p>
-                Notre idée est simple : une voiture propre, un prix connu à l&apos;avance et quelqu&apos;un qui décroche le téléphone, même la nuit. Nous
-                livrons à l&apos;aéroport Al Massira, à la Marina et dans les hôtels d&apos;Agadir et de Taghazout.
+                Our idea is simple: a clean car, a price known in advance and someone who picks up the phone, even at night. We
+                deliver to Al Massira airport, the Marina and hotels in Agadir and Taghazout.
               </p>
             </div>
             <Button href="/voitures" className="mt-8">
-              Voir nos voitures
+              See our cars
             </Button>
           </div>
         </div>
       </section>
 
-      <section className="border-y border-line bg-surface" aria-label="AZUR DRIVE en chiffres">
+      <section className="border-y border-line bg-surface" aria-label="AZUR DRIVE in numbers">
         <FadeUp>
           <ul className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-line lg:grid-cols-4">
             {stats.map((s) => (
@@ -82,7 +82,7 @@ export default function AboutPage() {
 
       <section className="py-20 sm:py-24" aria-labelledby="valeurs-titre">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <SectionHeading id="valeurs-titre" title="Ce qui compte pour nous" />
+          <SectionHeading id="valeurs-titre" title="What matters to us" />
           <StaggerGroup className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
             {values.map(({ Icon, title, text }) => (
               <div key={title} className="flex gap-5">
@@ -99,10 +99,10 @@ export default function AboutPage() {
           <FadeUp className="mt-16 flex flex-col items-start gap-4 rounded-[20px] border border-line bg-surface p-8 sm:flex-row sm:items-center sm:justify-between">
             <p className="flex items-center gap-3 text-lg">
               <MapPin className="size-5 text-accent-deep" aria-hidden />
-              Passez nous voir au centre-ville d&apos;Agadir, ou appelez-nous.
+              Visit us in Agadir city centre, or give us a call.
             </p>
             <Button href="/contact" variant="outline">
-              Nous contacter
+              Contact us
             </Button>
           </FadeUp>
         </div>

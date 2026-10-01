@@ -15,7 +15,7 @@ import { deleteCar, useAdminCars } from "@/lib/adminCars";
 import { formatMAD, formatNumber } from "@/lib/format";
 import type { Car } from "@/types";
 
-const STATUTS = ["Disponible", "Louée", "En maintenance"] as const;
+const STATUTS = ["Available", "Rented", "In maintenance"] as const;
 
 export default function AdminCarsPage() {
   const cars = useAdminCars();
@@ -27,7 +27,7 @@ export default function AdminCarsPage() {
   const confirmDelete = () => {
     if (!toDelete) return;
     deleteCar(toDelete.id);
-    toast(`${toDelete.marque} ${toDelete.modele} supprimée.`);
+    toast(`${toDelete.marque} ${toDelete.modele} deleted.`);
     setToDelete(null);
   };
 
@@ -35,27 +35,27 @@ export default function AdminCarsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Tabs
-          label="Filtrer par statut"
+          label="Filter by status"
           value={statut}
           onChange={setStatut}
-          tabs={[{ value: "toutes", label: "Toutes", count: cars.length }, ...STATUTS.map((s) => ({ value: s, label: s, count: cars.filter((c) => c.statut === s).length }))]}
+          tabs={[{ value: "toutes", label: "All", count: cars.length }, ...STATUTS.map((s) => ({ value: s, label: s, count: cars.filter((c) => c.statut === s).length }))]}
         />
         <Button href="/admin/voitures/nouvelle">
           <Plus className="size-4" aria-hidden />
-          Ajouter une voiture
+          Add a car
         </Button>
       </div>
 
       <Card padded={false}>
         <Table
-          caption="Liste des voitures"
+          caption="Car list"
           rows={list}
           rowKey={(c) => c.id}
-          empty={<EmptyState title="Aucune voiture" text="Aucune voiture ne correspond à ce filtre." />}
+          empty={<EmptyState title="No cars" text="No cars match this filter." />}
           columns={[
             {
               key: "voiture",
-              header: "Voiture",
+              header: "Car",
               render: (c) => (
                 <Link href={`/admin/voitures/${c.id}`} className="flex items-center gap-3 hover:underline">
                   <span className="relative h-12 w-18 shrink-0 overflow-hidden rounded-lg bg-sand">
@@ -75,29 +75,29 @@ export default function AdminCarsPage() {
                 </Link>
               ),
             },
-            { key: "immat", header: "Immatriculation", render: (c) => c.immatriculation, className: "tabular-nums" },
-            { key: "km", header: "Kilométrage", render: (c) => `${formatNumber(c.kilometrage)} km`, className: "tabular-nums" },
-            { key: "prix", header: "Prix / jour", render: (c) => formatMAD(c.prixParJour), className: "tabular-nums" },
-            { key: "statut", header: "Statut", render: (c) => <StatusBadge status={c.statut} /> },
+            { key: "immat", header: "Plate", render: (c) => c.immatriculation, className: "tabular-nums" },
+            { key: "km", header: "Mileage", render: (c) => `${formatNumber(c.kilometrage)} km`, className: "tabular-nums" },
+            { key: "prix", header: "Price / day", render: (c) => formatMAD(c.prixParJour), className: "tabular-nums" },
+            { key: "statut", header: "Status", render: (c) => <StatusBadge status={c.statut} /> },
             {
               key: "actions",
               header: "Actions",
               className: "text-right",
               render: (c) => (
                 <div className="flex justify-end gap-2">
-                  <Button href={`/admin/voitures/${c.id}/modifier`} variant="outline" size="sm" aria-label={`Modifier ${c.marque} ${c.modele}`}>
+                  <Button href={`/admin/voitures/${c.id}/modifier`} variant="outline" size="sm" aria-label={`Edit ${c.marque} ${c.modele}`}>
                     <Pencil className="size-3.5" aria-hidden />
-                    Modifier
+                    Edit
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     className="text-red-600 hover:border-red-300"
                     onClick={() => setToDelete(c)}
-                    aria-label={`Supprimer ${c.marque} ${c.modele}`}
+                    aria-label={`Delete ${c.marque} ${c.modele}`}
                   >
                     <Trash2 className="size-3.5" aria-hidden />
-                    Supprimer
+                    Delete
                   </Button>
                 </div>
               ),
@@ -109,21 +109,21 @@ export default function AdminCarsPage() {
       <Modal
         open={!!toDelete}
         onClose={() => setToDelete(null)}
-        title="Supprimer cette voiture ?"
+        title="Delete this car?"
         size="sm"
         footer={
           <>
             <Button variant="outline" onClick={() => setToDelete(null)}>
-              Annuler
+              Cancel
             </Button>
             <Button variant="danger" onClick={confirmDelete}>
-              Supprimer
+              Delete
             </Button>
           </>
         }
       >
         <p className="text-[15px] text-muted">
-          {toDelete?.marque} {toDelete?.modele} ({toDelete?.immatriculation}) sera retirée de la flotte. Cette action est définitive.
+          {toDelete?.marque} {toDelete?.modele} ({toDelete?.immatriculation}) will be removed from the fleet. This cannot be undone.
         </p>
       </Modal>
     </div>

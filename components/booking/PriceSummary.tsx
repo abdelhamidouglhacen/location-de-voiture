@@ -27,11 +27,11 @@ export function PriceSummary({ car, price, extras, depart, retour, action }: Pro
 
         <dl className="mt-4 grid grid-cols-2 gap-3 rounded-2xl bg-sand p-4 text-sm">
           <div>
-            <dt className="text-muted">Départ</dt>
+            <dt className="text-muted">Pick-up</dt>
             <dd className="font-medium tabular-nums">{formatDateTime(depart)}</dd>
           </div>
           <div>
-            <dt className="text-muted">Retour</dt>
+            <dt className="text-muted">Return</dt>
             <dd className="font-medium tabular-nums">{formatDateTime(retour)}</dd>
           </div>
         </dl>
@@ -40,13 +40,13 @@ export function PriceSummary({ car, price, extras, depart, retour, action }: Pro
         <dl className="mt-5 space-y-2 text-sm">
           <div className="flex justify-between gap-3">
             <dt className="text-muted">
-              {formatMAD(car.prixParJour)} × {price.jours} jour{price.jours > 1 ? "s" : ""}
+              {formatMAD(car.prixParJour)} × {price.jours} day{price.jours > 1 ? "s" : ""}
             </dt>
             <dd className="tabular-nums">{formatMAD(price.sousTotal)}</dd>
           </div>
           {price.remise > 0 && (
             <div className="flex justify-between gap-3 text-emerald-700">
-              <dt>Remise longue durée</dt>
+              <dt>Long-rental discount</dt>
               <dd className="tabular-nums">− {formatMAD(price.remise)}</dd>
             </div>
           )}
@@ -57,13 +57,13 @@ export function PriceSummary({ car, price, extras, depart, retour, action }: Pro
             </div>
           ))}
           <div className="flex items-baseline justify-between gap-3 border-t border-line pt-3">
-            <dt className="font-medium">Total estimé</dt>
+            <dt className="font-medium">Estimated total</dt>
             <dd className="font-display text-2xl font-semibold tabular-nums">
               <CountUp value={price.total} format="mad" duration={0.5} />
             </dd>
           </div>
           <div className="flex justify-between gap-3 text-xs text-muted">
-            <dt>Caution (rendue au retour)</dt>
+            <dt>Deposit (returned at drop-off)</dt>
             <dd className="tabular-nums">{formatMAD(car.caution)}</dd>
           </div>
         </dl>

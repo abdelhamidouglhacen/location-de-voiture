@@ -39,19 +39,19 @@ export function CarCard({ car, priority, search }: { car: Car; priority?: boolea
             <p className="leading-none">
               <span className="font-display text-xl font-semibold tabular-nums">{formatMAD(period.total)}</span>
               <span className="ml-1 text-sm text-muted">
-                pour {period.jours} jour{period.jours > 1 ? "s" : ""}
+                for {period.jours} day{period.jours > 1 ? "s" : ""}
               </span>
-              <span className="mt-1.5 block text-xs text-muted tabular-nums">soit {formatMAD(period.total / period.jours)} / jour</span>
+              <span className="mt-1.5 block text-xs text-muted tabular-nums">{formatMAD(period.total / period.jours)} / day</span>
             </p>
           ) : (
             <p className="leading-none">
               <span className="font-display text-xl font-semibold tabular-nums">{formatMAD(car.prixParJour)}</span>
-              <span className="ml-1 text-sm text-muted">/ jour</span>
+              <span className="ml-1 text-sm text-muted">/ day</span>
             </p>
           )}
           <div className="mt-4 grid grid-cols-2 gap-2">
-            <Button href={`/voitures/${car.id}`} variant="outline" size="sm" aria-label={`Détails de la ${name}`}>
-              Détails
+            <Button href={`/voitures/${car.id}`} variant="outline" size="sm" aria-label={`${name} details`}>
+              Details
             </Button>
             <ReserveDialog
               car={{ id: car.id, name, prixParJour: car.prixParJour }}

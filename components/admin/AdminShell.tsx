@@ -49,7 +49,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               type="button"
               onClick={() => setMenuOpen(false)}
               className="absolute top-4 -right-12 grid size-10 place-items-center rounded-full border border-line bg-surface"
-              aria-label="Fermer le menu"
+              aria-label="Close menu"
             >
               <X className="size-4.5" />
             </button>

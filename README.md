@@ -1,13 +1,13 @@
 # AZUR DRIVE: location de voitures à Agadir
 
-Frontend-only website for the AZUR DRIVE car rental business, plus a minimal admin dashboard. The whole interface is in French and in light mode. There is no backend, no API, no database and no login.
+Frontend-only website for the AZUR DRIVE car rental business, plus a minimal admin dashboard. The whole interface is in English and in light mode. There is no backend, no API, no database and no login.
 
 ## Stack
 
 - Next.js 16 (App Router) + TypeScript
 - Tailwind CSS 4. Design tokens (colors, fonts, radii) live in `app/globals.css`
 - Fonts: Sora (headings) and Geist (text), via `next/font`
-- GSAP + `@gsap/react` for animations, react-day-picker + date-fns (French) for the calendar, Recharts for admin charts, lucide-react icons
+- GSAP + `@gsap/react` for animations, react-day-picker + date-fns (English) for the calendar, Recharts for admin charts, lucide-react icons
 
 ## Getting started
 

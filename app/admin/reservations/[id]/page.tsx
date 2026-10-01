@@ -31,97 +31,97 @@ const status = (to: StatutReservation, a: Omit<Action, "run">): Action => ({ ...
 
 /** Forward steps first, then the step back. */
 const ACTIONS: Record<StatutReservation, Action[]> = {
-  "En attente": [
-    status("Confirmée", {
-      label: "Confirmer",
+  "Pending": [
+    status("Confirmed", {
+      label: "Confirm",
       variant: "primary",
-      title: "Confirmer la réservation ?",
-      text: "À faire après avoir appelé le client et qu'il a confirmé sa location. La voiture lui est réservée pour ces dates ; il ne l'a pas encore récupérée.",
-      toast: "Réservation confirmée.",
+      title: "Confirm the booking?",
+      text: "Do this after calling the customer and getting their confirmation. The car is reserved for them on these dates; they have not collected it yet.",
+      toast: "Booking confirmed.",
     }),
-    status("Annulée", {
-      label: "Annuler",
+    status("Cancelled", {
+      label: "Cancel",
       variant: "danger",
-      title: "Annuler la réservation ?",
-      text: "À faire si le client ne souhaite plus louer la voiture ou ne répond pas. La voiture redevient libre pour ces dates.",
-      toast: "Réservation annulée.",
+      title: "Cancel the booking?",
+      text: "Do this if the customer no longer wants the car or does not answer. The car becomes free again for these dates.",
+      toast: "Booking cancelled.",
     }),
   ],
-  Confirmée: [
-    status("En cours", {
-      label: "Voiture remise au client",
+  Confirmed: [
+    status("Ongoing", {
+      label: "Car handed to customer",
       variant: "primary",
-      title: "Le client a récupéré la voiture ?",
-      text: "À faire quand le client est venu à l'agence et est reparti avec la voiture. La location passe en cours.",
-      toast: "Location en cours.",
+      title: "Has the customer collected the car?",
+      text: "Do this when the customer has come to the agency and left with the car. The rental becomes ongoing.",
+      toast: "Rental ongoing.",
     }),
-    status("Annulée", {
-      label: "Annuler",
+    status("Cancelled", {
+      label: "Cancel",
       variant: "danger",
-      title: "Annuler la réservation ?",
-      text: "À faire si le client annule avant de récupérer la voiture. La voiture redevient libre pour ces dates.",
-      toast: "Réservation annulée.",
+      title: "Cancel the booking?",
+      text: "Do this if the customer cancels before collecting the car. The car becomes free again for these dates.",
+      toast: "Booking cancelled.",
     }),
-    status("En attente", {
-      label: "Revenir à « En attente »",
+    status("Pending", {
+      label: "Back to “Pending”",
       variant: "outline",
-      title: "Revenir à « En attente » ?",
-      text: "Annule la confirmation : la réservation redevient une demande à confirmer avec le client.",
-      toast: "Réservation remise en attente.",
+      title: "Go back to “Pending”?",
+      text: "Undoes the confirmation: the booking becomes a request to confirm with the customer again.",
+      toast: "Booking set back to pending.",
     }),
   ],
-  "En cours": [
-    status("Terminée", {
-      label: "Terminer",
+  "Ongoing": [
+    status("Completed", {
+      label: "Complete",
       variant: "primary",
-      title: "Terminer la location ?",
-      text: "À faire quand le client a rendu la voiture à l'agence. La location est clôturée et la voiture redevient disponible.",
-      toast: "Location terminée.",
+      title: "Complete the rental?",
+      text: "Do this when the customer has returned the car to the agency. The rental is closed and the car becomes available again.",
+      toast: "Rental completed.",
     }),
-    status("Confirmée", {
-      label: "Revenir à « Confirmée »",
+    status("Confirmed", {
+      label: "Back to “Confirmed”",
       variant: "outline",
-      title: "Revenir à « Confirmée » ?",
-      text: "À utiliser en cas d'erreur : le client n'a finalement pas encore récupéré la voiture.",
-      toast: "Réservation remise à « Confirmée ».",
-    }),
-  ],
-  Terminée: [
-    status("En cours", {
-      label: "Revenir à « En cours »",
-      variant: "outline",
-      title: "Revenir à « En cours » ?",
-      text: "À utiliser en cas d'erreur : le client n'a pas encore rendu la voiture.",
-      toast: "Location remise en cours.",
+      title: "Go back to “Confirmed”?",
+      text: "Use this in case of a mistake: the customer has not collected the car yet after all.",
+      toast: "Booking set back to “Confirmed”.",
     }),
   ],
-  Annulée: [
-    status("En attente", {
-      label: "Revenir à « En attente »",
+  Completed: [
+    status("Ongoing", {
+      label: "Back to “Ongoing”",
       variant: "outline",
-      title: "Rétablir la réservation ?",
-      text: "À utiliser si l'annulation était une erreur : la réservation redevient une demande à confirmer avec le client.",
-      toast: "Réservation rétablie.",
+      title: "Go back to “Ongoing”?",
+      text: "Use this in case of a mistake: the customer has not returned the car yet.",
+      toast: "Rental set back to ongoing.",
+    }),
+  ],
+  Cancelled: [
+    status("Pending", {
+      label: "Back to “Pending”",
+      variant: "outline",
+      title: "Restore the booking?",
+      text: "Use this if the cancellation was a mistake: the booking becomes a request to confirm with the customer again.",
+      toast: "Booking restored.",
     }),
   ],
 };
 
 const MARK_PAID: Action = {
-  label: "Marquer payé",
+  label: "Mark as paid",
   variant: "accent",
-  title: "Le client a payé ?",
-  text: "À faire quand le client a réglé le montant total de la location.",
-  toast: "Paiement enregistré.",
-  run: (id) => setPaymentStatus(id, "Payé"),
+  title: "Has the customer paid?",
+  text: "Do this when the customer has paid the full rental amount.",
+  toast: "Payment recorded.",
+  run: (id) => setPaymentStatus(id, "Paid"),
 };
 
 const UNMARK_PAID: Action = {
-  label: "Annuler le paiement",
+  label: "Undo payment",
   variant: "outline",
-  title: "Remettre le paiement en attente ?",
-  text: "À utiliser en cas d'erreur : le client n'a pas encore payé.",
-  toast: "Paiement remis en attente.",
-  run: (id) => setPaymentStatus(id, "En attente"),
+  title: "Set the payment back to pending?",
+  text: "Use this in case of a mistake: the customer has not paid yet.",
+  toast: "Payment set back to pending.",
+  run: (id) => setPaymentStatus(id, "Pending"),
 };
 
 const lieu = (id: string) => locations.find((l) => l.id === id)?.nom ?? id;
@@ -131,7 +131,7 @@ export default function BookingDetailsPage() {
   const b = useBookingRows().find((r) => r.id === id);
   const toast = useToast();
   const [pending, setPending] = useState<Action | null>(null);
-  if (!b) return <EmptyState title="Réservation introuvable" text="Cette réservation n'existe pas." action={<Button href="/admin/reservations">Retour aux réservations</Button>} />;
+  if (!b) return <EmptyState title="Booking not found" text="This booking does not exist." action={<Button href="/admin/reservations">Back to bookings</Button>} />;
 
   const options = extras.filter((e) => b.options.includes(e.id));
 
@@ -139,12 +139,12 @@ export default function BookingDetailsPage() {
     <div className="space-y-6">
       <Link href="/admin/reservations" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink">
         <ArrowLeft className="size-4" aria-hidden />
-        Réservations
+        Bookings
       </Link>
 
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm text-muted">Créée le {formatDateTime(b.creeLe)}</p>
+          <p className="text-sm text-muted">Created on {formatDateTime(b.creeLe)}</p>
           <h2 className="mt-1 font-display text-3xl font-semibold tracking-[-0.02em] tabular-nums">{b.reference}</h2>
         </div>
         <div className="flex gap-2">
@@ -156,7 +156,7 @@ export default function BookingDetailsPage() {
       <Card>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="mr-1 text-sm text-muted">Réservation</span>
+            <span className="mr-1 text-sm text-muted">Booking</span>
             {ACTIONS[b.statut].map((a) => (
               <Button key={a.label} size="sm" variant={a.variant} onClick={() => setPending(a)}>
                 {a.label}
@@ -164,8 +164,8 @@ export default function BookingDetailsPage() {
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
-            <span className="mr-1 text-sm text-muted">Paiement</span>
-            {[b.statutPaiement === "Payé" ? UNMARK_PAID : MARK_PAID].map((a) => (
+            <span className="mr-1 text-sm text-muted">Payment</span>
+            {[b.statutPaiement === "Paid" ? UNMARK_PAID : MARK_PAID].map((a) => (
               <Button key={a.label} size="sm" variant={a.variant} onClick={() => setPending(a)}>
                 {a.label}
               </Button>
@@ -182,7 +182,7 @@ export default function BookingDetailsPage() {
         footer={
           <>
             <Button variant="outline" onClick={() => setPending(null)}>
-              Retour
+              Back
             </Button>
             <Button
               variant={pending?.variant === "danger" ? "danger" : "primary"}
@@ -202,7 +202,7 @@ export default function BookingDetailsPage() {
       </Modal>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card title="Client">
+        <Card title="Customer">
           <Link href={`/admin/clients/${b.customer.id}`} className="font-medium hover:underline">
             {b.customer.nomComplet}
           </Link>
@@ -221,14 +221,14 @@ export default function BookingDetailsPage() {
             </li>
           </ul>
           <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-line pt-4 text-sm">
-            <Info label="Permis" value={b.customer.numeroPermis} />
-            <Info label="Expiration" value={formatDate(b.customer.expirationPermis)} />
-            <Info label="CIN / passeport" value={b.customer.pieceIdentite} />
-            <Info label="Nationalité" value={b.customer.nationalite} />
+            <Info label="Licence" value={b.customer.numeroPermis} />
+            <Info label="Expiry" value={formatDate(b.customer.expirationPermis)} />
+            <Info label="ID card / passport" value={b.customer.pieceIdentite} />
+            <Info label="Nationality" value={b.customer.nationalite} />
           </dl>
         </Card>
 
-        <Card title="Voiture">
+        <Card title="Car">
           <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-sand">
             <Image src={b.car.images[0]} alt="" fill sizes="400px" className="object-cover" />
           </div>
@@ -238,19 +238,19 @@ export default function BookingDetailsPage() {
           <p className="text-sm text-muted">{b.car.immatriculation}</p>
         </Card>
 
-        <Card title="Dates et lieux">
+        <Card title="Dates and places">
           <dl className="space-y-4 text-sm">
-            <Info label="Départ" value={formatDateTime(b.dateDepart)} sub={lieu(b.lieuDepartId)} />
-            <Info label="Retour" value={formatDateTime(b.dateRetour)} sub={lieu(b.lieuRetourId)} />
-            <Info label="Durée" value={`${b.nombreJours} jour${b.nombreJours > 1 ? "s" : ""}`} />
-            {b.numeroVol && <Info label="Vol" value={b.numeroVol} />}
+            <Info label="Pick-up" value={formatDateTime(b.dateDepart)} sub={lieu(b.lieuDepartId)} />
+            <Info label="Return" value={formatDateTime(b.dateRetour)} sub={lieu(b.lieuRetourId)} />
+            <Info label="Duration" value={`${b.nombreJours} day${b.nombreJours > 1 ? "s" : ""}`} />
+            {b.numeroVol && <Info label="Flight" value={b.numeroVol} />}
           </dl>
         </Card>
 
-        <Card title="Prix">
+        <Card title="Price">
           <dl className="space-y-2 text-sm">
             <Row label={`${b.nombreJours} × ${formatMAD(b.car.prixParJour)}`} value={formatMAD(b.sousTotal)} />
-            {b.remise > 0 && <Row label="Remise longue durée" value={`− ${formatMAD(b.remise)}`} />}
+            {b.remise > 0 && <Row label="Long-rental discount" value={`− ${formatMAD(b.remise)}`} />}
             {options.map((o) => (
               <Row key={o.id} label={o.nom} value={formatMAD(o.unite === "jour" ? o.prix * b.nombreJours : o.prix)} />
             ))}
@@ -258,11 +258,11 @@ export default function BookingDetailsPage() {
               <dt>Total</dt>
               <dd className="tabular-nums">{formatMAD(b.total)}</dd>
             </div>
-            <Row label="Caution" value={formatMAD(b.car.caution)} />
+            <Row label="Deposit" value={formatMAD(b.car.caution)} />
           </dl>
         </Card>
 
-        <Card title="Historique">
+        <Card title="History">
           <ol className="relative space-y-4 border-l border-line pl-5">
             {b.historique.map((h, i) => (
               <li key={i} className="relative">
@@ -274,14 +274,14 @@ export default function BookingDetailsPage() {
           </ol>
         </Card>
 
-        <Card title="État du véhicule">
+        <Card title="Vehicle condition">
           {b.etatDepart || b.etatRetour ? (
             <div className="space-y-3">
-              {b.etatDepart && <VehicleState label="Au départ" etat={b.etatDepart} />}
-              {b.etatRetour && <VehicleState label="Au retour" etat={b.etatRetour} />}
+              {b.etatDepart && <VehicleState label="At pick-up" etat={b.etatDepart} />}
+              {b.etatRetour && <VehicleState label="At return" etat={b.etatRetour} />}
             </div>
           ) : (
-            <p className="text-sm text-muted">Pas encore de départ.</p>
+            <p className="text-sm text-muted">Not picked up yet.</p>
           )}
         </Card>
 
@@ -319,8 +319,8 @@ function VehicleState({ label, etat }: { label: string; etat: EtatVehicule }) {
     <dl className="grid grid-cols-3 gap-3 rounded-xl bg-paper p-3 text-sm">
       <p className="col-span-3 text-xs font-medium text-muted">{label}</p>
       <Info label="Km" value={formatNumber(etat.kilometrage)} />
-      <Info label="Carburant" value={etat.carburant} />
-      <Info label="Dommages" value={etat.dommages} />
+      <Info label="Fuel" value={etat.carburant} />
+      <Info label="Damage" value={etat.dommages} />
     </dl>
   );
 }

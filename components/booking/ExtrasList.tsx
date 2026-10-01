@@ -21,7 +21,7 @@ interface Props {
 export function ExtrasList({ extras, selected, days, onToggle }: Props) {
   return (
     <fieldset>
-      <legend className="sr-only">Options</legend>
+      <legend className="sr-only">Extras</legend>
       <div className="grid gap-4 sm:grid-cols-2">
         {extras.map((extra) => {
           const Icon = icons[extra.id] ?? ShieldCheck;
@@ -49,8 +49,8 @@ export function ExtrasList({ extras, selected, days, onToggle }: Props) {
                 <span className="mt-1 block text-sm text-muted">{extra.description}</span>
                 <span className="mt-3 block text-sm">
                   <strong>{formatMAD(extra.prix)}</strong>
-                  <span className="text-muted">{extra.unite === "jour" ? " / jour" : " forfait"}</span>
-                  {extra.unite === "jour" && <span className="text-muted"> · {formatMAD(total)} au total</span>}
+                  <span className="text-muted">{extra.unite === "jour" ? " / day" : " flat fee"}</span>
+                  {extra.unite === "jour" && <span className="text-muted"> · {formatMAD(total)} in total</span>}
                 </span>
               </span>
             </label>

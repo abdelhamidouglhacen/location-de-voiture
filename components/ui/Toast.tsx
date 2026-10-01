@@ -38,7 +38,7 @@ function ToastView({ toast, onClose }: { toast: ToastItem; onClose: () => void }
     >
       {icons[toast.tone]}
       <p className="flex-1">{toast.message}</p>
-      <button type="button" onClick={onClose} className="rounded p-1 text-muted hover:text-ink" aria-label="Fermer la notification">
+      <button type="button" onClick={onClose} className="rounded p-1 text-muted hover:text-ink" aria-label="Close notification">
         <X className="size-4" />
       </button>
     </div>
@@ -73,6 +73,6 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
 export function useToast() {
   const ctx = useContext(ToastContext);
-  if (!ctx) throw new Error("useToast doit être utilisé dans <ToastProvider>.");
+  if (!ctx) throw new Error("useToast must be used inside <ToastProvider>.");
   return ctx;
 }

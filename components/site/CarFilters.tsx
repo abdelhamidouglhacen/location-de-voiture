@@ -32,7 +32,7 @@ export function CarFilters({ value, onChange, marques, idPrefix }: Props) {
   return (
     <div className="space-y-6">
       <fieldset>
-        <legend className="text-sm font-semibold">Catégorie</legend>
+        <legend className="text-sm font-semibold">Category</legend>
         <div className="mt-3 space-y-2.5">
           {CATEGORIES.map((c) => (
             <Checkbox key={c} id={`${idPrefix}-cat-${c}`} label={c} checked={value.categories.includes(c)} onChange={() => toggleCategory(c)} />
@@ -41,7 +41,7 @@ export function CarFilters({ value, onChange, marques, idPrefix }: Props) {
       </fieldset>
 
       <fieldset>
-        <legend className="text-sm font-semibold">Prix par jour (MAD)</legend>
+        <legend className="text-sm font-semibold">Price per day (MAD)</legend>
         <div className="mt-3 grid grid-cols-2 gap-3">
           <Input id={`${idPrefix}-prix-min`} label="Min" type="number" inputMode="numeric" min={0} step={50} placeholder="250" value={value.prixMin} onChange={(e) => set({ prixMin: e.target.value })} />
           <Input id={`${idPrefix}-prix-max`} label="Max" type="number" inputMode="numeric" min={0} step={50} placeholder="1500" value={value.prixMax} onChange={(e) => set({ prixMax: e.target.value })} />
@@ -50,32 +50,32 @@ export function CarFilters({ value, onChange, marques, idPrefix }: Props) {
 
       <Select
         id={`${idPrefix}-boite`}
-        label="Boîte de vitesses"
-        placeholder="Toutes"
-        options={[{ value: "Manuelle", label: "Manuelle" }, { value: "Automatique", label: "Automatique" }]}
+        label="Gearbox"
+        placeholder="All"
+        options={[{ value: "Manual", label: "Manual" }, { value: "Automatic", label: "Automatic" }]}
         value={value.boite}
         onChange={(e) => set({ boite: e.target.value })}
       />
       <Select
         id={`${idPrefix}-carburant`}
-        label="Carburant"
-        placeholder="Tous"
-        options={["Essence", "Diesel", "Hybride"].map((c) => ({ value: c, label: c }))}
+        label="Fuel"
+        placeholder="All"
+        options={["Petrol", "Diesel", "Hybrid"].map((c) => ({ value: c, label: c }))}
         value={value.carburant}
         onChange={(e) => set({ carburant: e.target.value })}
       />
       <Select
         id={`${idPrefix}-places`}
-        label="Places"
-        placeholder="Peu importe"
-        options={[{ value: "5", label: "5 places et plus" }, { value: "7", label: "7 places et plus" }, { value: "9", label: "9 places" }]}
+        label="Seats"
+        placeholder="Any"
+        options={[{ value: "5", label: "5 seats or more" }, { value: "7", label: "7 seats or more" }, { value: "9", label: "9 seats" }]}
         value={value.places}
         onChange={(e) => set({ places: e.target.value })}
       />
       <Select
         id={`${idPrefix}-marque`}
-        label="Marque"
-        placeholder="Toutes"
+        label="Brand"
+        placeholder="All"
         options={marques.map((m) => ({ value: m, label: m }))}
         value={value.marque}
         onChange={(e) => set({ marque: e.target.value })}

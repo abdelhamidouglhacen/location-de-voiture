@@ -20,7 +20,7 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-muted">
-            Location de voitures à Agadir, depuis le centre-ville, l&apos;aéroport Al Massira ou directement à votre hôtel.
+            Car rental in Agadir, from the city centre, Al Massira airport or straight to your hotel.
           </p>
           <ul className="mt-6 flex gap-2">
             {socials.map(({ href, label, Icon }) => (
@@ -42,7 +42,7 @@ export function Footer() {
         <div>
           <h2 className="text-sm font-semibold text-ink">Navigation</h2>
           <ul className="mt-4 space-y-3 text-sm">
-            {[...NAV_LINKS, { href: "/mes-reservations", label: "Mes réservations" }, { href: "/conditions", label: "Conditions de location" }].map((l) => (
+            {[...NAV_LINKS, { href: "/mes-reservations", label: "My bookings" }, { href: "/conditions", label: "Rental terms" }].map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="text-muted transition hover:text-ink">
                   {l.label}
@@ -75,19 +75,19 @@ export function Footer() {
             </li>
             <li className="flex items-start gap-2.5">
               <Clock className="mt-0.5 size-4 shrink-0 text-accent-deep" aria-hidden />
-              Ouvert 24h/24, 7j/7, jours fériés compris
+              Open 24/7, public holidays included
             </li>
           </ul>
         </div>
 
         <div>
-          <h2 className="text-sm font-semibold text-ink">Nous trouver</h2>
+          <h2 className="text-sm font-semibold text-ink">Find us</h2>
           <MapEmbed className="mt-4 h-44" />
         </div>
       </div>
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-muted sm:flex-row sm:px-6">
-          <p>© {new Date().getFullYear()} AZUR DRIVE. Tous droits réservés.</p>
+          <p>© {new Date().getFullYear()} AZUR DRIVE. All rights reserved.</p>
           <p>{BUSINESS.tagline}</p>
         </div>
       </div>

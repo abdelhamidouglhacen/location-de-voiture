@@ -31,9 +31,9 @@ export function ReservationEntry({ car, depart, retour, lieuDepart, lieuRetour, 
     return (
       <div className="mx-auto max-w-xl px-4 py-16">
         <EmptyState
-          title="Choisissez vos dates"
-          text={`Indiquez quand vous souhaitez louer la ${car.marque} ${car.modele} pour continuer.`}
-          action={<ReserveDialog car={{ id: car.id, name: `${car.marque} ${car.modele}`, prixParJour: car.prixParJour }} label="Ouvrir le calendrier" size="md" />}
+          title="Choose your dates"
+          text={`Tell us when you want to rent the ${car.marque} ${car.modele} to continue.`}
+          action={<ReserveDialog car={{ id: car.id, name: `${car.marque} ${car.modele}`, prixParJour: car.prixParJour }} label="Open calendar" size="md" />}
         />
       </div>
     );

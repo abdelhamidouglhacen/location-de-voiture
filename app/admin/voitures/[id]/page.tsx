@@ -16,18 +16,18 @@ import { daysUntil, formatDate, formatMAD, formatNumber } from "@/lib/format";
 export default function AdminCarPage() {
   const { id } = useParams<{ id: string }>();
   const car = useAdminCars().find((c) => c.id === id);
-  if (!car) return <EmptyState title="Voiture introuvable" text="Cette voiture n'existe pas." action={<Button href="/admin/voitures">Retour aux voitures</Button>} />;
+  if (!car) return <EmptyState title="Car not found" text="This car does not exist." action={<Button href="/admin/voitures">Back to cars</Button>} />;
 
   const history = bookingRows.filter((b) => b.voitureId === id);
-  const done = history.filter((b) => b.statut !== "Annulée");
-  const revenue = done.filter((b) => b.statutPaiement === "Payé").reduce((s, b) => s + b.total, 0);
+  const done = history.filter((b) => b.statut !== "Cancelled");
+  const revenue = done.filter((b) => b.statutPaiement === "Paid").reduce((s, b) => s + b.total, 0);
   const next = car.maintenance[0]?.prochainEntretien;
 
   return (
     <div className="space-y-6">
       <Link href="/admin/voitures" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink">
         <ArrowLeft className="size-4" aria-hidden />
-        Voitures
+        Cars
       </Link>
 
       <div className="grid gap-6 md:grid-cols-[260px_1fr] md:items-center">
@@ -45,7 +45,7 @@ export default function AdminCarPage() {
             <StatusBadge status={car.statut} />
             <Button href={`/admin/voitures/${car.id}/modifier`} variant="outline" size="sm" className="ml-auto">
               <Pencil className="size-3.5" aria-hidden />
-              Modifier
+              Edit
             </Button>
           </div>
           <p className="mt-1 text-muted tabular-nums">
@@ -55,50 +55,50 @@ export default function AdminCarPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Revenus générés" value={revenue} format="mad" />
-        <StatCard label="Locations" value={done.length} />
-        <StatCard label="Kilométrage" value={car.kilometrage} suffix=" km" />
-        <StatCard label="Prochain entretien" value={next ? Math.max(0, daysUntil(next)) : 0} suffix=" jours" hint={next ? `le ${formatDate(next)}` : undefined} />
+        <StatCard label="Revenue generated" value={revenue} format="mad" />
+        <StatCard label="Rentals" value={done.length} />
+        <StatCard label="Mileage" value={car.kilometrage} suffix=" km" />
+        <StatCard label="Next service" value={next ? Math.max(0, daysUntil(next)) : 0} suffix=" days" hint={next ? `on ${formatDate(next)}` : undefined} />
       </div>
 
-      <Card title="Historique des réservations" padded={false}>
+      <Card title="Booking history" padded={false}>
         <div className="pt-3">
           <Table
-            caption="Historique des réservations"
+            caption="Booking history"
             rows={history}
             rowKey={(b) => b.id}
-            empty={<EmptyState title="Aucune réservation" text="Cette voiture n'a pas encore été louée." />}
+            empty={<EmptyState title="No bookings" text="This car has not been rented yet." />}
             columns={[
               {
                 key: "ref",
-                header: "Référence",
+                header: "Reference",
                 render: (b) => (
                   <Link href={`/admin/reservations/${b.id}`} className="font-medium hover:underline">
                     {b.reference}
                   </Link>
                 ),
               },
-              { key: "client", header: "Client", render: (b) => b.customer.nomComplet },
+              { key: "client", header: "Customer", render: (b) => b.customer.nomComplet },
               { key: "dates", header: "Dates", render: (b) => `${formatDate(b.dateDepart)} → ${formatDate(b.dateRetour)}`, className: "tabular-nums" },
               { key: "total", header: "Total", render: (b) => formatMAD(b.total), className: "tabular-nums" },
-              { key: "statut", header: "Statut", render: (b) => <StatusBadge status={b.statut} /> },
+              { key: "statut", header: "Status", render: (b) => <StatusBadge status={b.statut} /> },
             ]}
           />
         </div>
       </Card>
 
-      <Card title="Carnet d'entretien" padded={false}>
+      <Card title="Service log" padded={false}>
         <div className="pt-3">
           <Table
-            caption="Carnet d'entretien"
+            caption="Service log"
             rows={car.maintenance}
             rowKey={(m) => m.id}
             columns={[
               { key: "date", header: "Date", render: (m) => formatDate(m.date), className: "tabular-nums" },
               { key: "type", header: "Type", render: (m) => m.type },
-              { key: "cout", header: "Coût", render: (m) => formatMAD(m.cout), className: "tabular-nums" },
-              { key: "km", header: "Kilométrage", render: (m) => `${formatNumber(m.kilometrage)} km`, className: "tabular-nums" },
-              { key: "next", header: "Prochain entretien", render: (m) => formatDate(m.prochainEntretien), className: "tabular-nums" },
+              { key: "cout", header: "Cost", render: (m) => formatMAD(m.cout), className: "tabular-nums" },
+              { key: "km", header: "Mileage", render: (m) => `${formatNumber(m.kilometrage)} km`, className: "tabular-nums" },
+              { key: "next", header: "Next service", render: (m) => formatDate(m.prochainEntretien), className: "tabular-nums" },
             ]}
           />
         </div>

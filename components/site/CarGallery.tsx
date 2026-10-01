@@ -38,7 +38,7 @@ export function CarGallery({ images, name }: { images: string[]; name: string })
     <div>
       <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] bg-sand">
         <div ref={mainRef} className="absolute inset-0">
-          <Image src={images[index]} alt={`${name}, photo ${index + 1} sur ${images.length}`} fill priority sizes="(min-width: 1024px) 66vw, 100vw" className="object-cover" />
+          <Image src={images[index]} alt={`${name}, photo ${index + 1} of ${images.length}`} fill priority sizes="(min-width: 1024px) 66vw, 100vw" className="object-cover" />
         </div>
         <button
           type="button"
@@ -46,7 +46,7 @@ export function CarGallery({ images, name }: { images: string[]; name: string })
           className="absolute right-4 bottom-4 inline-flex items-center gap-2 rounded-full bg-surface/90 px-4 py-2 text-sm font-medium text-ink shadow-card backdrop-blur transition hover:bg-surface"
         >
           <Expand className="size-4" aria-hidden />
-          Plein écran
+          Full screen
         </button>
       </div>
 
@@ -57,7 +57,7 @@ export function CarGallery({ images, name }: { images: string[]; name: string })
               key={src}
               type="button"
               onClick={() => setIndex(i)}
-              aria-label={`Voir la photo ${i + 1}`}
+              aria-label={`View photo ${i + 1}`}
               aria-pressed={i === index}
               className={cn(
                 "relative aspect-[4/3] overflow-hidden rounded-xl ring-2 ring-offset-2 ring-offset-paper transition",
@@ -72,12 +72,12 @@ export function CarGallery({ images, name }: { images: string[]; name: string })
 
       {lightbox &&
         createPortal(
-          <div ref={panelRef} role="dialog" aria-modal="true" aria-label={`Photos de la ${name}`} tabIndex={-1} className="fixed inset-0 z-[70] flex flex-col bg-paper/97 p-4 backdrop-blur">
+          <div ref={panelRef} role="dialog" aria-modal="true" aria-label={`${name} photos`} tabIndex={-1} className="fixed inset-0 z-[70] flex flex-col bg-paper/97 p-4 backdrop-blur">
             <div className="flex items-center justify-between text-ink">
               <p className="text-sm text-muted tabular-nums">
                 {index + 1} / {images.length}
               </p>
-              <button data-close type="button" onClick={() => setLightbox(false)} className="grid size-11 place-items-center rounded-full border border-line bg-surface hover:bg-sand" aria-label="Fermer">
+              <button data-close type="button" onClick={() => setLightbox(false)} className="grid size-11 place-items-center rounded-full border border-line bg-surface hover:bg-sand" aria-label="Close">
                 <X className="size-6" />
               </button>
             </div>
@@ -86,10 +86,10 @@ export function CarGallery({ images, name }: { images: string[]; name: string })
             </div>
             {images.length > 1 && (
               <div className="flex justify-center gap-4 pt-4">
-                <button type="button" onClick={() => go(-1)} className="grid size-12 place-items-center rounded-full border border-line bg-surface text-ink hover:border-ink/30" aria-label="Photo précédente">
+                <button type="button" onClick={() => go(-1)} className="grid size-12 place-items-center rounded-full border border-line bg-surface text-ink hover:border-ink/30" aria-label="Previous photo">
                   <ChevronLeft className="size-6" />
                 </button>
-                <button type="button" onClick={() => go(1)} className="grid size-12 place-items-center rounded-full border border-line bg-surface text-ink hover:border-ink/30" aria-label="Photo suivante">
+                <button type="button" onClick={() => go(1)} className="grid size-12 place-items-center rounded-full border border-line bg-surface text-ink hover:border-ink/30" aria-label="Next photo">
                   <ChevronRight className="size-6" />
                 </button>
               </div>

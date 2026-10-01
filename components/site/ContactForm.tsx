@@ -31,10 +31,10 @@ export function ContactForm() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const found: Errors<Fields> = {
-      nom: required(values.nom, "Le nom"),
+      nom: required(values.nom, "Name"),
       email: email(values.email),
       telephone: phone(values.telephone),
-      message: required(values.message, "Le message") ?? minLength(values.message, 10, "Le message"),
+      message: required(values.message, "Message") ?? minLength(values.message, 10, "Message"),
     };
     setErrors(found);
     if (hasErrors(found)) return;
@@ -43,19 +43,19 @@ export function ContactForm() {
     addMessage({ nom: values.nom.trim(), email: values.email.trim(), telephone: values.telephone.trim(), message: values.message.trim() });
     setSending(false);
     setValues(empty);
-    toast("Message envoyé, nous vous répondons rapidement.");
+    toast("Message sent, we will get back to you shortly.");
   }
 
   return (
     <form onSubmit={submit} noValidate className="grid gap-5 rounded-[20px] border border-line bg-surface p-6 sm:grid-cols-2 sm:p-8">
-      <Input {...field("nom")} label="Nom" autoComplete="name" required />
-      <Input {...field("telephone")} label="Téléphone" type="tel" autoComplete="tel" required />
-      <Input {...field("email")} label="E-mail" type="email" autoComplete="email" required wrapperClassName="sm:col-span-2" />
-      <Textarea {...field("message")} label="Message" rows={5} required wrapperClassName="sm:col-span-2" placeholder="Dates, voiture souhaitée, lieu de remise…" />
+      <Input {...field("nom")} label="Name" autoComplete="name" required />
+      <Input {...field("telephone")} label="Phone" type="tel" autoComplete="tel" required />
+      <Input {...field("email")} label="Email" type="email" autoComplete="email" required wrapperClassName="sm:col-span-2" />
+      <Textarea {...field("message")} label="Message" rows={5} required wrapperClassName="sm:col-span-2" placeholder="Dates, car you want, pick-up place…" />
       <div className="sm:col-span-2">
         <Button type="submit" size="lg" loading={sending}>
           <Send className="size-4" aria-hidden />
-          Envoyer le message
+          Send message
         </Button>
       </div>
     </form>

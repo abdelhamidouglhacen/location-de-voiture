@@ -13,9 +13,9 @@ export function PageHeader({ title, text, crumbs, children }: Props) {
   return (
     <section className="border-b border-line">
       <div className="mx-auto max-w-7xl px-4 pt-10 pb-12 sm:px-6 sm:pt-14 sm:pb-16">
-        <nav aria-label="Fil d'Ariane">
+        <nav aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted">
-            {[{ href: "/", label: "Accueil" }, ...crumbs].map((c, i, all) => (
+            {[{ href: "/", label: "Home" }, ...crumbs].map((c, i, all) => (
               <li key={c.label} className="inline-flex items-center gap-1.5">
                 {c.href && i < all.length - 1 ? (
                   <Link href={c.href} className="hover:text-ink">

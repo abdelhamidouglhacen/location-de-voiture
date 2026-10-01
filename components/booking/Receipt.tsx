@@ -18,17 +18,17 @@ export interface RequestSummary {
 
 export function Receipt({ reference, car, driver, depart, retour, lieuDepart, lieuRetour, options, price }: RequestSummary) {
   const rows: [string, string][] = [
-    ["Conducteur", driver.nomComplet],
-    ["Téléphone", driver.telephone],
-    ["E-mail", driver.email],
-    ["Voiture", `${car.marque} ${car.modele} (${car.annee})`],
-    ["Départ", `${formatDateTime(depart)}, ${lieuDepart}`],
-    ["Retour", `${formatDateTime(retour)}, ${lieuRetour}`],
+    ["Driver", driver.nomComplet],
+    ["Phone", driver.telephone],
+    ["Email", driver.email],
+    ["Car", `${car.marque} ${car.modele} (${car.annee})`],
+    ["Pick-up", `${formatDateTime(depart)}, ${lieuDepart}`],
+    ["Return", `${formatDateTime(retour)}, ${lieuRetour}`],
   ];
-  if (driver.numeroVol) rows.push(["Vol", driver.numeroVol]);
+  if (driver.numeroVol) rows.push(["Flight", driver.numeroVol]);
 
   return (
-    <article className="print-area rounded-[20px] border border-line bg-surface p-6 sm:p-8" aria-label="Récapitulatif de la demande">
+    <article className="print-area rounded-[20px] border border-line bg-surface p-6 sm:p-8" aria-label="Request summary">
       <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line pb-6">
         <div className="flex items-center gap-4">
           <LogoMark size={56} />
@@ -39,9 +39,9 @@ export function Receipt({ reference, car, driver, depart, retour, lieuDepart, li
           </div>
         </div>
         <div className="text-right text-sm">
-          <p className="text-muted">Demande</p>
+          <p className="text-muted">Request</p>
           <p className="font-display text-lg font-semibold tabular-nums">{reference}</p>
-          <p className="text-muted">du {formatDate(new Date())}</p>
+          <p className="text-muted">dated {formatDate(new Date())}</p>
         </div>
       </header>
 
@@ -55,18 +55,18 @@ export function Receipt({ reference, car, driver, depart, retour, lieuDepart, li
       </dl>
 
       <table className="w-full border-t border-line text-sm">
-        <caption className="sr-only">Estimation du prix</caption>
+        <caption className="sr-only">Price estimate</caption>
         <tbody>
           <tr>
             <th scope="row" className="py-2 text-left font-normal text-muted">
-              Location ({price.jours} × {formatMAD(car.prixParJour)})
+              Rental ({price.jours} × {formatMAD(car.prixParJour)})
             </th>
             <td className="py-2 text-right tabular-nums">{formatMAD(price.sousTotal)}</td>
           </tr>
           {price.remise > 0 && (
             <tr>
               <th scope="row" className="py-2 text-left font-normal text-muted">
-                Remise longue durée
+                Long-rental discount
               </th>
               <td className="py-2 text-right tabular-nums">− {formatMAD(price.remise)}</td>
             </tr>
@@ -81,7 +81,7 @@ export function Receipt({ reference, car, driver, depart, retour, lieuDepart, li
           ))}
           <tr className="border-t border-line">
             <th scope="row" className="pt-3 text-left font-medium">
-              Total estimé
+              Estimated total
             </th>
             <td className="pt-3 text-right font-display text-2xl font-semibold tabular-nums">{formatMAD(price.total)}</td>
           </tr>
@@ -89,8 +89,8 @@ export function Receipt({ reference, car, driver, depart, retour, lieuDepart, li
       </table>
 
       <p className="mt-6 border-t border-line pt-4 text-xs leading-relaxed text-muted">
-        Caution de {formatMAD(car.caution)} réglée au départ et rendue au retour. Présentez votre permis et votre pièce d&apos;identité au départ.
-        Kilométrage illimité, carburant plein / plein.
+        Deposit of {formatMAD(car.caution)} paid at pick-up and returned at drop-off. Bring your licence and ID document at pick-up.
+        Unlimited mileage, fuel full to full.
       </p>
     </article>
   );

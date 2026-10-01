@@ -9,29 +9,29 @@ import { BUSINESS } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Contactez AZUR DRIVE à Agadir par téléphone, WhatsApp ou e-mail, 24h/24 et 7j/7.",
+  description: "Contact AZUR DRIVE in Agadir by phone, WhatsApp or email, 24/7.",
 };
 
 const cards = [
-  { Icon: Phone, title: "Téléphone", lines: BUSINESS.phones.map((p) => ({ label: p.label, href: p.href })) },
-  { Icon: WhatsAppIcon, title: "WhatsApp", lines: [{ label: "Écrire sur WhatsApp", href: BUSINESS.whatsapp }] },
-  { Icon: Mail, title: "E-mail", lines: [{ label: BUSINESS.email, href: `mailto:${BUSINESS.email}` }] },
-  { Icon: Clock, title: "Horaires", lines: [{ label: "24h/24, 7j/7, jours fériés compris" }] },
+  { Icon: Phone, title: "Phone", lines: BUSINESS.phones.map((p) => ({ label: p.label, href: p.href })) },
+  { Icon: WhatsAppIcon, title: "WhatsApp", lines: [{ label: "Message us on WhatsApp", href: BUSINESS.whatsapp }] },
+  { Icon: Mail, title: "Email", lines: [{ label: BUSINESS.email, href: `mailto:${BUSINESS.email}` }] },
+  { Icon: Clock, title: "Opening hours", lines: [{ label: "24/7, public holidays included" }] },
 ];
 
 export default function ContactPage() {
   return (
     <>
-      <PageHeader title="Contact" text="Une question, une réservation urgente ? Nous répondons jour et nuit." crumbs={[{ label: "Contact" }]} />
+      <PageHeader title="Contact" text="A question, an urgent booking? We answer day and night." crumbs={[{ label: "Contact" }]} />
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.2fr_0.8fr] lg:py-20">
         <section aria-labelledby="form-titre">
           <h2 id="form-titre" className="font-display text-2xl font-semibold tracking-tight">
-            Écrivez-nous
+            Write to us
           </h2>
-          <p className="mt-2 mb-8 text-muted">Réponse en moins d&apos;une heure, en français, arabe ou anglais.</p>
+          <p className="mt-2 mb-8 text-muted">Reply in under an hour, in English, French or Arabic.</p>
           <ContactForm />
         </section>
-        <aside className="space-y-4" aria-label="Coordonnées">
+        <aside className="space-y-4" aria-label="Contact details">
           <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             {cards.map(({ Icon, title, lines }) => (
               <div key={title} className="flex gap-4 rounded-[20px] border border-line bg-surface p-5">

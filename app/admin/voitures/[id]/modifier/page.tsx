@@ -11,7 +11,7 @@ import { useAdminCars } from "@/lib/adminCars";
 export default function EditCarPage() {
   const { id } = useParams<{ id: string }>();
   const car = useAdminCars().find((c) => c.id === id);
-  if (!car) return <EmptyState title="Voiture introuvable" text="Cette voiture n'existe pas." action={<Button href="/admin/voitures">Retour aux voitures</Button>} />;
+  if (!car) return <EmptyState title="Car not found" text="This car does not exist." action={<Button href="/admin/voitures">Back to cars</Button>} />;
 
   return (
     <div className="space-y-6">
@@ -19,7 +19,7 @@ export default function EditCarPage() {
         <ArrowLeft className="size-4" aria-hidden />
         {car.marque} {car.modele}
       </Link>
-      <h2 className="font-display text-3xl font-semibold tracking-[-0.02em]">Modifier la voiture</h2>
+      <h2 className="font-display text-3xl font-semibold tracking-[-0.02em]">Edit car</h2>
       <CarForm key={car.id} car={car} />
     </div>
   );

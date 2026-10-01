@@ -9,9 +9,9 @@ export default function NewCarPage() {
     <div className="space-y-6">
       <Link href="/admin/voitures" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink">
         <ArrowLeft className="size-4" aria-hidden />
-        Voitures
+        Cars
       </Link>
-      <h2 className="font-display text-3xl font-semibold tracking-[-0.02em]">Nouvelle voiture</h2>
+      <h2 className="font-display text-3xl font-semibold tracking-[-0.02em]">New car</h2>
       <CarForm />
     </div>
   );

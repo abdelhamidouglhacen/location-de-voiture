@@ -10,7 +10,7 @@ import { ADMIN_NAV, isActive } from "./nav";
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   return (
-    <aside className="flex h-full w-[248px] flex-col border-r border-line bg-surface" aria-label="Menu d'administration">
+    <aside className="flex h-full w-[248px] flex-col border-r border-line bg-surface" aria-label="Admin menu">
       <div className="flex h-18 shrink-0 items-center px-5">
         <Logo href="/admin" size={36} subtitle="Administration" />
       </div>
@@ -40,7 +40,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <div className="border-t border-line p-3">
         <Link href="/" className="flex h-10 items-center gap-3 rounded-xl px-3 text-sm text-muted transition hover:bg-paper hover:text-ink">
           <ArrowUpRight className="size-4.5" strokeWidth={1.75} aria-hidden />
-          Voir le site
+          View site
         </Link>
       </div>
     </aside>

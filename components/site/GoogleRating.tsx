@@ -13,13 +13,13 @@ export function GoogleRating() {
       href={BUSINESS.googleMaps}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Noté ${String(rating).replace(".", ",")} sur 5 sur Google Maps. Voir les avis`}
+      aria-label={`Rated ${rating} out of 5 on Google Maps. See reviews`}
       className="group inline-flex items-center gap-4 rounded-2xl border border-white/15 bg-white/10 py-3 pr-5 pl-3 backdrop-blur-md transition hover:border-white/30 hover:bg-white/15"
     >
       <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-white">
         <GoogleIcon className="size-5.5" />
       </span>
-      <span className="font-display text-3xl leading-none font-semibold text-white tabular-nums">{String(rating).replace(".", ",")}</span>
+      <span className="font-display text-3xl leading-none font-semibold text-white tabular-nums">{rating}</span>
       <span className="flex flex-col gap-1">
         <span className="flex gap-0.5 text-amber-400" aria-hidden>
           {Array.from({ length: 5 }, (_, i) =>
@@ -36,7 +36,7 @@ export function GoogleRating() {
           )}
         </span>
         <span className="inline-flex items-center gap-1 text-xs text-white/70 group-hover:text-white">
-          Avis Google Maps
+          Google Maps reviews
           <ArrowUpRight className="size-3.5" aria-hidden />
         </span>
       </span>

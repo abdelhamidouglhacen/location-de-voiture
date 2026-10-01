@@ -27,7 +27,7 @@ export function ChartTooltip({ active, payload, label, unit = "mad" }: TooltipPr
   return (
     <div className="rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm shadow-lift">
       <p className="text-xs text-muted capitalize">{title}</p>
-      <p className="font-semibold text-ink tabular-nums">{unit === "mad" ? formatMAD(value) : `${value} réservation${value > 1 ? "s" : ""}`}</p>
+      <p className="font-semibold text-ink tabular-nums">{unit === "mad" ? formatMAD(value) : `${value} booking${value > 1 ? "s" : ""}`}</p>
     </div>
   );
 }

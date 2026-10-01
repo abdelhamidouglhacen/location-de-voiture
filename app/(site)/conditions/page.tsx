@@ -4,60 +4,60 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { BUSINESS } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Conditions de location",
-  description: "Conditions générales de location AZUR DRIVE : âge minimum, permis, caution, carburant, annulation et assurance.",
+  title: "Rental terms",
+  description: "AZUR DRIVE rental terms: minimum age, licence, deposit, fuel, cancellation and insurance.",
 };
 
 const sections = [
   {
-    title: "Conducteur",
+    title: "Driver",
     items: [
-      "Le conducteur doit avoir au moins 21 ans et un permis de conduire valide depuis au moins 2 ans.",
-      "Une pièce d'identité (CIN pour les résidents, passeport pour les visiteurs) est demandée au départ.",
-      "Un conducteur supplémentaire peut être ajouté pour 50 MAD par jour. Il doit remplir les mêmes conditions.",
+      "The driver must be at least 21 years old and have held a valid driving licence for at least 2 years.",
+      "An ID document (national ID card for residents, passport for visitors) is required at pick-up.",
+      "An additional driver can be added for 50 MAD per day. They must meet the same conditions.",
     ],
   },
   {
-    title: "Caution",
+    title: "Deposit",
     items: [
-      "Une caution est demandée au départ, en espèces ou par carte bancaire. Son montant dépend de la catégorie : de 3 000 MAD (économique) à 15 000 MAD (luxe).",
-      "La caution est rendue au retour si la voiture est rendue dans le même état, avec le plein et à l'heure prévue.",
+      "A deposit is required at pick-up, in cash or by bank card. The amount depends on the category: from 3,000 MAD (economy) to 15,000 MAD (luxury).",
+      "The deposit is returned when the car comes back in the same condition, with a full tank and on time.",
     ],
   },
   {
-    title: "Durée et prix",
+    title: "Duration and price",
     items: [
-      "La location est comptée par tranche de 24 heures à partir de l'heure de départ. Un retard de plus de 2 heures compte comme un jour supplémentaire.",
-      "Le kilométrage est illimité. Les prix comprennent l'assurance de base et l'assistance 24h/24.",
-      "Un tarif dégressif s'applique automatiquement dès 7 jours, puis dès 30 jours de location.",
+      "The rental is counted in 24-hour periods from the pick-up time. A delay of more than 2 hours counts as an extra day.",
+      "Mileage is unlimited. Prices include basic insurance and 24/7 assistance.",
+      "A reduced rate applies automatically from 7 days, and again from 30 days of rental.",
     ],
   },
   {
-    title: "Carburant",
-    items: ["La voiture est remise avec le plein et doit être rendue avec le plein. À défaut, le carburant manquant est facturé au prix de la station plus 50 MAD de service."],
+    title: "Fuel",
+    items: ["The car is handed over with a full tank and must be returned with a full tank. Otherwise, the missing fuel is charged at the station price plus a 50 MAD service fee."],
   },
   {
-    title: "Assurance et dommages",
+    title: "Insurance and damage",
     items: [
-      "L'assurance de base couvre la responsabilité civile. Une franchise reste à la charge du client en cas de dommage.",
-      "L'option assurance tous risques (100 MAD par jour) réduit fortement la franchise.",
-      "Tout accident doit être déclaré immédiatement à l'agence et faire l'objet d'un constat.",
+      "Basic insurance covers third-party liability. An excess remains payable by the customer in case of damage.",
+      "The full insurance option (100 MAD per day) greatly reduces the excess.",
+      "Any accident must be reported to the agency immediately, with an accident report filled in.",
     ],
   },
   {
-    title: "Annulation",
+    title: "Cancellation",
     items: [
-      "L'annulation est gratuite jusqu'à 48h avant le départ.",
-      "Moins de 48h avant le départ, un jour de location est retenu.",
-      "Si le client ne se présente pas, la réservation est facturée une journée.",
+      "Cancellation is free up to 48 hours before pick-up.",
+      "Less than 48 hours before pick-up, one rental day is charged.",
+      "If the customer does not show up, one day is charged for the booking.",
     ],
   },
   {
-    title: "Utilisation du véhicule",
+    title: "Use of the vehicle",
     items: [
-      "La voiture ne peut pas quitter le territoire marocain ni être prise sur un ferry.",
-      "Il est interdit de fumer dans la voiture, de la sous-louer ou de l'utiliser pour des courses ou du transport rémunéré.",
-      "La conduite sur piste est autorisée uniquement pour les SUV, avec prudence.",
+      "The car may not leave Morocco or be taken on a ferry.",
+      "Smoking in the car, subletting it, or using it for racing or paid transport is forbidden.",
+      "Off-road driving is allowed for SUVs only, with care.",
     ],
   },
 ];
@@ -65,9 +65,9 @@ const sections = [
 export default function ConditionsPage() {
   return (
     <>
-      <PageHeader title="Conditions de location" text="Tout ce qu'il faut savoir avant de prendre la route." crumbs={[{ label: "Conditions" }]} />
+      <PageHeader title="Rental terms" text="Everything you need to know before hitting the road." crumbs={[{ label: "Terms" }]} />
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[240px_1fr] lg:py-20">
-        <nav aria-label="Sommaire" className="hidden lg:block">
+        <nav aria-label="Contents" className="hidden lg:block">
           <ul className="sticky top-24 space-y-1 border-l border-line">
             {sections.map((s, i) => (
               <li key={s.title}>
@@ -95,7 +95,7 @@ export default function ConditionsPage() {
             </FadeUp>
           ))}
           <p className="text-sm text-muted">
-            Une question sur ces conditions ? Appelez le {BUSINESS.phones[0].label} ou écrivez à {BUSINESS.email}.
+            A question about these terms? Call {BUSINESS.phones[0].label} or write to {BUSINESS.email}.
           </p>
         </div>
       </div>

@@ -25,8 +25,8 @@ export interface SavedBooking {
   message: string;
 }
 
-const KEY = "hg-mes-reservations";
-const EVENT = "hg-mes-reservations-change";
+const KEY = "azur-my-bookings";
+const EVENT = "azur-my-bookings-change";
 const EMPTY: SavedBooking[] = [];
 
 let cache: { raw: string | null; list: SavedBooking[] } = { raw: null, list: EMPTY };

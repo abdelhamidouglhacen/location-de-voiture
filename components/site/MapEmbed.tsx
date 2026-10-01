@@ -6,7 +6,7 @@ export function MapEmbed({ className }: { className?: string }) {
   return (
     <div className={cn("overflow-hidden rounded-[20px] border border-line bg-surface", className)}>
       <iframe
-        title="Carte Google Maps : agence AZUR DRIVE à Agadir"
+        title="Google Maps: AZUR DRIVE agency in Agadir"
         src={GOOGLE_MAPS_EMBED}
         loading="lazy"
         referrerPolicy="strict-origin-when-cross-origin"

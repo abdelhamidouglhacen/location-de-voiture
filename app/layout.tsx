@@ -10,15 +10,15 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "sw
 export const metadata: Metadata = {
   title: { default: SITE_TITLE, template: "%s | AZUR DRIVE" },
   description:
-    "Location de voitures à Agadir, 24h/24 et 7j/7. Citadines, SUV, voitures de luxe et vans, livraison à l'aéroport Al Massira et à votre hôtel.",
-  openGraph: { locale: "fr_MA", siteName: "AZUR DRIVE", type: "website" },
+    "Car rental in Agadir, 24/7. City cars, SUVs, luxury cars and vans, delivered to Al Massira airport and to your hotel.",
+  openGraph: { locale: "en_US", siteName: "AZUR DRIVE", type: "website" },
 };
 
 export const viewport: Viewport = { themeColor: "#FAFAF9", colorScheme: "light" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${sora.variable} ${geist.variable}`}>
+    <html lang="en" className={`${sora.variable} ${geist.variable}`}>
       <body className="min-h-dvh">
         <ToastProvider>{children}</ToastProvider>
       </body>

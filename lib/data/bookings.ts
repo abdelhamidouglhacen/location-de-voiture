@@ -33,19 +33,19 @@ interface BookingSeed {
 }
 
 function history(statut: StatutReservation, creeLe: string, depart: string, retour: string): BookingEvent[] {
-  const events: BookingEvent[] = [{ statut: "En attente", date: creeLe }];
-  if (statut === "Annulée") return [...events, { statut, date: addHours(parseISO(creeLe), 20).toISOString() }];
-  if (statut === "En attente") return events;
-  events.push({ statut: "Confirmée", date: addHours(parseISO(creeLe), 2).toISOString() });
-  if (statut === "En cours" || statut === "Terminée") events.push({ statut: "En cours", date: depart });
-  if (statut === "Terminée") events.push({ statut: "Terminée", date: retour });
+  const events: BookingEvent[] = [{ statut: "Pending", date: creeLe }];
+  if (statut === "Cancelled") return [...events, { statut, date: addHours(parseISO(creeLe), 20).toISOString() }];
+  if (statut === "Pending") return events;
+  events.push({ statut: "Confirmed", date: addHours(parseISO(creeLe), 2).toISOString() });
+  if (statut === "Ongoing" || statut === "Completed") events.push({ statut: "Ongoing", date: depart });
+  if (statut === "Completed") events.push({ statut: "Completed", date: retour });
   return events;
 }
 
 function paymentStatus(statut: StatutReservation): StatutPaiement {
-  if (statut === "Annulée") return "Remboursé";
-  if (statut === "En attente") return "En attente";
-  return "Payé";
+  if (statut === "Cancelled") return "Refunded";
+  if (statut === "Pending") return "Pending";
+  return "Paid";
 }
 
 function build(seed: BookingSeed, index: number): Booking {
@@ -59,8 +59,8 @@ function build(seed: BookingSeed, index: number): Booking {
   const creeLe = daysFromNow(Math.min(seed.depart - 3 - (index % 9), -1 - (index % 4)), 9 + (index % 8));
   const lieuDepartId = options.includes("livraison-aeroport") ? "aeroport" : locations[index % locations.length].id;
   const kmDepart = car.kilometrage - 4000 + index * 90;
-  const finished = seed.statut === "Terminée";
-  const started = finished || seed.statut === "En cours";
+  const finished = seed.statut === "Completed";
+  const started = finished || seed.statut === "Ongoing";
 
   return {
     id: `b${index + 1}`,
@@ -83,9 +83,9 @@ function build(seed: BookingSeed, index: number): Booking {
     numeroVol: lieuDepartId === "aeroport" ? `AT${400 + index * 7}` : undefined,
     notes: seed.notes ?? "",
     historique: history(seed.statut, creeLe, dateDepart, dateRetour),
-    etatDepart: started ? { kilometrage: kmDepart, carburant: "Plein", dommages: "Aucun" } : undefined,
+    etatDepart: started ? { kilometrage: kmDepart, carburant: "Full", dommages: "None" } : undefined,
     etatRetour: finished
-      ? { kilometrage: kmDepart + seed.duree * 140, carburant: "Plein", dommages: index % 11 === 0 ? "Petite rayure pare-choc arrière" : "Aucun" }
+      ? { kilometrage: kmDepart + seed.duree * 140, carburant: "Full", dommages: index % 11 === 0 ? "Small scratch on rear bumper" : "None" }
       : undefined,
     creeLe,
   };
@@ -109,7 +109,7 @@ function pastSeeds(): BookingSeed[] {
       duree,
       heureDepart: 9 + Math.floor(rand() * 9),
       heureRetour: 9 + Math.floor(rand() * 9),
-      statut: i % 10 === 4 ? "Annulée" : "Terminée",
+      statut: i % 10 === 4 ? "Cancelled" : "Completed",
       options: pick(optionSets),
     };
   });
@@ -117,15 +117,15 @@ function pastSeeds(): BookingSeed[] {
 
 /** Current and upcoming rentals, crafted so the dashboard and planning have activity today. */
 const activeSeeds: BookingSeed[] = [
-  { voitureId: "mercedes-gle", clientId: "c7", depart: -4, duree: 4, heureDepart: 11, heureRetour: 18, statut: "En cours", options: ["assurance", "gps"], notes: "Client VIP, retour à l'agence." },
-  { voitureId: "hyundai-tucson", clientId: "c4", depart: -2, duree: 5, heureDepart: 15, heureRetour: 12, statut: "En cours", options: ["siege-bebe"] },
-  { voitureId: "peugeot-208", clientId: "c12", depart: -6, duree: 5, heureDepart: 10, heureRetour: 10, statut: "En cours", notes: "Retour prévu hier, client injoignable ce matin." },
-  { voitureId: "dacia-sandero", clientId: "c1", depart: -1, duree: 6, heureDepart: 9, heureRetour: 9, statut: "En cours", options: ["gps"] },
-  { voitureId: "vw-t-roc", clientId: "c13", depart: 0, duree: 7, heureDepart: 14, heureRetour: 14, statut: "Confirmée", options: ["livraison-aeroport", "assurance"] },
-  { voitureId: "renault-clio", clientId: "c2", depart: 0, duree: 3, heureDepart: 9, heureRetour: 9, statut: "Confirmée", statutPaiement: "En attente" },
-  { voitureId: "range-rover-evoque", clientId: "c1", depart: 4, duree: 3, heureDepart: 10, heureRetour: 18, statut: "Confirmée", options: ["assurance"] },
-  { voitureId: "dacia-duster", clientId: "c18", depart: 9, duree: 10, heureDepart: 12, heureRetour: 12, statut: "En attente", options: ["conducteur"] },
-  { voitureId: "dacia-lodgy", clientId: "c22", depart: 15, duree: 8, heureDepart: 16, heureRetour: 10, statut: "En attente", options: ["siege-bebe", "gps"] },
+  { voitureId: "mercedes-gle", clientId: "c7", depart: -4, duree: 4, heureDepart: 11, heureRetour: 18, statut: "Ongoing", options: ["assurance", "gps"], notes: "VIP customer, return at the agency." },
+  { voitureId: "hyundai-tucson", clientId: "c4", depart: -2, duree: 5, heureDepart: 15, heureRetour: 12, statut: "Ongoing", options: ["siege-bebe"] },
+  { voitureId: "peugeot-208", clientId: "c12", depart: -6, duree: 5, heureDepart: 10, heureRetour: 10, statut: "Ongoing", notes: "Return was due yesterday, customer unreachable this morning." },
+  { voitureId: "dacia-sandero", clientId: "c1", depart: -1, duree: 6, heureDepart: 9, heureRetour: 9, statut: "Ongoing", options: ["gps"] },
+  { voitureId: "vw-t-roc", clientId: "c13", depart: 0, duree: 7, heureDepart: 14, heureRetour: 14, statut: "Confirmed", options: ["livraison-aeroport", "assurance"] },
+  { voitureId: "renault-clio", clientId: "c2", depart: 0, duree: 3, heureDepart: 9, heureRetour: 9, statut: "Confirmed", statutPaiement: "Pending" },
+  { voitureId: "range-rover-evoque", clientId: "c1", depart: 4, duree: 3, heureDepart: 10, heureRetour: 18, statut: "Confirmed", options: ["assurance"] },
+  { voitureId: "dacia-duster", clientId: "c18", depart: 9, duree: 10, heureDepart: 12, heureRetour: 12, statut: "Pending", options: ["conducteur"] },
+  { voitureId: "dacia-lodgy", clientId: "c22", depart: 15, duree: 8, heureDepart: 16, heureRetour: 10, statut: "Pending", options: ["siege-bebe", "gps"] },
 ];
 
 export const bookings: Booking[] = [...pastSeeds(), ...activeSeeds].map(build);

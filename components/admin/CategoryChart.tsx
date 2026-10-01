@@ -52,7 +52,7 @@ export function CategoryChart({ data }: { data: { name: string; total: number }[
         <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
           <p>
             <span className="block font-display text-2xl font-semibold tabular-nums">{total}</span>
-            <span className="text-xs text-muted">réservations</span>
+            <span className="text-xs text-muted">bookings</span>
           </p>
         </div>
         {tip && active !== null && (

@@ -25,10 +25,10 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const car = findCar((await params).id);
-  if (!car) return { title: "Voiture introuvable" };
+  if (!car) return { title: "Car not found" };
   return {
-    title: `${car.marque} ${car.modele} à louer à Agadir`,
-    description: `Louez la ${car.marque} ${car.modele} ${car.annee} (${car.boite.toLowerCase()}, ${car.carburant.toLowerCase()}) à Agadir dès ${formatMAD(car.prixParJour)} par jour.`,
+    title: `Rent a ${car.marque} ${car.modele} in Agadir`,
+    description: `Rent the ${car.marque} ${car.modele} ${car.annee} (${car.boite.toLowerCase()}, ${car.carburant.toLowerCase()}) in Agadir from ${formatMAD(car.prixParJour)} per day.`,
   };
 }
 
@@ -39,22 +39,22 @@ export default async function CarDetailsPage({ params }: Props) {
   const similar = cars.filter((c) => c.categorie === car.categorie && c.id !== car.id).slice(0, 3);
 
   const specs = [
-    { Icon: Users, label: "Places", value: car.places },
-    { Icon: Cog, label: "Boîte", value: car.boite },
-    { Icon: Fuel, label: "Carburant", value: car.carburant },
-    { Icon: DoorOpen, label: "Portes", value: car.portes },
-    { Icon: Briefcase, label: "Bagages", value: `${car.bagages} valises` },
-    { Icon: Snowflake, label: "Climatisation", value: car.climatisation ? "Oui" : "Non" },
-    { Icon: Calendar, label: "Année", value: car.annee },
-    { Icon: Palette, label: "Couleur", value: car.couleur },
+    { Icon: Users, label: "Seats", value: car.places },
+    { Icon: Cog, label: "Gearbox", value: car.boite },
+    { Icon: Fuel, label: "Fuel", value: car.carburant },
+    { Icon: DoorOpen, label: "Doors", value: car.portes },
+    { Icon: Briefcase, label: "Luggage", value: `${car.bagages} suitcases` },
+    { Icon: Snowflake, label: "Air conditioning", value: car.climatisation ? "Yes" : "No" },
+    { Icon: Calendar, label: "Year", value: car.annee },
+    { Icon: Palette, label: "Colour", value: car.couleur },
   ];
 
   const conditions = [
-    { label: "Âge minimum", value: "21 ans" },
-    { label: "Permis", value: "2 ans minimum" },
-    { label: "Caution", value: formatMAD(car.caution) },
-    { label: "Kilométrage", value: "Illimité" },
-    { label: "Carburant", value: "Plein / plein" },
+    { label: "Minimum age", value: "21 years" },
+    { label: "Licence", value: "2 years minimum" },
+    { label: "Deposit", value: formatMAD(car.caution) },
+    { label: "Mileage", value: "Unlimited" },
+    { label: "Fuel", value: "Full to full" },
   ];
 
   return (
@@ -62,7 +62,7 @@ export default async function CarDetailsPage({ params }: Props) {
       <PageHeader
         title={name}
         text={`${car.categorie} · ${car.annee} · ${car.boite}`}
-        crumbs={[{ href: "/voitures", label: "Nos voitures" }, { label: name }]}
+        crumbs={[{ href: "/voitures", label: "Our cars" }, { label: name }]}
       />
 
       <div className="mx-auto grid max-w-7xl gap-12 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_360px] lg:py-16">
@@ -71,7 +71,7 @@ export default async function CarDetailsPage({ params }: Props) {
 
           <section aria-labelledby="caracteristiques">
             <h2 id="caracteristiques" className="font-display text-2xl font-semibold tracking-tight">
-              Caractéristiques
+              Specifications
             </h2>
             <FadeUp className="mt-6">
               <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-[20px] border border-line bg-line sm:grid-cols-4">
@@ -89,7 +89,7 @@ export default async function CarDetailsPage({ params }: Props) {
           <FadeUp>
             <section aria-labelledby="equipements">
               <h2 id="equipements" className="font-display text-2xl font-semibold tracking-tight">
-                Équipements
+                Features
               </h2>
               <ul className="mt-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
                 {car.equipements.map((e) => (
@@ -105,7 +105,7 @@ export default async function CarDetailsPage({ params }: Props) {
           <FadeUp>
             <section aria-labelledby="conditions">
               <h2 id="conditions" className="font-display text-2xl font-semibold tracking-tight">
-                Conditions de location
+                Rental terms
               </h2>
               <dl className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
                 {conditions.map((c) => (
@@ -119,35 +119,35 @@ export default async function CarDetailsPage({ params }: Props) {
           </FadeUp>
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start" aria-label="Réserver cette voiture">
+        <aside className="lg:sticky lg:top-24 lg:self-start" aria-label="Book this car">
           <div className="rounded-[20px] border border-line bg-surface p-6 shadow-card">
             <p className="leading-none">
               <span className="font-display text-3xl font-semibold tabular-nums">{formatMAD(car.prixParJour)}</span>
-              <span className="ml-1.5 text-muted">/ jour</span>
+              <span className="ml-1.5 text-muted">/ day</span>
             </p>
             <dl className="mt-5 space-y-2 border-t border-line pt-5 text-sm">
               <div className="flex justify-between">
-                <dt className="text-muted">Dès 7 jours</dt>
-                <dd className="font-medium tabular-nums">{formatMAD(car.prixParSemaine / 7)} / jour</dd>
+                <dt className="text-muted">From 7 days</dt>
+                <dd className="font-medium tabular-nums">{formatMAD(car.prixParSemaine / 7)} / day</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-muted">Dès 30 jours</dt>
-                <dd className="font-medium tabular-nums">{formatMAD(car.prixParMois / 30)} / jour</dd>
+                <dt className="text-muted">From 30 days</dt>
+                <dd className="font-medium tabular-nums">{formatMAD(car.prixParMois / 30)} / day</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-muted">Caution</dt>
+                <dt className="text-muted">Deposit</dt>
                 <dd className="font-medium tabular-nums">{formatMAD(car.caution)}</dd>
               </div>
             </dl>
-            {car.statut === "En maintenance" ? (
+            {car.statut === "In maintenance" ? (
               <p className="mt-6 rounded-xl bg-orange-50 px-4 py-3 text-sm text-orange-900">
-                Cette voiture est en maintenance. Appelez-nous pour connaître sa date de retour.
+                This car is in maintenance. Call us to find out when it will be back.
               </p>
             ) : (
-              <ReserveDialog car={{ id: car.id, name, prixParJour: car.prixParJour }} label="Choisir mes dates" size="lg" className="mt-6 w-full" />
+              <ReserveDialog car={{ id: car.id, name, prixParJour: car.prixParJour }} label="Choose my dates" size="lg" className="mt-6 w-full" />
             )}
             <Button
-              href={whatsappLink(`Bonjour, je suis intéressé(e) par la ${name}.`)}
+              href={whatsappLink(`Hello, I am interested in the ${name}.`)}
               target="_blank"
               rel="noopener noreferrer"
               variant="outline"
@@ -155,11 +155,11 @@ export default async function CarDetailsPage({ params }: Props) {
               className="mt-3 w-full"
             >
               <WhatsAppIcon className="size-4.5 text-[#1FA855]" />
-              Une question ?
+              Any questions?
             </Button>
             <p className="mt-5 flex items-center justify-center gap-2 text-xs text-muted">
               <ShieldCheck className="size-4 text-accent-deep" aria-hidden />
-              Annulation gratuite jusqu&apos;à 48h avant le départ
+              Free cancellation up to 48 hours before pick-up
             </p>
           </div>
         </aside>
@@ -169,7 +169,7 @@ export default async function CarDetailsPage({ params }: Props) {
         <section className="border-t border-line py-16 sm:py-20" aria-labelledby="similaires">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <h2 id="similaires" className="font-display text-3xl font-semibold tracking-[-0.03em]">
-              Voitures similaires
+              Similar cars
             </h2>
             <StaggerGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {similar.map((c) => (

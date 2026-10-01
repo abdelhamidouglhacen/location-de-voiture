@@ -5,8 +5,8 @@ import { cars as seedCars } from "@/lib/data/cars";
 import type { Car } from "@/types";
 
 /** Admin fleet edits live in this browser's localStorage; the public site still reads the static seed. */
-const KEY = "hg-admin-voitures";
-const EVENT = "hg-admin-voitures-change";
+const KEY = "azur-admin-cars";
+const EVENT = "azur-admin-cars-change";
 
 let cache: { raw: string | null; list: Car[] } = { raw: null, list: seedCars };
 
@@ -57,7 +57,7 @@ export function slugForCar(marque: string, modele: string) {
       .replace(/[̀-ͯ]/g, "")
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "") || "voiture";
+      .replace(/^-|-$/g, "") || "car";
   const taken = new Set(read().map((c) => c.id));
   let id = base;
   for (let i = 2; taken.has(id); i++) id = `${base}-${i}`;

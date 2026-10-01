@@ -1,11 +1,11 @@
 import { CalendarDays, CalendarRange, Car, LayoutDashboard, Mail, Users } from "lucide-react";
 
 export const ADMIN_NAV = [
-  { href: "/admin", label: "Tableau de bord", Icon: LayoutDashboard },
-  { href: "/admin/reservations", label: "Réservations", Icon: CalendarDays },
+  { href: "/admin", label: "Dashboard", Icon: LayoutDashboard },
+  { href: "/admin/reservations", label: "Bookings", Icon: CalendarDays },
   { href: "/admin/planning", label: "Planning", Icon: CalendarRange },
-  { href: "/admin/voitures", label: "Voitures", Icon: Car },
-  { href: "/admin/clients", label: "Clients", Icon: Users },
+  { href: "/admin/voitures", label: "Cars", Icon: Car },
+  { href: "/admin/clients", label: "Customers", Icon: Users },
   { href: "/admin/messages", label: "Messages", Icon: Mail },
 ];
 

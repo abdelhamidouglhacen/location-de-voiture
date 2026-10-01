@@ -20,15 +20,15 @@ export function DriverForm({ value, errors, onChange }: Props) {
 
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      <Input {...field("nomComplet")} label="Nom complet" autoComplete="name" required wrapperClassName="sm:col-span-2" />
-      <Input {...field("email")} label="E-mail" type="email" autoComplete="email" required />
-      <Input {...field("telephone")} label="Téléphone" type="tel" autoComplete="tel" placeholder="06 12 34 56 78" required />
-      <Input {...field("age")} label="Âge" type="number" inputMode="numeric" min={18} max={99} hint="21 ans minimum." required />
-      <Input {...field("pieceIdentite")} label="CIN ou passeport" placeholder="Ex : JB412867" required />
-      <Input {...field("numeroPermis")} label="Numéro de permis" required />
-      <Input {...field("expirationPermis")} label="Expiration du permis" type="date" required />
-      <Input {...field("numeroVol")} label="Numéro de vol (optionnel)" placeholder="Ex : AT 412" hint="Utile si nous vous livrons à l'aéroport." wrapperClassName="sm:col-span-2" />
-      <Textarea {...field("remarques")} label="Remarques (optionnel)" placeholder="Heure d'arrivée, nom de l'hôtel, demande particulière…" wrapperClassName="sm:col-span-2" rows={3} />
+      <Input {...field("nomComplet")} label="Full name" autoComplete="name" required wrapperClassName="sm:col-span-2" />
+      <Input {...field("email")} label="Email" type="email" autoComplete="email" required />
+      <Input {...field("telephone")} label="Phone" type="tel" autoComplete="tel" placeholder="06 12 34 56 78" required />
+      <Input {...field("age")} label="Age" type="number" inputMode="numeric" min={18} max={99} hint="21 years minimum." required />
+      <Input {...field("pieceIdentite")} label="ID card or passport" placeholder="E.g. JB412867" required />
+      <Input {...field("numeroPermis")} label="Licence number" required />
+      <Input {...field("expirationPermis")} label="Licence expiry date" type="date" required />
+      <Input {...field("numeroVol")} label="Flight number (optional)" placeholder="E.g. AT 412" hint="Useful if we deliver to you at the airport." wrapperClassName="sm:col-span-2" />
+      <Textarea {...field("remarques")} label="Notes (optional)" placeholder="Arrival time, hotel name, special request…" wrapperClassName="sm:col-span-2" rows={3} />
     </div>
   );
 }
@@ -36,12 +36,12 @@ export function DriverForm({ value, errors, onChange }: Props) {
 export function validateDriver(d: DriverInfo): Errors<DriverInfo> {
   const expired = d.expirationPermis && new Date(d.expirationPermis) < new Date();
   return {
-    nomComplet: required(d.nomComplet, "Le nom complet") ?? minLength(d.nomComplet, 3, "Le nom complet"),
+    nomComplet: required(d.nomComplet, "Full name") ?? minLength(d.nomComplet, 3, "Full name"),
     email: email(d.email),
     telephone: phone(d.telephone),
     age: minAge(d.age, 21),
-    pieceIdentite: required(d.pieceIdentite, "Le numéro de CIN ou de passeport"),
-    numeroPermis: required(d.numeroPermis, "Le numéro de permis"),
-    expirationPermis: required(d.expirationPermis, "La date d'expiration") ?? (expired ? "Votre permis est expiré." : undefined),
+    pieceIdentite: required(d.pieceIdentite, "ID card or passport number"),
+    numeroPermis: required(d.numeroPermis, "Licence number"),
+    expirationPermis: required(d.expirationPermis, "Expiry date") ?? (expired ? "Your licence has expired." : undefined),
   };
 }

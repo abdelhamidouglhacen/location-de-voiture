@@ -18,10 +18,10 @@ export function Pagination({ page, pageCount, onChange, total, pageSize }: Props
   return (
     <nav className="flex flex-col items-center justify-between gap-3 px-4 py-4 sm:flex-row" aria-label="Pagination">
       <p className="text-sm text-muted">
-        {from} à {to} sur {total}
+        {from} to {to} of {total}
       </p>
       <div className="flex items-center gap-1">
-        <button type="button" className={cn(btn, "hover:bg-sand")} onClick={() => onChange(page - 1)} disabled={page === 1} aria-label="Page précédente">
+        <button type="button" className={cn(btn, "hover:bg-sand")} onClick={() => onChange(page - 1)} disabled={page === 1} aria-label="Previous page">
           <ChevronLeft className="size-4" />
         </button>
         {Array.from({ length: pageCount }, (_, i) => i + 1).map((p) => (
@@ -35,7 +35,7 @@ export function Pagination({ page, pageCount, onChange, total, pageSize }: Props
             {p}
           </button>
         ))}
-        <button type="button" className={cn(btn, "hover:bg-sand")} onClick={() => onChange(page + 1)} disabled={page === pageCount} aria-label="Page suivante">
+        <button type="button" className={cn(btn, "hover:bg-sand")} onClick={() => onChange(page + 1)} disabled={page === pageCount} aria-label="Next page">
           <ChevronRight className="size-4" />
         </button>
       </div>

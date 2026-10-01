@@ -19,9 +19,9 @@ import { removeBooking, useMyBookings, type SavedBooking } from "@/lib/myBooking
 type Phase = { label: string; tone: BadgeTone; upcoming: boolean };
 
 function phaseOf(b: SavedBooking, now: number): Phase {
-  if (new Date(b.retour).getTime() < now) return { label: "Terminée", tone: "gray", upcoming: false };
-  if (new Date(b.depart).getTime() <= now) return { label: "En cours", tone: "green", upcoming: true };
-  return { label: "À venir", tone: "blue", upcoming: true };
+  if (new Date(b.retour).getTime() < now) return { label: "Completed", tone: "gray", upcoming: false };
+  if (new Date(b.depart).getTime() <= now) return { label: "Ongoing", tone: "green", upcoming: true };
+  return { label: "Upcoming", tone: "blue", upcoming: true };
 }
 
 export function MyReservations() {
@@ -36,9 +36,9 @@ export function MyReservations() {
     return (
       <div className="mx-auto max-w-xl px-4 py-16">
         <EmptyState
-          title="Aucune réservation pour l'instant"
-          text="Les demandes envoyées depuis ce navigateur apparaîtront ici, avec leurs dates, le lieu de retrait et le prix estimé."
-          action={<Button href="/voitures">Choisir une voiture</Button>}
+          title="No bookings yet"
+          text="Requests sent from this browser will appear here, with their dates, pick-up place and estimated price."
+          action={<Button href="/voitures">Choose a car</Button>}
         />
       </div>
     );
@@ -52,26 +52,26 @@ export function MyReservations() {
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:py-14">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Tabs
-          label="Filtrer mes réservations"
+          label="Filter my bookings"
           value={tab}
           onChange={setTab}
           tabs={[
-            { value: "a-venir", label: "À venir", count: upcoming.length },
-            { value: "passees", label: "Passées", count: past.length },
+            { value: "a-venir", label: "Upcoming", count: upcoming.length },
+            { value: "passees", label: "Past", count: past.length },
           ]}
         />
         <p className="flex items-center gap-2 text-sm text-muted">
           <Info className="size-4" aria-hidden />
-          Enregistrées sur cet appareil uniquement
+          Saved on this device only
         </p>
       </div>
 
       {list.length === 0 ? (
         <div className="mt-8 rounded-[20px] border border-line bg-surface">
           <EmptyState
-            title={tab === "a-venir" ? "Rien de prévu" : "Pas encore de location passée"}
-            text={tab === "a-venir" ? "Vous n'avez pas de location à venir." : "Vos anciennes locations apparaîtront ici."}
-            action={<Button href="/voitures">Voir nos voitures</Button>}
+            title={tab === "a-venir" ? "Nothing planned" : "No past rentals yet"}
+            text={tab === "a-venir" ? "You have no upcoming rentals." : "Your past rentals will appear here."}
+            action={<Button href="/voitures">See our cars</Button>}
           />
         </div>
       ) : (
@@ -85,12 +85,12 @@ export function MyReservations() {
       <Modal
         open={!!toRemove}
         onClose={() => setToRemove(null)}
-        title="Retirer de l'historique ?"
+        title="Remove from history?"
         size="sm"
         footer={
           <>
             <Button variant="outline" onClick={() => setToRemove(null)}>
-              Garder
+              Keep
             </Button>
             <Button
               variant="danger"
@@ -99,14 +99,14 @@ export function MyReservations() {
                 setToRemove(null);
               }}
             >
-              Retirer
+              Remove
             </Button>
           </>
         }
       >
         <p className="text-[15px] leading-relaxed text-muted">
-          La demande {toRemove?.reference} disparaîtra de cette liste. Cela n&apos;annule pas la réservation auprès de l&apos;agence : pour annuler, appelez-nous ou
-          écrivez-nous sur WhatsApp.
+          Request {toRemove?.reference} will disappear from this list. This does not cancel the booking with the agency: to cancel, call us or
+          message us on WhatsApp.
         </p>
       </Modal>
     </div>
@@ -125,7 +125,7 @@ function BookingCard({ booking: b, phase, onRemove }: { booking: SavedBooking; p
           <div>
             <h2 className="font-display text-xl font-semibold tracking-tight">{b.carName}</h2>
             <p className="mt-0.5 text-sm text-muted tabular-nums">
-              Demande {b.reference}, envoyée le {formatDate(b.envoyeLe)}
+              Request {b.reference}, sent on {formatDate(b.envoyeLe)}
             </p>
           </div>
           <Badge tone={phase.tone}>{phase.label}</Badge>
@@ -135,7 +135,7 @@ function BookingCard({ booking: b, phase, onRemove }: { booking: SavedBooking; p
           <div className="flex gap-3">
             <CalendarDays className="mt-0.5 size-4 shrink-0 text-accent-deep" aria-hidden />
             <div>
-              <dt className="text-muted">Dates ({b.jours} jour{b.jours > 1 ? "s" : ""})</dt>
+              <dt className="text-muted">Dates ({b.jours} day{b.jours > 1 ? "s" : ""})</dt>
               <dd className="font-medium tabular-nums">
                 {formatDateTime(b.depart)} → {formatDateTime(b.retour)}
               </dd>
@@ -144,7 +144,7 @@ function BookingCard({ booking: b, phase, onRemove }: { booking: SavedBooking; p
           <div className="flex gap-3">
             <MapPin className="mt-0.5 size-4 shrink-0 text-accent-deep" aria-hidden />
             <div>
-              <dt className="text-muted">Retrait / retour</dt>
+              <dt className="text-muted">Pick-up / return</dt>
               <dd className="font-medium">
                 {b.lieuDepart}
                 {b.lieuRetour !== b.lieuDepart && ` → ${b.lieuRetour}`}
@@ -152,11 +152,11 @@ function BookingCard({ booking: b, phase, onRemove }: { booking: SavedBooking; p
             </div>
           </div>
           <div>
-            <dt className="text-muted">Options</dt>
-            <dd className="font-medium">{b.options.join(", ") || "Aucune"}</dd>
+            <dt className="text-muted">Extras</dt>
+            <dd className="font-medium">{b.options.join(", ") || "None"}</dd>
           </div>
           <div>
-            <dt className="text-muted">Conducteur</dt>
+            <dt className="text-muted">Driver</dt>
             <dd className="font-medium">
               {b.conducteur}, <span className="tabular-nums">{b.telephone}</span>
             </dd>
@@ -165,29 +165,29 @@ function BookingCard({ booking: b, phase, onRemove }: { booking: SavedBooking; p
 
         <div className="mt-auto flex flex-wrap items-end justify-between gap-4 border-t border-line pt-4">
           <p className="leading-tight">
-            <span className="block text-sm text-muted">Total estimé</span>
+            <span className="block text-sm text-muted">Estimated total</span>
             <span className="font-display text-2xl font-semibold tabular-nums">{formatMAD(b.total)}</span>
-            <span className="ml-2 text-xs text-muted tabular-nums">+ caution {formatMAD(b.caution)}</span>
+            <span className="ml-2 text-xs text-muted tabular-nums">+ deposit {formatMAD(b.caution)}</span>
           </p>
           <div className="flex flex-wrap gap-2">
             {phase.upcoming ? (
               <Button href={whatsappLink(b.message)} target="_blank" rel="noopener noreferrer" variant="outline" size="sm">
                 <WhatsAppIcon className="size-4 text-[#1FA855]" />
-                Renvoyer
+                Resend
               </Button>
             ) : (
-              car && car.statut !== "En maintenance" && <ReserveDialog car={{ id: car.id, name: b.carName, prixParJour: car.prixParJour }} label="Relouer" />
+              car && car.statut !== "In maintenance" && <ReserveDialog car={{ id: car.id, name: b.carName, prixParJour: car.prixParJour }} label="Rent again" />
             )}
             {car && (
               <Button href={`/voitures/${car.id}`} variant="outline" size="sm">
-                Voir la voiture
+                View car
               </Button>
             )}
             <button
               type="button"
               onClick={onRemove}
               className="grid size-9 place-items-center rounded-full text-muted transition hover:bg-red-50 hover:text-red-700"
-              aria-label={`Retirer la demande ${b.reference} de l'historique`}
+              aria-label={`Remove request ${b.reference} from history`}
             >
               <Trash2 className="size-4" />
             </button>

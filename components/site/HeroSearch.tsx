@@ -62,11 +62,11 @@ export function HeroSearch({ variant = "card" }: { variant?: "card" | "sheet" })
   function submit(e: React.FormEvent) {
     e.preventDefault();
     const found = {
-      depart: depart.date ? undefined : "Choisissez la date de départ",
-      retour: retour.date ? undefined : "Choisissez la date de retour",
+      depart: depart.date ? undefined : "Choose the pick-up date",
+      retour: retour.date ? undefined : "Choose the return date",
     };
     if (depart.date && retour.date && withTime(retour.date, retour.heure) <= withTime(depart.date, depart.heure)) {
-      found.retour = "Le retour doit être après le départ";
+      found.retour = "Return must be after pick-up";
     }
     setErrors(found);
     if (found.depart || found.retour) return;
@@ -89,7 +89,7 @@ export function HeroSearch({ variant = "card" }: { variant?: "card" | "sheet" })
         <div className={cn(!sheet && "col-span-2")}>
           <IconSelect
             id={`${variant}-lieu-${key}`}
-            label={key === "depart" ? "Lieu de départ" : "Lieu de destination"}
+            label={key === "depart" ? "Pick-up place" : "Return place"}
             value={value.lieu}
             onChange={(lieu) => set({ ...value, lieu })}
             options={placeOptions}
@@ -98,7 +98,7 @@ export function HeroSearch({ variant = "card" }: { variant?: "card" | "sheet" })
         </div>
         <DateField
           id={`${variant}-date-${key}`}
-          label={key === "depart" ? "Date de départ" : "Date de retour"}
+          label={key === "depart" ? "Pick-up date" : "Return date"}
           hideLabel
           inline={sheet}
           up={!sheet && key === "retour"}
@@ -113,7 +113,7 @@ export function HeroSearch({ variant = "card" }: { variant?: "card" | "sheet" })
         />
         <IconSelect
           id={`${variant}-heure-${key}`}
-          label={key === "depart" ? "Heure de départ" : "Heure de retour"}
+          label={key === "depart" ? "Pick-up time" : "Return time"}
           value={value.heure}
           onChange={(heure) => set({ ...value, heure })}
           options={hourOptions}
@@ -124,15 +124,15 @@ export function HeroSearch({ variant = "card" }: { variant?: "card" | "sheet" })
   );
 
   return (
-    <form onSubmit={submit} noValidate aria-label="Trouvez votre voiture" className={cn(!sheet && "rounded-[24px] bg-surface p-6 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)]")}>
-      {!sheet && <p className="font-display text-lg font-semibold tracking-tight">Trouvez votre voiture</p>}
+    <form onSubmit={submit} noValidate aria-label="Find your car" className={cn(!sheet && "rounded-[24px] bg-surface p-6 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)]")}>
+      {!sheet && <p className="font-display text-lg font-semibold tracking-tight">Find your car</p>}
       <div className={cn("space-y-5", !sheet && "mt-5")}>
-        {leg("depart", "Départ", depart, setDepart)}
-        <div className="border-t border-line pt-5">{leg("retour", "Destination", retour, setRetour)}</div>
+        {leg("depart", "Pick-up", depart, setDepart)}
+        <div className="border-t border-line pt-5">{leg("retour", "Return", retour, setRetour)}</div>
       </div>
       <Button type="submit" size="lg" className="mt-6 w-full">
         <Search className="size-4" aria-hidden />
-        Rechercher
+        Search
       </Button>
     </form>
   );

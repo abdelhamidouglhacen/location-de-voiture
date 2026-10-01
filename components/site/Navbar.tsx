@@ -52,7 +52,7 @@ export function Navbar() {
           scrolled ? "border-line bg-paper/85 shadow-[0_8px_24px_-18px_rgb(18_18_18/0.25)] backdrop-blur-lg" : "border-transparent bg-paper",
         )}
       >
-        <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6" aria-label="Navigation principale">
+        <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6" aria-label="Main navigation">
           <Logo />
           <ul className="hidden items-center gap-1 lg:flex">
             {NAV_LINKS.map((l) => (
@@ -84,15 +84,15 @@ export function Navbar() {
               )}
             >
               <CalendarCheck className="size-4 text-accent-deep" aria-hidden />
-              Mes réservations
+              My bookings
             </Link>
-            {/* <Button href="/voitures">Réserver</Button> */}
+            {/* <Button href="/voitures">Book</Button> */}
           </div>
           <button
             type="button"
             className="grid size-11 place-items-center rounded-full border border-line text-ink lg:hidden"
             onClick={() => setMenuOpen(true)}
-            aria-label="Ouvrir le menu"
+            aria-label="Open menu"
             aria-expanded={menuOpen}
             aria-controls="menu-mobile"
           >
@@ -105,12 +105,12 @@ export function Navbar() {
         <div ref={menuRef} id="menu-mobile" role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-[60] flex flex-col bg-paper px-5 pt-4 pb-8 lg:hidden">
           <div className="flex items-center justify-between">
             <Logo />
-            <button type="button" onClick={() => setMenuOpen(false)} className="grid size-11 place-items-center rounded-full border border-line" aria-label="Fermer le menu" autoFocus>
+            <button type="button" onClick={() => setMenuOpen(false)} className="grid size-11 place-items-center rounded-full border border-line" aria-label="Close menu" autoFocus>
               <X className="size-5" />
             </button>
           </div>
           <ul className="mt-12 flex flex-col">
-            {[...NAV_LINKS, { href: "/mes-reservations", label: "Mes réservations" }].map((l) => (
+            {[...NAV_LINKS, { href: "/mes-reservations", label: "My bookings" }].map((l) => (
               <li key={l.href} data-menu-link className="border-b border-line">
                 <Link
                   href={l.href}
@@ -125,7 +125,7 @@ export function Navbar() {
           </ul>
           <div className="mt-auto flex flex-col gap-3" data-menu-link>
             <Button href="/voitures" size="lg" onClick={() => setMenuOpen(false)}>
-              Réserver une voiture
+              Book a car
             </Button>
             <Button href={BUSINESS.phones[0].href} variant="outline" size="lg">
               <Phone className="size-4" aria-hidden />

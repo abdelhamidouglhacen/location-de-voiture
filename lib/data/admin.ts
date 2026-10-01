@@ -3,7 +3,7 @@
  * There is no database: nothing here is saved.
  */
 import { addDays, addMonths, addWeeks, eachDayOfInterval, eachWeekOfInterval, format, isSameDay, isSameMonth, parseISO, startOfMonth, startOfWeek, subMonths } from "date-fns";
-import { fr } from "date-fns/locale";
+import { enGB } from "date-fns/locale";
 import type { Booking, Car, Customer } from "@/types";
 import { bookings } from "./bookings";
 import { cars } from "./cars";
@@ -20,11 +20,11 @@ export const bookingRows: BookingRow[] = bookings
   .sort((a, b) => b.dateDepart.localeCompare(a.dateDepart));
 
 export const customerRows: Customer[] = customers.map((c) => {
-  const own = bookings.filter((b) => b.clientId === c.id && b.statut !== "Annulée");
+  const own = bookings.filter((b) => b.clientId === c.id && b.statut !== "Cancelled");
   return {
     ...c,
     nombreLocations: own.length,
-    totalDepense: own.filter((b) => b.statutPaiement === "Payé").reduce((s, b) => s + b.total, 0),
+    totalDepense: own.filter((b) => b.statutPaiement === "Paid").reduce((s, b) => s + b.total, 0),
   };
 });
 
@@ -36,7 +36,7 @@ export function findCustomer(id: string) {
   return customerRows.find((c) => c.id === id);
 }
 
-const paid = bookingRows.filter((b) => b.statut !== "Annulée" && b.statutPaiement === "Payé");
+const paid = bookingRows.filter((b) => b.statut !== "Cancelled" && b.statutPaiement === "Paid");
 const revenueIn = (month: Date) => paid.filter((b) => isSameMonth(parseISO(b.dateDepart), month)).reduce((s, b) => s + b.total, 0);
 
 export type RevenuePeriod = "semaine" | "mois" | "3mois" | "6mois";
@@ -49,7 +49,7 @@ function bucketsFor(period: RevenuePeriod): Bucket[] {
     const start = period === "semaine" ? startOfWeek(TODAY, { weekStartsOn: 1 }) : startOfMonth(TODAY);
     const end = period === "semaine" ? addDays(start, 7) : addMonths(start, 1);
     return eachDayOfInterval({ start, end: addDays(end, -1) }).map((day) => ({
-      label: format(day, period === "semaine" ? "EEE d" : "d MMM", { locale: fr }),
+      label: format(day, period === "semaine" ? "EEE d" : "d MMM", { locale: enGB }),
       from: day,
       to: addDays(day, 1),
     }));
@@ -58,7 +58,7 @@ function bucketsFor(period: RevenuePeriod): Bucket[] {
     const start = startOfWeek(subMonths(startOfMonth(TODAY), 2), { weekStartsOn: 1 });
     const end = addMonths(startOfMonth(TODAY), 1);
     return eachWeekOfInterval({ start, end: addDays(end, -1) }, { weekStartsOn: 1 }).map((week) => ({
-      label: format(week, "d MMM", { locale: fr }),
+      label: format(week, "d MMM", { locale: enGB }),
       from: week,
       to: addWeeks(week, 1),
     }));
@@ -66,7 +66,7 @@ function bucketsFor(period: RevenuePeriod): Bucket[] {
   const thisMonth = startOfMonth(TODAY);
   return Array.from({ length: 6 }, (_, i) => {
     const month = addMonths(subMonths(thisMonth, 5), i);
-    return { label: format(month, "MMM", { locale: fr }), from: month, to: addMonths(month, 1) };
+    return { label: format(month, "MMM", { locale: enGB }), from: month, to: addMonths(month, 1) };
   });
 }
 
@@ -76,7 +76,7 @@ const departsIn = (list: BookingRow[], from: Date, to: Date) =>
     return d >= from && d < to;
   });
 
-const booked = bookingRows.filter((b) => b.statut !== "Annulée");
+const booked = bookingRows.filter((b) => b.statut !== "Cancelled");
 
 export function revenueSeries(period: RevenuePeriod): { label: string; total: number }[] {
   return bucketsFor(period).map(({ label, from, to }) => ({ label, total: departsIn(paid, from, to).reduce((s, b) => s + b.total, 0) }));
@@ -87,7 +87,7 @@ export function bookingsSeries(period: RevenuePeriod): { label: string; total: n
   return bucketsFor(period).map(({ label, from, to }) => ({ label, total: departsIn(booked, from, to).length }));
 }
 
-/** Most booked cars over the period: the top 4, the rest grouped as "Autres". */
+/** Most booked cars over the period: the top 4, the rest grouped as "Others". */
 export function topCars(period: RevenuePeriod): { name: string; total: number }[] {
   const buckets = bucketsFor(period);
   const inPeriod = departsIn(booked, buckets[0].from, buckets[buckets.length - 1].to);
@@ -98,31 +98,31 @@ export function topCars(period: RevenuePeriod): { name: string; total: number }[
   }
   const sorted = [...counts].map(([name, total]) => ({ name, total })).sort((a, b) => b.total - a.total);
   const rest = sorted.slice(4).reduce((s, c) => s + c.total, 0);
-  return rest ? [...sorted.slice(0, 4), { name: "Autres", total: rest }] : sorted;
+  return rest ? [...sorted.slice(0, 4), { name: "Others", total: rest }] : sorted;
 }
 
 export function dashboardSummary() {
   const thisMonth = startOfMonth(TODAY);
   const revenue = revenueIn(thisMonth);
   const previous = revenueIn(subMonths(thisMonth, 1));
-  const active = bookingRows.filter((b) => b.statut !== "Annulée");
+  const active = bookingRows.filter((b) => b.statut !== "Cancelled");
 
   return {
     kpis: {
       revenue,
       revenueChange: previous ? ((revenue - previous) / previous) * 100 : 0,
-      enCours: bookingRows.filter((b) => b.statut === "En cours").length,
-      aConfirmer: bookingRows.filter((b) => b.statut === "En attente").length,
-      disponibles: cars.filter((c) => c.statut === "Disponible").length,
+      enCours: bookingRows.filter((b) => b.statut === "Ongoing").length,
+      aConfirmer: bookingRows.filter((b) => b.statut === "Pending").length,
+      disponibles: cars.filter((c) => c.statut === "Available").length,
       totalVoitures: cars.length,
     },
-    byCategory: ["Économique", "Citadine", "SUV", "Luxe", "Van"].map((categorie) => ({
+    byCategory: ["Economy", "City", "SUV", "Luxury", "Van"].map((categorie) => ({
       name: categorie,
       total: active.filter((b) => b.car.categorie === categorie).length,
     })),
     today: [
-      ...bookingRows.filter((b) => b.statut === "Confirmée" && isSameDay(parseISO(b.dateDepart), TODAY)).map((b) => ({ type: "Départ" as const, heure: b.dateDepart, booking: b })),
-      ...bookingRows.filter((b) => b.statut === "En cours" && isSameDay(parseISO(b.dateRetour), TODAY)).map((b) => ({ type: "Retour" as const, heure: b.dateRetour, booking: b })),
+      ...bookingRows.filter((b) => b.statut === "Confirmed" && isSameDay(parseISO(b.dateDepart), TODAY)).map((b) => ({ type: "Pick-up" as const, heure: b.dateDepart, booking: b })),
+      ...bookingRows.filter((b) => b.statut === "Ongoing" && isSameDay(parseISO(b.dateRetour), TODAY)).map((b) => ({ type: "Return" as const, heure: b.dateRetour, booking: b })),
     ].sort((a, b) => a.heure.localeCompare(b.heure)),
     latest: [...bookingRows].sort((a, b) => b.creeLe.localeCompare(a.creeLe)).slice(0, 6),
   };

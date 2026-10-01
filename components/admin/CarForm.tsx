@@ -12,26 +12,26 @@ import { useToast } from "@/components/ui/Toast";
 import { saveCar, slugForCar } from "@/lib/adminCars";
 import type { Boite, Car, Carburant, Categorie, StatutVoiture } from "@/types";
 
-const CATEGORIES: Categorie[] = ["Économique", "Citadine", "SUV", "Luxe", "Van"];
-const BOITES: Boite[] = ["Manuelle", "Automatique"];
-const CARBURANTS: Carburant[] = ["Essence", "Diesel", "Hybride"];
-const STATUTS: StatutVoiture[] = ["Disponible", "Louée", "En maintenance"];
+const CATEGORIES: Categorie[] = ["Economy", "City", "SUV", "Luxury", "Van"];
+const BOITES: Boite[] = ["Manual", "Automatic"];
+const CARBURANTS: Carburant[] = ["Petrol", "Diesel", "Hybrid"];
+const STATUTS: StatutVoiture[] = ["Available", "Rented", "In maintenance"];
 const EQUIPEMENTS = [
-  "Climatisation",
+  "Air conditioning",
   "Bluetooth",
-  "Direction assistée",
-  "Vitres électriques",
+  "Power steering",
+  "Electric windows",
   "ABS",
   "Airbags",
-  "Écran tactile",
+  "Touchscreen",
   "Apple CarPlay / Android Auto",
-  "Caméra de recul",
-  "Régulateur de vitesse",
-  "Sièges en cuir",
-  "Toit panoramique",
-  "Sièges chauffants",
-  "Navigation GPS intégrée",
-  "Aide au stationnement",
+  "Reversing camera",
+  "Cruise control",
+  "Leather seats",
+  "Panoramic roof",
+  "Heated seats",
+  "Built-in GPS navigation",
+  "Parking assist",
 ];
 const MAX_PHOTO_BYTES = 1_500_000;
 
@@ -63,9 +63,9 @@ function toValues(car?: Car): Values {
     marque: car?.marque ?? "",
     modele: car?.modele ?? "",
     annee: String(car?.annee ?? new Date().getFullYear()),
-    categorie: car?.categorie ?? "Citadine",
-    boite: car?.boite ?? "Manuelle",
-    carburant: car?.carburant ?? "Essence",
+    categorie: car?.categorie ?? "City",
+    boite: car?.boite ?? "Manual",
+    carburant: car?.carburant ?? "Petrol",
     places: String(car?.places ?? 5),
     portes: String(car?.portes ?? 5),
     bagages: String(car?.bagages ?? 2),
@@ -74,9 +74,9 @@ function toValues(car?: Car): Values {
     immatriculation: car?.immatriculation ?? "",
     couleur: car?.couleur ?? "",
     kilometrage: car ? String(car.kilometrage) : "",
-    statut: car?.statut ?? "Disponible",
+    statut: car?.statut ?? "Available",
     climatisation: car?.climatisation ?? true,
-    equipements: car?.equipements ?? ["Climatisation", "Bluetooth", "ABS", "Airbags"],
+    equipements: car?.equipements ?? ["Air conditioning", "Bluetooth", "ABS", "Airbags"],
     images: car?.images ?? [],
   };
 }
@@ -86,19 +86,19 @@ type Errors = Partial<Record<keyof Values, string>>;
 function validate(v: Values): Errors {
   const e: Errors = {};
   const year = new Date().getFullYear() + 1;
-  if (!v.marque.trim()) e.marque = "Indiquez la marque.";
-  if (!v.modele.trim()) e.modele = "Indiquez le modèle.";
-  if (!v.immatriculation.trim()) e.immatriculation = "Indiquez l'immatriculation.";
+  if (!v.marque.trim()) e.marque = "Enter the brand.";
+  if (!v.modele.trim()) e.modele = "Enter the model.";
+  if (!v.immatriculation.trim()) e.immatriculation = "Enter the plate number.";
   const annee = Number(v.annee);
-  if (!Number.isInteger(annee) || annee < 1990 || annee > year) e.annee = `Entre 1990 et ${year}.`;
-  if (!(Number(v.prixParJour) > 0)) e.prixParJour = "Prix supérieur à 0.";
-  if (v.caution !== "" && !(Number(v.caution) >= 0)) e.caution = "Montant invalide.";
-  if (v.kilometrage === "" || !(Number(v.kilometrage) >= 0)) e.kilometrage = "Kilométrage invalide.";
+  if (!Number.isInteger(annee) || annee < 1990 || annee > year) e.annee = `Between 1990 and ${year}.`;
+  if (!(Number(v.prixParJour) > 0)) e.prixParJour = "Price must be above 0.";
+  if (v.caution !== "" && !(Number(v.caution) >= 0)) e.caution = "Invalid amount.";
+  if (v.kilometrage === "" || !(Number(v.kilometrage) >= 0)) e.kilometrage = "Invalid mileage.";
   for (const k of ["places", "portes", "bagages"] as const) {
     const n = Number(v[k]);
-    if (!Number.isInteger(n) || n < (k === "bagages" ? 0 : 1) || n > 20) e[k] = "Valeur invalide.";
+    if (!Number.isInteger(n) || n < (k === "bagages" ? 0 : 1) || n > 20) e[k] = "Invalid value.";
   }
-  if (v.images.length === 0) e.images = "Ajoutez au moins une photo.";
+  if (v.images.length === 0) e.images = "Add at least one photo.";
   return e;
 }
 
@@ -126,7 +126,7 @@ export function CarForm({ car }: { car?: Car }) {
     if (!files) return;
     const picked = Array.from(files);
     if (picked.some((f) => f.size > MAX_PHOTO_BYTES)) {
-      toast("Photo trop lourde (1,5 Mo maximum).", "error");
+      toast("Photo too large (1.5 MB maximum).", "error");
       return;
     }
     const urls = await Promise.all(
@@ -147,7 +147,7 @@ export function CarForm({ car }: { car?: Car }) {
     const found = validate(values);
     setErrors(found);
     if (Object.values(found).some(Boolean)) {
-      toast("Corrigez les champs en rouge.", "error");
+      toast("Fix the fields in red.", "error");
       return;
     }
     const prixParJour = Number(values.prixParJour);
@@ -177,46 +177,46 @@ export function CarForm({ car }: { car?: Car }) {
       ajouteLe: car?.ajouteLe ?? new Date().toISOString(),
     };
     saveCar(next);
-    toast(car ? "Voiture mise à jour." : "Voiture ajoutée.");
+    toast(car ? "Car updated." : "Car added.");
     router.push("/admin/voitures");
   };
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-6">
-      <Card title="Informations">
+      <Card title="Details">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Input label="Marque" required placeholder="Dacia" {...field("marque")} />
-          <Input label="Modèle" required placeholder="Duster" {...field("modele")} />
-          <Input label="Année" required type="number" inputMode="numeric" {...field("annee")} />
-          <Input label="Immatriculation" required placeholder="12345-A-33" {...field("immatriculation")} />
-          <Input label="Couleur" placeholder="Blanc" {...field("couleur")} />
-          <Input label="Kilométrage (km)" required type="number" inputMode="numeric" min={0} {...field("kilometrage")} />
-          <Select label="Catégorie" options={opts(CATEGORIES)} {...field("categorie")} />
-          <Select label="Statut" options={opts(STATUTS)} {...field("statut")} />
+          <Input label="Brand" required placeholder="Dacia" {...field("marque")} />
+          <Input label="Model" required placeholder="Duster" {...field("modele")} />
+          <Input label="Year" required type="number" inputMode="numeric" {...field("annee")} />
+          <Input label="Plate number" required placeholder="12345-A-33" {...field("immatriculation")} />
+          <Input label="Colour" placeholder="White" {...field("couleur")} />
+          <Input label="Mileage (km)" required type="number" inputMode="numeric" min={0} {...field("kilometrage")} />
+          <Select label="Category" options={opts(CATEGORIES)} {...field("categorie")} />
+          <Select label="Status" options={opts(STATUTS)} {...field("statut")} />
         </div>
       </Card>
 
-      <Card title="Caractéristiques">
+      <Card title="Specifications">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Select label="Boîte" options={opts(BOITES)} {...field("boite")} />
-          <Select label="Carburant" options={opts(CARBURANTS)} {...field("carburant")} />
-          <Input label="Places" type="number" inputMode="numeric" min={1} {...field("places")} />
-          <Input label="Portes" type="number" inputMode="numeric" min={1} {...field("portes")} />
-          <Input label="Bagages" type="number" inputMode="numeric" min={0} {...field("bagages")} />
+          <Select label="Gearbox" options={opts(BOITES)} {...field("boite")} />
+          <Select label="Fuel" options={opts(CARBURANTS)} {...field("carburant")} />
+          <Input label="Seats" type="number" inputMode="numeric" min={1} {...field("places")} />
+          <Input label="Doors" type="number" inputMode="numeric" min={1} {...field("portes")} />
+          <Input label="Luggage" type="number" inputMode="numeric" min={0} {...field("bagages")} />
           <div className="flex items-end pb-3">
-            <Checkbox name="climatisation" label="Climatisation" checked={values.climatisation} onChange={(e) => set("climatisation", e.target.checked)} />
+            <Checkbox name="climatisation" label="Air conditioning" checked={values.climatisation} onChange={(e) => set("climatisation", e.target.checked)} />
           </div>
         </div>
       </Card>
 
-      <Card title="Tarifs">
+      <Card title="Pricing">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Input label="Prix par jour (MAD)" required type="number" inputMode="numeric" min={1} {...field("prixParJour")} />
-          <Input label="Caution (MAD)" type="number" inputMode="numeric" min={0} hint="Rendue au retour du véhicule." {...field("caution")} />
+          <Input label="Price per day (MAD)" required type="number" inputMode="numeric" min={1} {...field("prixParJour")} />
+          <Input label="Deposit (MAD)" type="number" inputMode="numeric" min={0} hint="Returned when the vehicle comes back." {...field("caution")} />
         </div>
       </Card>
 
-      <Card title="Équipements">
+      <Card title="Features">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {EQUIPEMENTS.map((eq, i) => (
             <Checkbox
@@ -238,12 +238,12 @@ export function CarForm({ car }: { car?: Car }) {
                 <li key={`${i}-${src.slice(0, 40)}`} className="relative aspect-[16/10] overflow-hidden rounded-xl bg-sand">
                   {/* eslint-disable-next-line @next/next/no-img-element -- previews may be data URLs */}
                   <img src={src} alt="" className="size-full object-cover" />
-                  {i === 0 && <span className="absolute bottom-2 left-2 rounded-full bg-ink/80 px-2 py-0.5 text-xs text-white">Principale</span>}
+                  {i === 0 && <span className="absolute bottom-2 left-2 rounded-full bg-ink/80 px-2 py-0.5 text-xs text-white">Main</span>}
                   <button
                     type="button"
                     onClick={() => set("images", values.images.filter((_, j) => j !== i))}
                     className="absolute top-2 right-2 grid size-7 place-items-center rounded-full bg-surface/90 text-ink shadow hover:bg-surface"
-                    aria-label={`Retirer la photo ${i + 1}`}
+                    aria-label={`Remove photo ${i + 1}`}
                   >
                     <X className="size-4" />
                   </button>
@@ -253,9 +253,9 @@ export function CarForm({ car }: { car?: Car }) {
           )}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
             <Input
-              label="Ajouter par lien"
+              label="Add by link"
               name="photoUrl"
-              placeholder="/cars/dacia-duster-1.jpg ou https://…"
+              placeholder="/cars/dacia-duster-1.jpg or https://…"
               value={photoUrl}
               onChange={(e) => setPhotoUrl(e.target.value)}
               wrapperClassName="flex-1"
@@ -268,11 +268,11 @@ export function CarForm({ car }: { car?: Car }) {
                 setPhotoUrl("");
               }}
             >
-              Ajouter
+              Add
             </Button>
             <label className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-line bg-surface px-5 text-sm font-medium transition hover:border-ink/40">
               <ImagePlus className="size-4" aria-hidden />
-              Importer
+              Upload
               <input type="file" accept="image/*" multiple className="sr-only" onChange={(e) => onFiles(e.target.files)} />
             </label>
           </div>
@@ -286,9 +286,9 @@ export function CarForm({ car }: { car?: Car }) {
 
       <div className="flex flex-wrap justify-end gap-3">
         <Button href="/admin/voitures" variant="outline">
-          Annuler
+          Cancel
         </Button>
-        <Button type="submit">{car ? "Enregistrer" : "Ajouter la voiture"}</Button>
+        <Button type="submit">{car ? "Save" : "Add car"}</Button>
       </div>
     </form>
   );

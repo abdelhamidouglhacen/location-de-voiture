@@ -51,13 +51,13 @@ export function Hero() {
         <div className="max-w-xl">
           <p data-hero-anim data-hero-label className="inline-flex items-center gap-3 text-sm font-medium text-accent">
             <span className="h-px w-8 bg-accent" aria-hidden />
-            Location de voitures à Agadir
+            Car rental in Agadir
           </p>
           <h1 id="hero-title" data-hero-anim data-hero-title className="mt-6 font-display text-5xl leading-[1.02] font-semibold tracking-[-0.035em] text-white sm:text-6xl xl:text-7xl">
             Best <span className="text-accent">Car</span> For Rent
           </h1>
           <p data-hero-anim data-hero-sub className="mt-6 max-w-md text-lg leading-relaxed text-white/75">
-            Conduisez le meilleur, louez avec nous. Voitures récentes, livrées à l&apos;aéroport ou à votre hôtel, jour et nuit.
+            Drive the best, rent with us. Recent cars, delivered to the airport or your hotel, day and night.
           </p>
           <div data-hero-anim data-hero-rating className="mt-6 lg:mt-8">
             <GoogleRating />
@@ -65,7 +65,7 @@ export function Hero() {
           <div data-hero-anim data-hero-cta className="mt-8 lg:hidden">
             <Button variant="accent" size="lg" onClick={() => setSearchOpen(true)} className="w-full sm:w-auto">
               <CalendarDays className="size-4.5" aria-hidden />
-              Réserver
+              Book now
             </Button>
           </div>
         </div>
@@ -75,7 +75,7 @@ export function Hero() {
         </div>
       </div>
 
-      <Modal open={searchOpen} onClose={() => setSearchOpen(false)} title="Trouvez votre voiture" description="Choisissez vos lieux, dates et heures.">
+      <Modal open={searchOpen} onClose={() => setSearchOpen(false)} title="Find your car" description="Choose your places, dates and times.">
         <HeroSearch variant="sheet" />
       </Modal>
     </section>

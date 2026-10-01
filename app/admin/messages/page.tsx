@@ -13,8 +13,8 @@ import { useToast } from "@/components/ui/Toast";
 import { type ContactMessage, deleteMessage, setMessageStatus, type StatutMessage, useMessages } from "@/lib/contactMessages";
 import { formatDateTime } from "@/lib/format";
 
-const STATUTS: StatutMessage[] = ["Nouveau", "Lu", "Traité"];
-const TONES: Record<StatutMessage, BadgeTone> = { Nouveau: "amber", Lu: "blue", Traité: "green" };
+const STATUTS: StatutMessage[] = ["New", "Read", "Handled"];
+const TONES: Record<StatutMessage, BadgeTone> = { New: "amber", Read: "blue", Handled: "green" };
 
 export default function MessagesPage() {
   const messages = useMessages();
@@ -26,32 +26,32 @@ export default function MessagesPage() {
   const open = messages.find((m) => m.id === openId) ?? null;
 
   const view = (m: ContactMessage) => {
-    if (m.statut === "Nouveau") setMessageStatus(m.id, "Lu");
+    if (m.statut === "New") setMessageStatus(m.id, "Read");
     setOpenId(m.id);
   };
 
   return (
     <div className="space-y-6">
       <Tabs
-        label="Filtrer par statut"
+        label="Filter by status"
         value={statut}
         onChange={setStatut}
-        tabs={[{ value: "tous", label: "Tous", count: messages.length }, ...STATUTS.map((s) => ({ value: s, label: s, count: messages.filter((m) => m.statut === s).length }))]}
+        tabs={[{ value: "tous", label: "All", count: messages.length }, ...STATUTS.map((s) => ({ value: s, label: s, count: messages.filter((m) => m.statut === s).length }))]}
       />
 
       <Card padded={false}>
         <Table
-          caption="Messages reçus"
+          caption="Received messages"
           rows={list}
           rowKey={(m) => m.id}
-          empty={<EmptyState title="Aucun message" text="Aucun message ne correspond à ce filtre." />}
+          empty={<EmptyState title="No messages" text="No messages match this filter." />}
           columns={[
             {
               key: "nom",
-              header: "Expéditeur",
+              header: "Sender",
               render: (m) => (
                 <button type="button" onClick={() => view(m)} className="text-left hover:underline">
-                  <span className={m.statut === "Nouveau" ? "block font-semibold" : "block font-medium"}>{m.nom}</span>
+                  <span className={m.statut === "New" ? "block font-semibold" : "block font-medium"}>{m.nom}</span>
                   <span className="text-xs text-muted tabular-nums">{m.telephone}</span>
                 </button>
               ),
@@ -61,8 +61,8 @@ export default function MessagesPage() {
               header: "Message",
               render: (m) => <p className="line-clamp-2 max-w-md text-ink-2">{m.message}</p>,
             },
-            { key: "date", header: "Reçu le", render: (m) => formatDateTime(m.envoyeLe), className: "whitespace-nowrap tabular-nums" },
-            { key: "statut", header: "Statut", render: (m) => <Badge tone={TONES[m.statut]}>{m.statut}</Badge> },
+            { key: "date", header: "Received", render: (m) => formatDateTime(m.envoyeLe), className: "whitespace-nowrap tabular-nums" },
+            { key: "statut", header: "Status", render: (m) => <Badge tone={TONES[m.statut]}>{m.statut}</Badge> },
             {
               key: "actions",
               header: "Actions",
@@ -70,9 +70,9 @@ export default function MessagesPage() {
               render: (m) => (
                 <div className="flex justify-end gap-2">
                   <Button size="sm" variant="outline" onClick={() => view(m)}>
-                    Voir
+                    View
                   </Button>
-                  <Button size="sm" variant="outline" className="text-red-600 hover:border-red-300" onClick={() => setToDelete(m)} aria-label={`Supprimer le message de ${m.nom}`}>
+                  <Button size="sm" variant="outline" className="text-red-600 hover:border-red-300" onClick={() => setToDelete(m)} aria-label={`Delete message from ${m.nom}`}>
                     <Trash2 className="size-3.5" aria-hidden />
                   </Button>
                 </div>
@@ -86,23 +86,23 @@ export default function MessagesPage() {
         open={!!open}
         onClose={() => setOpenId(null)}
         title={open?.nom ?? ""}
-        description={open ? `Reçu le ${formatDateTime(open.envoyeLe)}` : undefined}
+        description={open ? `Received on ${formatDateTime(open.envoyeLe)}` : undefined}
         footer={
           open && (
             <>
-              {open.statut === "Traité" ? (
-                <Button variant="outline" onClick={() => setMessageStatus(open.id, "Lu")}>
-                  Marquer non traité
+              {open.statut === "Handled" ? (
+                <Button variant="outline" onClick={() => setMessageStatus(open.id, "Read")}>
+                  Mark as not handled
                 </Button>
               ) : (
                 <Button
                   onClick={() => {
-                    setMessageStatus(open.id, "Traité");
-                    toast("Message marqué comme traité.");
+                    setMessageStatus(open.id, "Handled");
+                    toast("Message marked as handled.");
                     setOpenId(null);
                   }}
                 >
-                  Marquer traité
+                  Mark as handled
                 </Button>
               )}
             </>
@@ -133,28 +133,28 @@ export default function MessagesPage() {
       <Modal
         open={!!toDelete}
         onClose={() => setToDelete(null)}
-        title="Supprimer ce message ?"
+        title="Delete this message?"
         size="sm"
         footer={
           <>
             <Button variant="outline" onClick={() => setToDelete(null)}>
-              Annuler
+              Cancel
             </Button>
             <Button
               variant="danger"
               onClick={() => {
                 if (!toDelete) return;
                 deleteMessage(toDelete.id);
-                toast("Message supprimé.");
+                toast("Message deleted.");
                 setToDelete(null);
               }}
             >
-              Supprimer
+              Delete
             </Button>
           </>
         }
       >
-        <p className="text-[15px] text-muted">Le message de {toDelete?.nom} sera supprimé définitivement.</p>
+        <p className="text-[15px] text-muted">The message from {toDelete?.nom} will be permanently deleted.</p>
       </Modal>
     </div>
   );

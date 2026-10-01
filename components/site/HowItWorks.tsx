@@ -5,9 +5,9 @@ import { gsap, useGSAP } from "@/lib/gsap";
 import { SectionHeading } from "./SectionHeading";
 
 const steps = [
-  { title: "Choisissez", text: "Parcourez la flotte et cliquez sur « Réserver » sur la voiture qui vous plaît." },
-  { title: "Datez", text: "Le calendrier s'ouvre : choisissez vos jours et heures de départ et de retour." },
-  { title: "Envoyez", text: "Remplissez le formulaire. Nous vous rappelons pour confirmer la remise." },
+  { title: "Choose", text: "Browse the fleet and click “Book” on the car you like." },
+  { title: "Pick dates", text: "The calendar opens: choose your pick-up and return days and times." },
+  { title: "Send", text: "Fill in the form. We call you back to confirm the handover." },
 ];
 
 export function HowItWorks() {
@@ -51,7 +51,7 @@ export function HowItWorks() {
   return (
     <section ref={ref} className="border-y border-line bg-surface py-20 sm:py-28" aria-labelledby="etapes-titre">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <SectionHeading className="mx-auto text-center md:mx-0 md:text-left" id="etapes-titre" title="Réserver en trois gestes" text="Aucun compte à créer. Vous choisissez, vous datez, vous envoyez." />
+        <SectionHeading className="mx-auto text-center md:mx-0 md:text-left" id="etapes-titre" title="Book in three steps" text="No account needed. You choose, pick your dates and send." />
         <ol data-steps className="relative mt-16 grid gap-12 md:grid-cols-3 md:gap-10">
           <span data-step-line className="absolute top-5 left-5 hidden h-0.5 origin-left -translate-y-1/2 rounded-full bg-accent md:block" style={{ right: "calc((100% - 5rem) / 3 - 1.25rem)" }} aria-hidden />
           {steps.map((s, i) => (
@@ -60,7 +60,7 @@ export function HowItWorks() {
                 {i + 1}
               </span>
               <h3 className="mt-6 font-display text-2xl font-semibold tracking-tight">
-                <span className="sr-only">Étape {i + 1} : </span>
+                <span className="sr-only">Step {i + 1}: </span>
                 {s.title}
               </h3>
               <p className="mx-auto mt-3 max-w-xs leading-relaxed text-muted md:mx-0">{s.text}</p>

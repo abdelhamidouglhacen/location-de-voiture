@@ -3,18 +3,18 @@ import { Accordion } from "@/components/ui/Accordion";
 import { SectionHeading } from "./SectionHeading";
 
 const questions = [
-  { question: "Quels documents faut-il pour louer une voiture ?", answer: "Un permis de conduire valide depuis au moins 2 ans, une pièce d'identité (CIN ou passeport) et la caution. Le conducteur doit avoir au moins 21 ans." },
-  { question: "Pouvez-vous livrer la voiture à l'aéroport ou à l'hôtel ?", answer: "Oui. Nous livrons à l'aéroport Agadir Al Massira (150 MAD) et à votre hôtel à Agadir ou Taghazout, à toute heure du jour et de la nuit." },
-  { question: "Comment fonctionne la caution ?", answer: "La caution est bloquée au départ, en espèces ou par carte, puis rendue au retour du véhicule s'il est rendu dans le même état. Son montant dépend de la catégorie." },
-  { question: "Le kilométrage est-il limité ?", answer: "Non, toutes nos locations sont en kilométrage illimité. La voiture est remise avec le plein et doit être rendue avec le plein." },
-  { question: "Puis-je annuler ma réservation ?", answer: "L'annulation est gratuite jusqu'à 48h avant le départ. Au-delà, un jour de location est retenu." },
+  { question: "What documents do I need to rent a car?", answer: "A driving licence held for at least 2 years, an ID document (national ID card or passport) and the deposit. The driver must be at least 21 years old." },
+  { question: "Can you deliver the car to the airport or my hotel?", answer: "Yes. We deliver to Agadir Al Massira airport (150 MAD) and to your hotel in Agadir or Taghazout, at any hour of the day or night." },
+  { question: "How does the deposit work?", answer: "The deposit is held at pick-up, in cash or by card, then returned when the vehicle comes back in the same condition. The amount depends on the category." },
+  { question: "Is mileage limited?", answer: "No, all our rentals come with unlimited mileage. The car is handed over with a full tank and must be returned with a full tank." },
+  { question: "Can I cancel my booking?", answer: "Cancellation is free up to 48 hours before pick-up. After that, one rental day is charged." },
 ];
 
 export function Faq() {
   return (
     <section className="py-20 sm:py-28" aria-labelledby="faq-titre">
       <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr]">
-        <SectionHeading id="faq-titre" title="Questions fréquentes" text="Tout ce qu'il faut savoir avant de prendre la route. Une autre question ? Appelez-nous, on répond 24h/24." />
+        <SectionHeading id="faq-titre" title="Frequently asked questions" text="Everything you need to know before hitting the road. Another question? Call us, we answer 24/7." />
         <StaggerGroup selector="[data-stagger-item]">
           <Accordion items={questions} />
         </StaggerGroup>

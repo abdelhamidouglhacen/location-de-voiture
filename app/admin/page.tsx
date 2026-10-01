@@ -16,10 +16,10 @@ import { bookingsSeries, dashboardSummary, type RevenuePeriod, revenueSeries, to
 import { formatDate, formatMAD } from "@/lib/format";
 
 const PERIODS = [
-  { value: "semaine", label: "Cette semaine" },
-  { value: "mois", label: "Ce mois" },
-  { value: "3mois", label: "3 mois" },
-  { value: "6mois", label: "6 mois" },
+  { value: "semaine", label: "This week" },
+  { value: "mois", label: "This month" },
+  { value: "3mois", label: "3 months" },
+  { value: "6mois", label: "6 months" },
 ];
 
 export default function DashboardPage() {
@@ -33,60 +33,60 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <StaggerGroup className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Revenus du mois" value={kpis.revenue} format="mad" change={kpis.revenueChange} hint="vs mois dernier" />
-        <StatCard label="Locations en cours" value={kpis.enCours} />
-        <StatCard label="Demandes à confirmer" value={kpis.aConfirmer} />
-        <StatCard label="Voitures disponibles" value={kpis.disponibles} suffix={` / ${kpis.totalVoitures}`} />
+        <StatCard label="Revenue this month" value={kpis.revenue} format="mad" change={kpis.revenueChange} hint="vs last month" />
+        <StatCard label="Ongoing rentals" value={kpis.enCours} />
+        <StatCard label="Requests to confirm" value={kpis.aConfirmer} />
+        <StatCard label="Available cars" value={kpis.disponibles} suffix={` / ${kpis.totalVoitures}`} />
       </StaggerGroup>
 
       <div className="grid gap-6 lg:grid-cols-3 [&>*]:min-w-0">
         <Card
-          title="Revenus"
+          title="Revenue"
           className="lg:col-span-2"
-          action={<Tabs label="Période des revenus" value={period} onChange={(v) => setPeriod(v as RevenuePeriod)} tabs={PERIODS} />}
+          action={<Tabs label="Revenue period" value={period} onChange={(v) => setPeriod(v as RevenuePeriod)} tabs={PERIODS} />}
         >
           <RevenueChart data={revenue} />
         </Card>
-        <Card title="Par catégorie">
+        <Card title="By category">
           <CategoryChart data={byCategory} />
         </Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3 [&>*]:min-w-0">
         <Card
-          title="Réservations"
+          title="Bookings"
           className="lg:col-span-2"
-          action={<Tabs label="Période des réservations" value={bookingPeriod} onChange={(v) => setBookingPeriod(v as RevenuePeriod)} tabs={PERIODS} />}
+          action={<Tabs label="Bookings period" value={bookingPeriod} onChange={(v) => setBookingPeriod(v as RevenuePeriod)} tabs={PERIODS} />}
         >
           <BookingsChart data={bookings} />
         </Card>
-        <Card title="Voitures les plus louées">
-          {cars.length ? <CategoryChart data={cars} /> : <p className="py-10 text-center text-sm text-muted">Aucune réservation sur cette période.</p>}
+        <Card title="Most rented cars">
+          {cars.length ? <CategoryChart data={cars} /> : <p className="py-10 text-center text-sm text-muted">No bookings in this period.</p>}
         </Card>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1fr_1.6fr] [&>*]:min-w-0">
-        <Card title="Aujourd'hui">
+        <Card title="Today">
           <TodaySchedule items={today} />
         </Card>
         <Card
-          title="Dernières réservations"
+          title="Latest bookings"
           padded={false}
           action={
             <Link href="/admin/reservations" className="text-sm text-muted hover:text-ink">
-              Tout voir
+              View all
             </Link>
           }
         >
           <div className="pt-3 pb-1">
             <Table
-              caption="Dernières réservations"
+              caption="Latest bookings"
               rows={latest}
               rowKey={(b) => b.id}
               columns={[
                 {
                   key: "ref",
-                  header: "Référence",
+                  header: "Reference",
                   className: "whitespace-nowrap",
                   render: (b) => (
                     <Link href={`/admin/reservations/${b.id}`} className="font-medium hover:underline">
@@ -94,11 +94,11 @@ export default function DashboardPage() {
                     </Link>
                   ),
                 },
-                { key: "client", header: "Client", render: (b) => b.customer.nomComplet },
-                { key: "voiture", header: "Voiture", render: (b) => `${b.car.marque} ${b.car.modele}` },
-                { key: "depart", header: "Départ", render: (b) => formatDate(b.dateDepart), className: "tabular-nums" },
+                { key: "client", header: "Customer", render: (b) => b.customer.nomComplet },
+                { key: "voiture", header: "Car", render: (b) => `${b.car.marque} ${b.car.modele}` },
+                { key: "depart", header: "Pick-up", render: (b) => formatDate(b.dateDepart), className: "tabular-nums" },
                 { key: "total", header: "Total", render: (b) => formatMAD(b.total), className: "text-right tabular-nums whitespace-nowrap" },
-                { key: "statut", header: "Statut", render: (b) => <StatusBadge status={b.statut} /> },
+                { key: "statut", header: "Status", render: (b) => <StatusBadge status={b.statut} /> },
               ]}
             />
           </div>

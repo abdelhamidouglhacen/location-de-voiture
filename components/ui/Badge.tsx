@@ -14,16 +14,16 @@ const tones = {
 export type BadgeTone = keyof typeof tones;
 
 const STATUS_TONES: Record<string, BadgeTone> = {
-  "En attente": "amber",
-  Confirmée: "blue",
-  "En cours": "green",
-  Terminée: "gray",
-  Annulée: "red",
-  "En maintenance": "orange",
-  Payé: "green",
-  Remboursé: "purple",
-  Disponible: "green",
-  Louée: "blue",
+  "Pending": "amber",
+  Confirmed: "blue",
+  "Ongoing": "green",
+  Completed: "gray",
+  Cancelled: "red",
+  "In maintenance": "orange",
+  Paid: "green",
+  Refunded: "purple",
+  Available: "green",
+  Rented: "blue",
 };
 
 export function statusTone(status: string): BadgeTone {

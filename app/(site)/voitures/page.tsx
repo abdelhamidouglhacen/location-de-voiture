@@ -5,14 +5,14 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { cars } from "@/lib/data/cars";
 
 export const metadata: Metadata = {
-  title: "Nos voitures",
-  description: "Toute la flotte AZUR DRIVE à Agadir : économiques, citadines, SUV, voitures de luxe et vans, dès 250 MAD par jour.",
+  title: "Our cars",
+  description: "The full AZUR DRIVE fleet in Agadir: economy cars, city cars, SUVs, luxury cars and vans, from 250 MAD per day.",
 };
 
 export default function CarsPage() {
   return (
     <>
-      <PageHeader title="Nos voitures" text="Choisissez une voiture, puis vos dates. Climatisation et kilométrage illimité partout." crumbs={[{ label: "Nos voitures" }]} />
+      <PageHeader title="Our cars" text="Choose a car, then your dates. Air conditioning and unlimited mileage on every car." crumbs={[{ label: "Our cars" }]} />
       <Suspense>
         <CarCatalog cars={cars} />
       </Suspense>

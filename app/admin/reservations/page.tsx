@@ -14,7 +14,7 @@ import { useBookingRows } from "@/lib/adminBookings";
 import { formatDate, formatMAD } from "@/lib/format";
 
 const PAGE_SIZE = 12;
-const STATUTS = ["En attente", "Confirmée", "En cours", "Terminée", "Annulée"];
+const STATUTS = ["Pending", "Confirmed", "Ongoing", "Completed", "Cancelled"];
 
 export default function ReservationsPage() {
   const bookingRows = useBookingRows();
@@ -38,22 +38,22 @@ export default function ReservationsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <Tabs
-          label="Filtrer par statut"
+          label="Filter by status"
           value={statut}
           onChange={(v) => {
             setStatut(v);
             setPage(1);
           }}
           tabs={[
-            { value: "tous", label: "Toutes", count: bookingRows.length },
+            { value: "tous", label: "All", count: bookingRows.length },
             ...STATUTS.map((s) => ({ value: s, label: s, count: bookingRows.filter((b) => b.statut === s).length })),
           ]}
         />
         <Input
           id="res-q"
-          aria-label="Rechercher une réservation"
+          aria-label="Search bookings"
           icon={<Search className="size-4" />}
-          placeholder="Référence, client, voiture"
+          placeholder="Reference, customer, car"
           value={q}
           onChange={(e) => {
             setQ(e.target.value);
@@ -65,14 +65,14 @@ export default function ReservationsPage() {
 
       <Card padded={false}>
         <Table
-          caption="Réservations"
+          caption="Bookings"
           rows={filtered.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE)}
           rowKey={(b) => b.id}
-          empty={<EmptyState title="Aucune réservation" text="Aucune réservation ne correspond à cette recherche." />}
+          empty={<EmptyState title="No bookings" text="No bookings match this search." />}
           columns={[
             {
               key: "ref",
-              header: "Référence",
+              header: "Reference",
               className: "whitespace-nowrap",
               render: (b) => (
                 <Link href={`/admin/reservations/${b.id}`} className="font-medium hover:underline">
@@ -82,7 +82,7 @@ export default function ReservationsPage() {
             },
             {
               key: "client",
-              header: "Client",
+              header: "Customer",
               render: (b) => (
                 <>
                   <span className="block">{b.customer.nomComplet}</span>
@@ -90,11 +90,11 @@ export default function ReservationsPage() {
                 </>
               ),
             },
-            { key: "voiture", header: "Voiture", render: (b) => `${b.car.marque} ${b.car.modele}` },
+            { key: "voiture", header: "Car", render: (b) => `${b.car.marque} ${b.car.modele}` },
             { key: "dates", header: "Dates", render: (b) => `${formatDate(b.dateDepart)} → ${formatDate(b.dateRetour)}`, className: "whitespace-nowrap tabular-nums" },
             { key: "total", header: "Total", render: (b) => formatMAD(b.total), className: "whitespace-nowrap text-right tabular-nums" },
-            { key: "paiement", header: "Paiement", render: (b) => <StatusBadge status={b.statutPaiement} /> },
-            { key: "statut", header: "Statut", render: (b) => <StatusBadge status={b.statut} /> },
+            { key: "paiement", header: "Payment", render: (b) => <StatusBadge status={b.statutPaiement} /> },
+            { key: "statut", header: "Status", render: (b) => <StatusBadge status={b.statut} /> },
           ]}
         />
         <Pagination page={current} pageCount={pageCount} onChange={setPage} total={filtered.length} pageSize={PAGE_SIZE} />

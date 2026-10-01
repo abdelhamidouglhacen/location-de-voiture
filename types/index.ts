@@ -1,7 +1,7 @@
-export type Categorie = "Économique" | "Citadine" | "SUV" | "Luxe" | "Van";
-export type Boite = "Manuelle" | "Automatique";
-export type Carburant = "Essence" | "Diesel" | "Hybride";
-export type StatutVoiture = "Disponible" | "Louée" | "En maintenance";
+export type Categorie = "Economy" | "City" | "SUV" | "Luxury" | "Van";
+export type Boite = "Manual" | "Automatic";
+export type Carburant = "Petrol" | "Diesel" | "Hybrid";
+export type StatutVoiture = "Available" | "Rented" | "In maintenance";
 
 export interface MaintenanceEntry {
   id: string;
@@ -38,8 +38,8 @@ export interface Car {
   ajouteLe: string;
 }
 
-export type StatutReservation = "En attente" | "Confirmée" | "En cours" | "Terminée" | "Annulée";
-export type StatutPaiement = "En attente" | "Payé" | "Remboursé";
+export type StatutReservation = "Pending" | "Confirmed" | "Ongoing" | "Completed" | "Cancelled";
+export type StatutPaiement = "Pending" | "Paid" | "Refunded";
 export type ModePaiement = "agence" | "carte";
 
 export interface EtatVehicule {

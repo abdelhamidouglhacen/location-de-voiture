@@ -30,12 +30,12 @@ export default function ClientsPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <p className="text-muted">{filtered.length} clients</p>
+        <p className="text-muted">{filtered.length} customers</p>
         <Input
           id="clients-q"
-          aria-label="Rechercher un client"
+          aria-label="Search customers"
           icon={<Search className="size-4" />}
-          placeholder="Nom, e-mail, téléphone"
+          placeholder="Name, email, phone"
           value={q}
           onChange={(e) => {
             setQ(e.target.value);
@@ -46,14 +46,14 @@ export default function ClientsPage() {
       </div>
       <Card padded={false}>
         <Table
-          caption="Clients"
+          caption="Customers"
           rows={filtered.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE)}
           rowKey={(c) => c.id}
-          empty={<EmptyState title="Aucun client" text="Aucun client ne correspond à cette recherche." />}
+          empty={<EmptyState title="No customers" text="No customers match this search." />}
           columns={[
             {
               key: "nom",
-              header: "Client",
+              header: "Customer",
               render: (c) => (
                 <Link href={`/admin/clients/${c.id}`} className="hover:underline">
                   <span className="block font-medium">{c.nomComplet}</span>
@@ -61,11 +61,11 @@ export default function ClientsPage() {
                 </Link>
               ),
             },
-            { key: "tel", header: "Téléphone", render: (c) => c.telephone, className: "whitespace-nowrap tabular-nums" },
-            { key: "nat", header: "Nationalité", render: (c) => c.nationalite },
-            { key: "loc", header: "Locations", render: (c) => c.nombreLocations, className: "tabular-nums" },
-            { key: "total", header: "Total dépensé", render: (c) => formatMAD(c.totalDepense), className: "whitespace-nowrap text-right tabular-nums" },
-            { key: "statut", header: "", render: (c) => c.listeNoire && <Badge tone="red">Liste noire</Badge> },
+            { key: "tel", header: "Phone", render: (c) => c.telephone, className: "whitespace-nowrap tabular-nums" },
+            { key: "nat", header: "Nationality", render: (c) => c.nationalite },
+            { key: "loc", header: "Rentals", render: (c) => c.nombreLocations, className: "tabular-nums" },
+            { key: "total", header: "Total spent", render: (c) => formatMAD(c.totalDepense), className: "whitespace-nowrap text-right tabular-nums" },
+            { key: "statut", header: "", render: (c) => c.listeNoire && <Badge tone="red">Blacklisted</Badge> },
           ]}
         />
         <Pagination page={current} pageCount={pageCount} onChange={setPage} total={filtered.length} pageSize={PAGE_SIZE} />

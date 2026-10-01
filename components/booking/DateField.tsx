@@ -3,7 +3,7 @@
 import { CalendarDays } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
-import { fr } from "react-day-picker/locale";
+import { enGB } from "react-day-picker/locale";
 import { cn } from "@/lib/cn";
 import { formatDate } from "@/lib/format";
 
@@ -60,7 +60,7 @@ export function DateField({ id, label, value, onChange, minDate, error, align = 
         )}
       >
         <CalendarDays className="size-4 shrink-0 text-accent-deep" aria-hidden />
-        <span className="truncate tabular-nums">{value ? formatDate(value) : hideLabel ? label : "Choisir"}</span>
+        <span className="truncate tabular-nums">{value ? formatDate(value) : hideLabel ? label : "Choose"}</span>
       </button>
       {error && (
         <p id={`${id}-error`} className="mt-1 text-xs text-red-600" role="alert">
@@ -78,7 +78,7 @@ export function DateField({ id, label, value, onChange, minDate, error, align = 
         >
           <DayPicker
             mode="single"
-            locale={fr}
+            locale={enGB}
             selected={value}
             defaultMonth={value ?? minDate}
             onSelect={(day) => {

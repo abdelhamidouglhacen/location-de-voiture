@@ -8,15 +8,15 @@ export default function NotFound() {
       <div>
         <LogoMark size={72} className="mx-auto" />
         <p className="mt-10 font-display text-7xl font-semibold tracking-[-0.04em] text-accent sm:text-8xl">404</p>
-        <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight sm:text-3xl">Cette page a pris une autre route</h1>
-        <p className="mx-auto mt-3 max-w-md text-muted">La page que vous cherchez n&apos;existe pas ou a été déplacée.</p>
+        <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight sm:text-3xl">This page took another road</h1>
+        <p className="mx-auto mt-3 max-w-md text-muted">The page you are looking for does not exist or has been moved.</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <Button href="/">Retour à l&apos;accueil</Button>
+          <Button href="/">Back to home</Button>
           <Button href="/voitures" variant="outline">
-            Voir nos voitures
+            See our cars
           </Button>
         </div>
-        <p className="mt-10 text-sm text-muted tabular-nums">Besoin d&apos;aide ? {BUSINESS.phones[0].label}</p>
+        <p className="mt-10 text-sm text-muted tabular-nums">Need help? {BUSINESS.phones[0].label}</p>
       </div>
     </main>
   );

@@ -13,9 +13,9 @@ export function LogoMark({ size = 44, className }: { size?: number; className?: 
   );
 }
 
-export function Logo({ size = 44, className, href = "/", subtitle = "Location de voitures" }: { size?: number; className?: string; href?: string; subtitle?: string }) {
+export function Logo({ size = 44, className, href = "/", subtitle = "Car rental" }: { size?: number; className?: string; href?: string; subtitle?: string }) {
   return (
-    <Link href={href} className={cn("inline-flex items-center gap-3", className)} aria-label={`${BUSINESS.name}, accueil`}>
+    <Link href={href} className={cn("inline-flex items-center gap-3", className)} aria-label={`${BUSINESS.name}, home`}>
       <LogoMark size={size} />
       <span className="leading-none">
         <span className="block font-display text-[15px] font-semibold tracking-[0.08em] text-ink">{BUSINESS.name}</span>

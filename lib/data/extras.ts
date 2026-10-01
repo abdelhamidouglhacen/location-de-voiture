@@ -1,9 +1,9 @@
 import type { Extra } from "@/types";
 
 export const extras: Extra[] = [
-  { id: "gps", nom: "GPS", description: "Navigation avec cartes du Maroc à jour.", prix: 30, unite: "jour" },
-  { id: "siege-bebe", nom: "Siège bébé", description: "Siège homologué pour enfant de 0 à 4 ans.", prix: 40, unite: "jour" },
-  { id: "conducteur", nom: "Conducteur supplémentaire", description: "Un deuxième conducteur assuré au volant.", prix: 50, unite: "jour" },
-  { id: "assurance", nom: "Assurance tous risques", description: "Franchise réduite en cas de dommages.", prix: 100, unite: "jour" },
-  { id: "livraison-aeroport", nom: "Livraison aéroport", description: "Voiture remise en main propre à l'aéroport Al Massira.", prix: 150, unite: "forfait" },
+  { id: "gps", nom: "GPS", description: "Navigation with up-to-date maps of Morocco.", prix: 30, unite: "jour" },
+  { id: "siege-bebe", nom: "Baby seat", description: "Approved seat for children aged 0 to 4.", prix: 40, unite: "jour" },
+  { id: "conducteur", nom: "Additional driver", description: "A second insured driver at the wheel.", prix: 50, unite: "jour" },
+  { id: "assurance", nom: "Full insurance", description: "Reduced excess in case of damage.", prix: 100, unite: "jour" },
+  { id: "livraison-aeroport", nom: "Airport delivery", description: "Car handed over in person at Al Massira airport.", prix: 150, unite: "forfait" },
 ];

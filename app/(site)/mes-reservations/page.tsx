@@ -3,15 +3,15 @@ import { MyReservations } from "@/components/site/MyReservations";
 import { PageHeader } from "@/components/site/PageHeader";
 
 export const metadata: Metadata = {
-  title: "Mes réservations",
-  description: "Retrouvez les voitures que vous avez réservées chez AZUR DRIVE, avec leurs dates et le prix estimé.",
+  title: "My bookings",
+  description: "Find the cars you booked with AZUR DRIVE, with their dates and estimated price.",
   robots: { index: false },
 };
 
 export default function MyReservationsPage() {
   return (
     <>
-      <PageHeader title="Mes réservations" text="Les voitures que vous avez demandées, leurs dates et le prix estimé." crumbs={[{ label: "Mes réservations" }]} />
+      <PageHeader title="My bookings" text="The cars you requested, their dates and the estimated price." crumbs={[{ label: "My bookings" }]} />
       <MyReservations />
     </>
   );
