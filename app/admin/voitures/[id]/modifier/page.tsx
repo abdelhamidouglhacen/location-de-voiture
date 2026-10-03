@@ -20,7 +20,7 @@ export default function EditCarPage() {
         {car.marque} {car.modele}
       </Link>
       <h2 className="font-display text-3xl font-semibold tracking-[-0.02em]">Edit car</h2>
-      <CarForm key={car.id} car={car} />
+      <CarForm />
     </div>
   );
 }

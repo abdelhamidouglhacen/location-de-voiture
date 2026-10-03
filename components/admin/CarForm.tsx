@@ -1,294 +1,629 @@
-"use client";
-
-import { ImagePlus, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+'use client'
+import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { Checkbox } from "@/components/ui/Checkbox";
-import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
-import { useToast } from "@/components/ui/Toast";
-import { saveCar, slugForCar } from "@/lib/adminCars";
-import type { Boite, Car, Carburant, Categorie, StatutVoiture } from "@/types";
+import { supabase } from "@/lib/supabase";
 
-const CATEGORIES: Categorie[] = ["Economy", "City", "SUV", "Luxury", "Van"];
-const BOITES: Boite[] = ["Manual", "Automatic"];
-const CARBURANTS: Carburant[] = ["Petrol", "Diesel", "Hybrid"];
-const STATUTS: StatutVoiture[] = ["Available", "Rented", "In maintenance"];
-const EQUIPEMENTS = [
-  "Air conditioning",
-  "Bluetooth",
-  "Power steering",
-  "Electric windows",
-  "ABS",
-  "Airbags",
-  "Touchscreen",
-  "Apple CarPlay / Android Auto",
-  "Reversing camera",
-  "Cruise control",
-  "Leather seats",
-  "Panoramic roof",
-  "Heated seats",
-  "Built-in GPS navigation",
-  "Parking assist",
-];
-const MAX_PHOTO_BYTES = 1_500_000;
+export function CarForm() {
 
-const opts = (list: readonly string[]) => list.map((v) => ({ value: v, label: v }));
+  const [files, setFiles] = useState<File[]>([])
+  const [form, setForm] = useState({
+    brand: '',
+    model: '',
+    year: '',
+    registration: '',
+    color: '',
+    mileage: '',
+    category: 'Economy',
+    status: 'Available',
+    gearbox: 'Manual',
+    fuel_type: 'Petrol',
+    seats: 0,
+    doors: 0, 
+    air_conditioning: false,
+    price_per_day: 0,
+    deposit: 0,
+    abs: false,
+    airbags: false,
+    cruise_control: false,
+    touchscreen: false,
+    reversing_camera: false,
+    parking_assist: false,
+    built_in_gps: false,
+    bluetooth: false,
+    panoramic_roof: false,
+  })
 
-interface Values {
-  marque: string;
-  modele: string;
-  annee: string;
-  categorie: Categorie;
-  boite: Boite;
-  carburant: Carburant;
-  places: string;
-  portes: string;
-  bagages: string;
-  prixParJour: string;
-  caution: string;
-  immatriculation: string;
-  couleur: string;
-  kilometrage: string;
-  statut: StatutVoiture;
-  climatisation: boolean;
-  equipements: string[];
-  images: string[];
-}
+  const createCar = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-function toValues(car?: Car): Values {
-  return {
-    marque: car?.marque ?? "",
-    modele: car?.modele ?? "",
-    annee: String(car?.annee ?? new Date().getFullYear()),
-    categorie: car?.categorie ?? "City",
-    boite: car?.boite ?? "Manual",
-    carburant: car?.carburant ?? "Petrol",
-    places: String(car?.places ?? 5),
-    portes: String(car?.portes ?? 5),
-    bagages: String(car?.bagages ?? 2),
-    prixParJour: car ? String(car.prixParJour) : "",
-    caution: car ? String(car.caution) : "",
-    immatriculation: car?.immatriculation ?? "",
-    couleur: car?.couleur ?? "",
-    kilometrage: car ? String(car.kilometrage) : "",
-    statut: car?.statut ?? "Available",
-    climatisation: car?.climatisation ?? true,
-    equipements: car?.equipements ?? ["Air conditioning", "Bluetooth", "ABS", "Airbags"],
-    images: car?.images ?? [],
-  };
-}
-
-type Errors = Partial<Record<keyof Values, string>>;
-
-function validate(v: Values): Errors {
-  const e: Errors = {};
-  const year = new Date().getFullYear() + 1;
-  if (!v.marque.trim()) e.marque = "Enter the brand.";
-  if (!v.modele.trim()) e.modele = "Enter the model.";
-  if (!v.immatriculation.trim()) e.immatriculation = "Enter the plate number.";
-  const annee = Number(v.annee);
-  if (!Number.isInteger(annee) || annee < 1990 || annee > year) e.annee = `Between 1990 and ${year}.`;
-  if (!(Number(v.prixParJour) > 0)) e.prixParJour = "Price must be above 0.";
-  if (v.caution !== "" && !(Number(v.caution) >= 0)) e.caution = "Invalid amount.";
-  if (v.kilometrage === "" || !(Number(v.kilometrage) >= 0)) e.kilometrage = "Invalid mileage.";
-  for (const k of ["places", "portes", "bagages"] as const) {
-    const n = Number(v[k]);
-    if (!Number.isInteger(n) || n < (k === "bagages" ? 0 : 1) || n > 20) e[k] = "Invalid value.";
-  }
-  if (v.images.length === 0) e.images = "Add at least one photo.";
-  return e;
-}
-
-export function CarForm({ car }: { car?: Car }) {
-  const router = useRouter();
-  const toast = useToast();
-  const [values, setValues] = useState<Values>(() => toValues(car));
-  const [errors, setErrors] = useState<Errors>({});
-  const [photoUrl, setPhotoUrl] = useState("");
-
-  const set = <K extends keyof Values>(key: K, value: Values[K]) => {
-    setValues((v) => ({ ...v, [key]: value }));
-    setErrors((e) => ({ ...e, [key]: undefined }));
-  };
-  const field = (key: keyof Values) => ({
-    name: key,
-    value: values[key] as string,
-    error: errors[key],
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => set(key, e.target.value as never),
-  });
-
-  const addPhotos = (urls: string[]) => set("images", [...values.images, ...urls]);
-
-  const onFiles = async (files: FileList | null) => {
-    if (!files) return;
-    const picked = Array.from(files);
-    if (picked.some((f) => f.size > MAX_PHOTO_BYTES)) {
-      toast("Photo too large (1.5 MB maximum).", "error");
-      return;
-    }
+    // upload pics into cloudinary
     const urls = await Promise.all(
-      picked.map(
-        (f) =>
-          new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.readAsDataURL(f);
-          }),
-      ),
-    );
-    addPhotos(urls);
-  };
+      files.map(async (file) => {
+        const body = new FormData();
+        body.append('file', file)
+        body.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!)
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const found = validate(values);
-    setErrors(found);
-    if (Object.values(found).some(Boolean)) {
-      toast("Fix the fields in red.", "error");
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/images/upload`, { method: 'POST', body})
+        const data = await res.json()
+        return data.secure_url as string;
+      })
+    )
+
+    const { status, ...car } = form;
+
+    // insert all data into supabase
+    const { error } = await supabase.from('Car').insert({
+      // add rest of data
+      ...car,
+      // add convert into numbers
+      year: Number(form.year),
+      mileage: Number(form.mileage),
+      seats: Number(form.seats),
+      doors: Number(form.doors),
+      price_per_day: Number(form.price_per_day),
+      deposit: Number(form.deposit),
+      images: urls
+    })
+
+    // check results of res
+    if(error){
+      console.error(error.message);
       return;
+    } else{
+      console.log('Car created!');
     }
-    const prixParJour = Number(values.prixParJour);
-    const next: Car = {
-      id: car?.id ?? slugForCar(values.marque, values.modele),
-      marque: values.marque.trim(),
-      modele: values.modele.trim(),
-      annee: Number(values.annee),
-      categorie: values.categorie,
-      boite: values.boite,
-      carburant: values.carburant,
-      places: Number(values.places),
-      portes: Number(values.portes),
-      bagages: Number(values.bagages),
-      climatisation: values.climatisation,
-      prixParJour,
-      prixParSemaine: prixParJour * 6,
-      prixParMois: prixParJour * 22,
-      caution: values.caution === "" ? 0 : Number(values.caution),
-      images: values.images,
-      equipements: values.equipements,
-      statut: values.statut,
-      immatriculation: values.immatriculation.trim(),
-      couleur: values.couleur.trim(),
-      kilometrage: Number(values.kilometrage),
-      maintenance: car?.maintenance ?? [],
-      ajouteLe: car?.ajouteLe ?? new Date().toISOString(),
-    };
-    saveCar(next);
-    toast(car ? "Car updated." : "Car added.");
-    router.push("/admin/voitures");
-  };
+  }
+
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-6">
-      <Card title="Details">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Input label="Brand" required placeholder="Dacia" {...field("marque")} />
-          <Input label="Model" required placeholder="Duster" {...field("modele")} />
-          <Input label="Year" required type="number" inputMode="numeric" {...field("annee")} />
-          <Input label="Plate number" required placeholder="12345-A-33" {...field("immatriculation")} />
-          <Input label="Colour" placeholder="White" {...field("couleur")} />
-          <Input label="Mileage (km)" required type="number" inputMode="numeric" min={0} {...field("kilometrage")} />
-          <Select label="Category" options={opts(CATEGORIES)} {...field("categorie")} />
-          <Select label="Status" options={opts(STATUTS)} {...field("statut")} />
+    <form noValidate className="space-y-6">
+      <div className="rounded-[20px] border border-line bg-surface">
+        <div className="px-5 pt-5">
+          <h2 className="font-display text-base font-semibold tracking-tight">
+            Details
+          </h2>
         </div>
-      </Card>
-
-      <Card title="Specifications">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Select label="Gearbox" options={opts(BOITES)} {...field("boite")} />
-          <Select label="Fuel" options={opts(CARBURANTS)} {...field("carburant")} />
-          <Input label="Seats" type="number" inputMode="numeric" min={1} {...field("places")} />
-          <Input label="Doors" type="number" inputMode="numeric" min={1} {...field("portes")} />
-          <Input label="Luggage" type="number" inputMode="numeric" min={0} {...field("bagages")} />
-          <div className="flex items-end pb-3">
-            <Checkbox name="climatisation" label="Air conditioning" checked={values.climatisation} onChange={(e) => set("climatisation", e.target.checked)} />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 p-5">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="brand" className="text-sm font-medium text-ink">
+              Brand
+              <span className="ml-0.5 text-red-600" aria-hidden>
+                *
+              </span>
+            </label>
+            <input
+              id="brand"
+              name="brand"
+              value={form.brand}
+              onChange={(e) => setForm({...form, brand: e.target.value})}
+              type="text"
+              placeholder="Dacia"
+              required
+              className="h-12 w-full rounded-xl border border-line bg-surface px-4 text-[15px] text-ink placeholder:text-muted/70 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="model" className="text-sm font-medium text-ink">
+              Model
+              <span className="ml-0.5 text-red-600" aria-hidden>
+                *
+              </span>
+            </label>
+            <input
+              id="model"
+              name="model"
+              type="text"
+              value={form.model}
+              onChange={(e) => setForm({...form, model: e.target.value})}
+              placeholder="Duster"
+              required
+              className="h-12 w-full rounded-xl border border-line bg-surface px-4 text-[15px] text-ink placeholder:text-muted/70 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="year" className="text-sm font-medium text-ink">
+              Year
+              <span className="ml-0.5 text-red-600" aria-hidden>
+                *
+              </span>
+            </label>
+            <input
+              id="year"
+              value={form.year}
+              onChange={(e) => setForm({...form, year: e.target.value})}
+              name="year"
+              type="number"
+              inputMode="numeric"
+              required
+              className="h-12 w-full rounded-xl border border-line bg-surface px-4 text-[15px] text-ink placeholder:text-muted/70 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="registration"
+              className="text-sm font-medium text-ink"
+            >
+              Plate number
+              <span className="ml-0.5 text-red-600" aria-hidden>
+                *
+              </span>
+            </label>
+            <input
+              id="registration"
+              name="registration"
+              value={form.registration}
+              onChange={(e) => setForm({...form, registration: e.target.value})}
+              type="text"
+              placeholder="12345-A-33"
+              required
+              className="h-12 w-full rounded-xl border border-line bg-surface px-4 text-[15px] text-ink placeholder:text-muted/70 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="color" className="text-sm font-medium text-ink">
+              Colour
+            </label>
+            <input
+              id="color"
+              name="color"
+              value={form.color}
+              onChange={(e) => setForm({...form, color: e.target.value})}
+              type="text"
+              placeholder="White"
+              className="h-12 w-full rounded-xl border border-line bg-surface px-4 text-[15px] text-ink placeholder:text-muted/70 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="mileage" className="text-sm font-medium text-ink">
+              Mileage (km)
+              <span className="ml-0.5 text-red-600" aria-hidden>
+                *
+              </span>
+            </label>
+            <input
+              id="mileage"
+              name="mileage"
+              value={form.mileage}
+              onChange={(e) => setForm({...form, mileage: e.target.value})}
+              type="number"
+              inputMode="numeric"
+              min={0}
+              required
+              className="h-12 w-full rounded-xl border border-line bg-surface px-4 text-[15px] text-ink placeholder:text-muted/70 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="category" className="text-sm font-medium text-ink">
+              Category
+            </label>
+            <div className="relative">
+              <select
+                id="category"
+                value={form.category}
+                onChange={(e) => setForm({...form, category: e.target.value})}
+                name="category"
+                className="h-12 w-full cursor-pointer appearance-none rounded-xl border border-line bg-surface px-4 pr-10 text-[15px] text-ink transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+              >
+                <option value="Economy">Economy</option>
+                <option value="City">City</option>
+                <option value="SUV">SUV</option>
+                <option value="Luxury">Luxury</option>
+                <option value="Van">Van</option>
+              </select>
+              <svg
+                className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-muted"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="status" className="text-sm font-medium text-ink">
+              Status
+            </label>
+            <div className="relative">
+              <select
+                id="status"
+                name="status"
+                value={form.status}
+                onChange={(e) => setForm({...form, status: e.target.value})}
+                className="h-12 w-full cursor-pointer appearance-none rounded-xl border border-line bg-surface px-4 pr-10 text-[15px] text-ink transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+              >
+                <option value="Available">Available</option>
+                <option value="Rented">Rented</option>
+                <option value="In maintenance">In maintenance</option>
+              </select>
+              <svg
+                className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-muted"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </div>
           </div>
         </div>
-      </Card>
+      </div>
 
-      <Card title="Pricing">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Input label="Price per day (MAD)" required type="number" inputMode="numeric" min={1} {...field("prixParJour")} />
-          <Input label="Deposit (MAD)" type="number" inputMode="numeric" min={0} hint="Returned when the vehicle comes back." {...field("caution")} />
+      <div className="rounded-[20px] border border-line bg-surface">
+        <div className="px-5 pt-5">
+          <h2 className="font-display text-base font-semibold tracking-tight">
+            Specifications
+          </h2>
         </div>
-      </Card>
-
-      <Card title="Features">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {EQUIPEMENTS.map((eq, i) => (
-            <Checkbox
-              key={eq}
-              id={`eq-${i}`}
-              label={eq}
-              checked={values.equipements.includes(eq)}
-              onChange={(e) => set("equipements", e.target.checked ? [...values.equipements, eq] : values.equipements.filter((x) => x !== eq))}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 p-5">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="gearbox" className="text-sm font-medium text-ink">
+              Gearbox
+            </label>
+            <div className="relative">
+              <select
+                id="gearbox"
+                value={form.gearbox}
+                onChange={(e) => setForm({...form, gearbox: e.target.value})}
+                name="gearbox"
+                className="h-12 w-full cursor-pointer appearance-none rounded-xl border border-line bg-surface px-4 pr-10 text-[15px] text-ink transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+              >
+                <option value="Manual">Manual</option>
+                <option value="Automatic">Automatic</option>
+              </select>
+              <svg
+                className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-muted"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="fuel_type" className="text-sm font-medium text-ink">
+              Fuel
+            </label>
+            <div className="relative">
+              <select
+                id="fuel_type"
+                name="fuel_type"
+                value={form.fuel_type}
+                onChange={(e) => setForm({...form, fuel_type: e.target.value})}
+                className="h-12 w-full cursor-pointer appearance-none rounded-xl border border-line bg-surface px-4 pr-10 text-[15px] text-ink transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+              >
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Hybrid">Hybrid</option>
+              </select>
+              <svg
+                className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-muted"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="seats" className="text-sm font-medium text-ink">
+              Seats
+            </label>
+            <input
+              id="seats"
+              name="seats"
+              value={form.seats}
+              onChange={(e) => setForm({...form, seats: Number(e.target.value)})}
+              type="number"
+              inputMode="numeric"
+              min={1}
+              className="h-12 w-full rounded-xl border border-line bg-surface px-4 text-[15px] text-ink placeholder:text-muted/70 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
             />
-          ))}
-        </div>
-      </Card>
-
-      <Card title="Photos">
-        <div className="space-y-4">
-          {values.images.length > 0 && (
-            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {values.images.map((src, i) => (
-                <li key={`${i}-${src.slice(0, 40)}`} className="relative aspect-[16/10] overflow-hidden rounded-xl bg-sand">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- previews may be data URLs */}
-                  <img src={src} alt="" className="size-full object-cover" />
-                  {i === 0 && <span className="absolute bottom-2 left-2 rounded-full bg-ink/80 px-2 py-0.5 text-xs text-white">Main</span>}
-                  <button
-                    type="button"
-                    onClick={() => set("images", values.images.filter((_, j) => j !== i))}
-                    className="absolute top-2 right-2 grid size-7 place-items-center rounded-full bg-surface/90 text-ink shadow hover:bg-surface"
-                    aria-label={`Remove photo ${i + 1}`}
-                  >
-                    <X className="size-4" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-            <Input
-              label="Add by link"
-              name="photoUrl"
-              placeholder="/cars/dacia-duster-1.jpg or https://…"
-              value={photoUrl}
-              onChange={(e) => setPhotoUrl(e.target.value)}
-              wrapperClassName="flex-1"
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="doors" className="text-sm font-medium text-ink">
+              Doors
+            </label>
+            <input
+              id="doors"
+              name="doors"
+              type="number"
+              value={form.doors}
+                onChange={(e) => setForm({...form, doors: Number(e.target.value)})}
+              inputMode="numeric"
+              min={1}
+              className="h-12 w-full rounded-xl border border-line bg-surface px-4 text-[15px] text-ink placeholder:text-muted/70 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
             />
-            <Button
-              variant="outline"
-              onClick={() => {
-                if (!photoUrl.trim()) return;
-                addPhotos([photoUrl.trim()]);
-                setPhotoUrl("");
-              }}
+          </div>
+          <div className="flex items-end pb-3">
+            <label
+              htmlFor="air_conditioning"
+              className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
             >
-              Add
-            </Button>
-            <label className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-line bg-surface px-5 text-sm font-medium transition hover:border-ink/40">
-              <ImagePlus className="size-4" aria-hidden />
-              Upload
-              <input type="file" accept="image/*" multiple className="sr-only" onChange={(e) => onFiles(e.target.files)} />
+              <input
+                id="air_conditioning"
+                name="air_conditioning"
+                checked={form.air_conditioning}
+                onChange={(e) => setForm({ ...form, air_conditioning: e.target.checked})}
+                type="checkbox"
+                className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+              />
+              <span>Air conditioning</span>
             </label>
           </div>
-          {errors.images && (
-            <p className="text-sm text-red-600" role="alert">
-              {errors.images}
-            </p>
-          )}
         </div>
-      </Card>
+      </div>
+
+      <div className="rounded-[20px] border border-line bg-surface">
+        <div className="px-5 pt-5">
+          <h2 className="font-display text-base font-semibold tracking-tight">
+            Pricing
+          </h2>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 p-5">
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="price_per_day"
+              className="text-sm font-medium text-ink"
+            >
+              Price per day (MAD)
+              <span className="ml-0.5 text-red-600" aria-hidden>
+                *
+              </span>
+            </label>
+            <input
+              id="price_per_day"
+              name="price_per_day"
+              value={form.price_per_day}
+              onChange={(e) => setForm({ ...form, price_per_day: Number(e.target.value)})}
+              type="number"
+              inputMode="numeric"
+              min={1}
+              required
+              className="h-12 w-full rounded-xl border border-line bg-surface px-4 text-[15px] text-ink placeholder:text-muted/70 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="deposit" className="text-sm font-medium text-ink">
+              Deposit (MAD)
+            </label>
+            <input
+              id="deposit"
+              name="deposit"
+              value={form.deposit}
+              onChange={(e) => setForm({ ...form, deposit: Number(e.target.value)})}
+              type="number"
+              inputMode="numeric"
+              min={0}
+              className="h-12 w-full rounded-xl border border-line bg-surface px-4 text-[15px] text-ink placeholder:text-muted/70 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"
+            />
+            <p className="text-xs text-muted">
+              Returned when the vehicle comes back.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-[20px] border border-line bg-surface">
+        <div className="px-5 pt-5">
+          <h2 className="font-display text-base font-semibold tracking-tight">
+            Features
+          </h2>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 p-5">
+          {/* <label
+            htmlFor="power_windows"
+            className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
+          >
+            <input
+              id="power_windows"
+              name="power_windows"
+               checked={form.po}
+              onChange={(e) => setForm({ ...form, po: e.target.checked})}
+              type="checkbox"
+              className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+            />
+            <span>Electric windows</span>
+          </label> */}
+          <label
+            htmlFor="touchscreen"
+            className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
+          >
+            <input
+              id="touchscreen"
+              name="touchscreen"
+              checked={form.touchscreen}
+              onChange={(e) => setForm({ ...form, touchscreen: e.target.checked})}
+              type="checkbox"
+              className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+            />
+            <span>Touchscreen</span>
+          </label>
+          <label
+            htmlFor="cruise_control"
+            className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
+          >
+            <input
+              id="cruise_control"
+              name="cruise_control"
+              checked={form.cruise_control}
+              onChange={(e) => setForm({ ...form, cruise_control: e.target.checked})}
+              type="checkbox"
+              className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+            />
+            <span>Cruise control</span>
+          </label>
+          <label
+            htmlFor="bluetooth"
+            className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
+          >
+            <input
+              id="bluetooth"
+              name="bluetooth"
+              checked={form.bluetooth}
+              onChange={(e) => setForm({ ...form, bluetooth: e.target.checked})}
+              type="checkbox"
+              className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+            />
+            <span>Bluetooth</span>
+          </label>
+          <label
+            htmlFor="abs"
+            className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
+          >
+            <input
+              id="abs"
+              name="abs"
+              checked={form.abs}
+              onChange={(e) => setForm({ ...form, abs: e.target.checked})}
+              type="checkbox"
+              className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+            />
+            <span>ABS</span>
+          </label>
+          <label
+            htmlFor="built_in_gps"
+            className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
+          >
+            <input
+              id="built_in_gps"
+              name="built_in_gps"
+              checked={form.built_in_gps}
+              onChange={(e) => setForm({ ...form, built_in_gps: e.target.checked})}
+              type="checkbox"
+              className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+            />
+            <span>Built-in GPS navigation</span>
+          </label>
+          <label
+            htmlFor="airbags"
+            className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
+          >
+            <input
+              id="airbags"
+              name="airbags"
+              checked={form.airbags}
+              onChange={(e) => setForm({ ...form, airbags: e.target.checked})}
+              type="checkbox"
+              className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+            />
+            <span>Airbags</span>
+          </label>
+          <label
+            htmlFor="rear_camera"
+            className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
+          >
+            <input
+              id="rear_camera"
+              name="rear_camera"
+              checked={form.reversing_camera}
+              onChange={(e) => setForm({ ...form, reversing_camera: e.target.checked})}
+              type="checkbox"
+              className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+            />
+            <span>Reversing camera</span>
+          </label>
+          <label
+            htmlFor="panoramic_roof"
+            className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
+          >
+            <input
+              id="panoramic_roof"
+              checked={form.panoramic_roof}
+              onChange={(e) => setForm({ ...form, panoramic_roof: e.target.checked})}
+              name="panoramic_roof"
+              type="checkbox"
+              className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+            />
+            <span>Panoramic roof</span>
+          </label>
+          <label
+            htmlFor="parking_assist"
+            className="inline-flex cursor-pointer items-start gap-3 text-sm text-ink"
+          >
+            <input
+              id="parking_assist"
+              checked={form.parking_assist}
+              onChange={(e) => setForm({ ...form, parking_assist: e.target.checked})}
+              name="parking_assist"
+              type="checkbox"
+              className="mt-0.5 size-4.5 shrink-0 cursor-pointer rounded accent-ink"
+            />
+            <span>Parking assist</span>
+          </label>
+        </div>
+      </div>
+
+      <div className="rounded-[20px] border border-line bg-surface">
+        <div className="px-5 pt-5">
+          <h2 className="font-display text-base font-semibold tracking-tight">
+            Photos
+          </h2>
+        </div>
+        <div className="flex p-5">
+          <label className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-line bg-surface px-5 text-sm font-medium transition hover:border-ink/40">
+            <svg
+              className="size-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M16 5h6" />
+              <path d="M19 2v6" />
+              <path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5" />
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+              <circle cx="9" cy="9" r="2" />
+            </svg>
+            Upload
+            <input
+              id="images"
+              name="images"
+              type="file"
+              onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
+              accept="image/*"
+              multiple
+              className="sr-only"
+            />
+          </label>
+        </div>
+      </div>
 
       <div className="flex flex-wrap justify-end gap-3">
-        <Button href="/admin/voitures" variant="outline">
+        <Link
+          href="/admin/voitures"
+          className="inline-flex h-11 items-center justify-center rounded-full border border-line bg-surface px-5 text-sm font-medium text-ink transition hover:border-ink/40"
+        >
           Cancel
-        </Button>
-        <Button type="submit">{car ? "Save" : "Add car"}</Button>
+        </Link>
+        <button
+          type="button"
+          onClick={createCar}
+          className="inline-flex h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-medium text-white transition hover:bg-ink-2"
+        >
+          Save
+        </button>
       </div>
     </form>
   );
