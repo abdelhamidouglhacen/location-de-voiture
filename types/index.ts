@@ -1,55 +1,55 @@
-export type Categorie = "Economy" | "City" | "SUV" | "Luxury" | "Van";
-export type Boite = "Manual" | "Automatic";
-export type Carburant = "Petrol" | "Diesel" | "Hybrid";
-export type StatutVoiture = "Available" | "Rented" | "In maintenance";
+export type Category = "Economy" | "City" | "SUV" | "Luxury" | "Van";
+export type Gearbox = "Manual" | "Automatic";
+export type FuelType = "Petrol" | "Diesel" | "Hybrid";
+export type CarStatus = "Available" | "Rented" | "In maintenance";
 
 export interface MaintenanceEntry {
   id: string;
   date: string;
   type: string;
-  cout: number;
-  kilometrage: number;
-  prochainEntretien: string;
+  cost: number;
+  mileage: number;
+  next_service: string;
 }
 
 export interface Car {
   id: string;
-  marque: string;
-  modele: string;
-  annee: number;
-  categorie: Categorie;
-  boite: Boite;
-  carburant: Carburant;
-  places: number;
-  portes: number;
-  bagages: number;
-  climatisation: boolean;
-  prixParJour: number;
-  prixParSemaine: number;
-  prixParMois: number;
-  caution: number;
+  brand: string;
+  model: string;
+  year: number;
+  category: Category;
+  gearbox: Gearbox;
+  fuel_type: FuelType;
+  seats: number;
+  doors: number;
+  luggage: number;
+  air_conditioning: boolean;
+  price_per_day: number;
+  price_per_week: number;
+  price_per_month: number;
+  deposit: number;
   images: string[];
-  equipements: string[];
-  statut: StatutVoiture;
-  immatriculation: string;
-  couleur: string;
-  kilometrage: number;
+  features: string[];
+  status: CarStatus;
+  registration: string;
+  color: string;
+  mileage: number;
   maintenance: MaintenanceEntry[];
-  ajouteLe: string;
+  created_at: string;
 }
 
-export type StatutReservation = "Pending" | "Confirmed" | "Ongoing" | "Completed" | "Cancelled";
-export type StatutPaiement = "Pending" | "Paid" | "Refunded";
-export type ModePaiement = "agence" | "carte";
+export type BookingStatus = "Pending" | "Confirmed" | "Ongoing" | "Completed" | "Cancelled";
+export type PaymentStatus = "Pending" | "Paid" | "Refunded";
+export type PaymentMethod = "agency" | "card";
 
-export interface EtatVehicule {
-  kilometrage: number;
-  carburant: string;
-  dommages: string;
+export interface VehicleCondition {
+  mileage: number;
+  fuel: string;
+  damages: string;
 }
 
 export interface BookingEvent {
-  statut: StatutReservation;
+  status: BookingStatus;
   date: string;
   note?: string;
 }
@@ -57,69 +57,69 @@ export interface BookingEvent {
 export interface Booking {
   id: string;
   reference: string;
-  clientId: string;
-  voitureId: string;
-  lieuDepartId: string;
-  lieuRetourId: string;
-  dateDepart: string;
-  dateRetour: string;
-  options: string[];
-  nombreJours: number;
-  sousTotal: number;
-  optionsTotal: number;
-  remise: number;
+  customer_id: string;
+  car_id: string;
+  pickup_location_id: string;
+  return_location_id: string;
+  pickup_date: string;
+  return_date: string;
+  extras: string[];
+  days: number;
+  subtotal: number;
+  extras_total: number;
+  discount: number;
   total: number;
-  statutPaiement: StatutPaiement;
-  statut: StatutReservation;
-  modePaiement: ModePaiement;
-  numeroVol?: string;
+  payment_status: PaymentStatus;
+  status: BookingStatus;
+  payment_method: PaymentMethod;
+  flight_number?: string;
   notes: string;
-  historique: BookingEvent[];
-  etatDepart?: EtatVehicule;
-  etatRetour?: EtatVehicule;
-  creeLe: string;
+  history: BookingEvent[];
+  pickup_condition?: VehicleCondition;
+  return_condition?: VehicleCondition;
+  created_at: string;
 }
 
 export interface Customer {
   id: string;
-  nomComplet: string;
+  full_name: string;
   email: string;
-  telephone: string;
-  nationalite: string;
-  numeroPermis: string;
-  expirationPermis: string;
-  pieceIdentite: string;
+  phone: string;
+  nationality: string;
+  license_number: string;
+  license_expiry: string;
+  id_document: string;
   age: number;
-  nombreLocations: number;
-  totalDepense: number;
-  listeNoire: boolean;
-  raisonListeNoire?: string;
+  rentals_count: number;
+  total_spent: number;
+  blacklisted: boolean;
+  blacklist_reason?: string;
   notes: string;
-  creeLe: string;
+  created_at: string;
 }
 
 export interface Extra {
   id: string;
-  nom: string;
+  name: string;
   description: string;
-  prix: number;
-  unite: "jour" | "forfait";
+  price: number;
+  unit: "day" | "flat";
 }
 
 export interface Location {
   id: string;
-  nom: string;
-  adresse: string;
+  name: string;
+  address: string;
 }
 
 export interface DriverInfo {
-  nomComplet: string;
+  full_name: string;
   email: string;
-  telephone: string;
+  phone: string;
   age: string;
-  numeroPermis: string;
-  expirationPermis: string;
-  pieceIdentite: string;
-  numeroVol: string;
-  remarques: string;
+  license_number: string;
+  license_expiry: string;
+  id_document: string;
+  flight_number: string;
+  remarks: string;
 }

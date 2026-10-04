@@ -1,10 +1,10 @@
 "use client";
-
+import { useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import { Pencil, Plus, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { deleteCar, useAdminCars } from "@/lib/adminCars";
-import { formatMAD, formatNumber } from "@/lib/format";
+import Image from "next/image";
 import type { Car } from "@/types";
 
 const statusStyles: Record<string, string> = {
@@ -14,9 +14,16 @@ const statusStyles: Record<string, string> = {
 };
 
 export default function AdminCarsPage() {
-  const list = useAdminCars();
-
+  const [cars, setCars] = useState<Car[]>([]);
   const [toDelete, setToDelete] = useState<Car | null>(null);
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      const { data } = await supabase.from("Car").select("*");
+      setCars(data ?? []);
+    };
+    fetchCars();
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -104,88 +111,66 @@ export default function AdminCarsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
-              {list.length === 0 ? (
-                <tr>
-                  {/* Empty state */}
-                  <td colSpan={6} className="px-5 py-12 text-center">
-                    <p className="font-medium text-ink">No cars</p>
-                    <p className="mt-1 text-muted">
-                      No cars match this filter.
-                    </p>
+              {/* Row 1 */}
+              {cars.map((car) => (
+                <tr key={car.id} className="transition hover:bg-paper">
+                  <td className="px-5 py-3">
+                    <Link
+                      href="#"
+                      className="flex items-center gap-3 hover:underline"
+                    >
+                      <span className="relative h-12 w-18 shrink-0 overflow-hidden rounded-lg bg-sand">
+                        {car.images?.[0] && (
+                          <Image
+                            src={car.images[0]}
+                            alt={`${car.brand} ${car.model}`}
+                            fill
+                            sizes="72px"
+                            className="object-cover"
+                          />
+                        )}
+                      </span>
+                      <span>
+                        <span className="block font-medium">
+                          {car.brand} {car.model}
+                        </span>
+                        <span className="block text-xs text-muted">
+                          {car.category} · {car.year}
+                        </span>
+                      </span>
+                    </Link>
+                  </td>
+                  <td className="px-5 py-3 tabular-nums">{car.registration}</td>
+                  <td className="px-5 py-3 tabular-nums">{car.mileage} Km</td>
+                  <td className="px-5 py-3 tabular-nums">
+                    {car.price_per_day} MAD
+                  </td>
+                  <td className="px-5 py-3">
+                    <span className="inline-flex rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700">
+                      {car.status}
+                    </span>
+                  </td>
+                  <td className="px-5 py-3 text-right">
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        href="#"
+                        className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3.5 text-sm font-medium text-ink transition hover:border-ink/40"
+                      >
+                        <Pencil className="size-3.5" aria-hidden />
+                        Edit
+                      </Link>
+                      <button
+                        type="button"
+                        // onClick={toDelete}
+                        className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3.5 text-sm font-medium text-red-600 transition hover:border-red-300"
+                      >
+                        <Trash2 className="size-3.5" aria-hidden />
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
-              ) : (
-                list.map((c) => (
-                  <tr key={c.id}>
-                    <td className="px-5 py-3">
-                      <Link
-                        href={`/admin/voitures/${c.id}`}
-                        className="flex items-center gap-3 hover:underline"
-                      >
-                        <span className="relative h-12 w-18 shrink-0 overflow-hidden rounded-lg bg-sand">
-                          {c.images[0] && (
-                            // eslint-disable-next-line @next/next/no-img-element -- admin photos may be data URLs or external links
-                            <img
-                              src={c.images[0]}
-                              alt=""
-                              className="size-full object-cover"
-                            />
-                          )}
-                        </span>
-                        <span>
-                          <span className="block font-medium">
-                            {c.marque} {c.modele}
-                          </span>
-                          <span className="block text-xs text-muted">
-                            {c.categorie} · {c.annee}
-                          </span>
-                        </span>
-                      </Link>
-                    </td>
-                    <td className="px-5 py-3 tabular-nums">
-                      {c.immatriculation}
-                    </td>
-                    <td className="px-5 py-3 tabular-nums">
-                      {formatNumber(c.kilometrage)} km
-                    </td>
-                    <td className="px-5 py-3 tabular-nums">
-                      {formatMAD(c.prixParJour)}
-                    </td>
-                    <td className="px-5 py-3">
-                      {/* Status badge */}
-                      <span
-                        className={`inline-flex rounded-full border px-2.5 py-0.5 text-xs font-medium ${
-                          statusStyles[c.statut] ??
-                          "bg-sand text-muted border-line"
-                        }`}
-                      >
-                        {c.statut}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Link
-                          href={`/admin/voitures/${c.id}/modifier`}
-                          aria-label={`Edit ${c.marque} ${c.modele}`}
-                          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3.5 text-sm font-medium text-ink transition hover:border-ink/40"
-                        >
-                          <Pencil className="size-3.5" aria-hidden />
-                          Edit
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => setToDelete(c)}
-                          aria-label={`Delete ${c.marque} ${c.modele}`}
-                          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3.5 text-sm font-medium text-red-600 transition hover:border-red-300"
-                        >
-                          <Trash2 className="size-3.5" aria-hidden />
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
+              ))}
             </tbody>
           </table>
         </div>
@@ -223,8 +208,8 @@ export default function AdminCarsPage() {
             </div>
 
             <p className="mt-3 text-[15px] text-muted">
-              {toDelete.marque} {toDelete.modele} ({toDelete.immatriculation})
-              will be removed from the fleet. This cannot be undone.
+              {toDelete.brand} {toDelete.model} ({toDelete.registration}) will
+              be removed from the fleet. This cannot be undone.
             </p>
 
             <div className="mt-6 flex justify-end gap-3">
