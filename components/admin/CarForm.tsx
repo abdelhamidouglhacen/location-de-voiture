@@ -2,10 +2,15 @@
 import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
 export function CarForm() {
+  const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
-  const [preveiw, setPreview] = useState<string[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
+  const [preview, setPreview] = useState<string[]>([]);
   const [form, setForm] = useState({
     brand: "",
     model: "",
@@ -36,9 +41,61 @@ export function CarForm() {
   const createCar = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const lettersOnly = /^[A-Za-zÀ-ÿ\s-]+$/; // letters, spaces, hyphens
+    const lettersNumbers = /^[A-Za-z0-9À-ÿ\s-]+$/; // + numbers
+    const plate = /^\d{1,5}-[A-Za-z]-\d{1,2}$/; // e.g. 12345-A-33
+
+    const newErrors: string[] = [];
+
+    // input validation
+    if (!lettersOnly.test(form.brand.trim())) {
+      newErrors.push("Brand: letters only");
+      toast.error("Brand: letters only");
+    }
+
+    if (!lettersNumbers.test(form.model.trim())) {
+      newErrors.push("Model: letters and numbers only");
+      toast.error("Model: letters and numbers only");
+    }
+
+    if (form.color && !lettersOnly.test(form.color.trim())) {
+      newErrors.push("Colour: letters only");
+      toast.error("Colour: letters only");
+    }
+
+    if (!plate.test(form.registration.trim())) {
+      newErrors.push("Plate format: 12345-A-33");
+      toast.error("Plate format: 12345-A-33");
+    }
+
+    if (!form.year) {
+      newErrors.push("Year is required");
+      toast.error("Year is required");
+    }
+
+    if (!form.mileage) {
+      newErrors.push("mileage is required");
+      toast.error("mileage is required");
+    }
+
+    if (files.length === 0) {
+      newErrors.push("Add at least one photo");
+      toast.error("Add at least one photo");
+    }
+
+    setErrors(newErrors)
+
+    if(errors.length > 0){
+      return;
+    }
+
     // upload pics into cloudinary
+
+    // we use Promise to tell array to wait till data comes in
     const urls = await Promise.all(
+      // it creates a new array where each file is replaced by its URL
       files.map(async (file) => {
+        // send files into cloudinary using FormData
         const body = new FormData();
         body.append("file", file);
         body.append(
@@ -46,6 +103,7 @@ export function CarForm() {
           process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!,
         );
 
+        // get Urls from cloudinary
         const res = await fetch(
           `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
           { method: "POST", body },
@@ -76,12 +134,68 @@ export function CarForm() {
       console.error(error.message);
       return;
     } else {
-      console.log("Car created!");
+      toast.success("Car Created");
+      router.push("/admin/voitures");
     }
   };
 
   return (
     <form noValidate className="space-y-6">
+      <Toaster position="top-center" />
+      {errors.length > 0 && (
+        <div
+          role="alert"
+          className="rounded-[20px] border border-red-200 bg-red-50 p-5"
+        >
+          <div className="flex items-start gap-3">
+            <svg
+              className="mt-0.5 size-5 shrink-0 text-red-600"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v4" />
+              <path d="M12 16h.01" />
+            </svg>
+            <div className="flex-1">
+              <h3 className="font-display text-sm font-semibold text-red-800">
+                Please fix the following{" "}
+                {errors.length > 1 ? "errors" : "error"}:
+              </h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-red-700">
+                {errors.map((err) => (
+                  <li key={err}>{err}</li>
+                ))}
+              </ul>
+            </div>
+            <button
+              type="button"
+              aria-label="Dismiss errors"
+              onClick={() => setErrors([])}
+              className="grid size-7 place-items-center rounded-full text-red-700 transition hover:bg-red-100"
+            >
+              <svg
+                className="size-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
       <div className="rounded-[20px] border border-line bg-surface">
         <div className="px-5 pt-5">
           <h2 className="font-display text-base font-semibold tracking-tight">
@@ -613,7 +727,7 @@ export function CarForm() {
         </div>
         <div className="flex flex-col items-start gap-4 p-5">
           <ul className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
-            {preveiw.map((src, i) => (
+            {preview.map((src, i) => (
               <li
                 key={src}
                 className="relative aspect-[16/10] overflow-hidden rounded-xl bg-sand"
@@ -669,12 +783,15 @@ export function CarForm() {
               name="images"
               onChange={(e) => {
                 const picked = Array.from(e.target.files ?? []);
+
+                // put the picked files(pics) in state of Files to upload them into cloudinary
                 setFiles((prev) => [...prev, ...picked]);
+
+                // put the picked files(pics) in state of Preview to upload them into preview state
                 setPreview((prev) => [
                   ...prev,
                   ...picked.map((file) => URL.createObjectURL(file)),
                 ]);
-                e.target.value = "";
               }}
               type="file"
               accept="image/*"

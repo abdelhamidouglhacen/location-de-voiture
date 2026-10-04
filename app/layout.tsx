@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Sora } from "next/font/google";
 import { ToastProvider } from "@/components/ui/Toast";
 import { SITE_TITLE } from "@/lib/constants";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const sora = Sora({ subsets: ["latin"], variable: "--font-sora", display: "swap" });
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sora.variable} ${geist.variable}`}>
       <body className="min-h-dvh">
-        <ToastProvider>{children}</ToastProvider>
+        <ToastProvider>{children}<Toaster position="top-center" /></ToastProvider>
       </body>
     </html>
   );
