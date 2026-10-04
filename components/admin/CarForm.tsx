@@ -48,7 +48,7 @@ export function CarForm() {
     const newErrors: string[] = [];
 
     // input validation
-    if (!lettersOnly.test(form.brand.trim())) {
+    if (!lettersOnly.test(form.brand.trim()) || form.brand.trim() === '') {
       newErrors.push("Brand: letters only");
       toast.error("Brand: letters only");
     }
@@ -85,7 +85,7 @@ export function CarForm() {
 
     setErrors(newErrors)
 
-    if(errors.length > 0){
+    if(newErrors.length > 0){
       return;
     }
 
@@ -131,7 +131,7 @@ export function CarForm() {
 
     // check results of res
     if (error) {
-      console.error(error.message);
+      console.error(error?.message);
       return;
     } else {
       toast.success("Car Created");
