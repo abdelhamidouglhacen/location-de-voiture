@@ -2,7 +2,7 @@
 
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { CarForm } from "@/components/admin/CarForm";
+import { CarForm } from "@/components/admin/cars/CarForm";
 
 export default function NewCarPage() {
   return (

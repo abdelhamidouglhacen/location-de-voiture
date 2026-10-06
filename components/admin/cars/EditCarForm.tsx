@@ -1,15 +1,23 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Toaster } from "react-hot-toast";
+import { useParams } from "next/navigation";
+import { Car } from "@/types";
+import Image from "next/image";
+import { toWebp } from "@/lib/toWeb";
 
-export function CarForm() {
+export function EditCarForm() {
+  const params = useParams();
+  const id = params.id;
   const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
+  const [updating, setUpdating] = useState(false);
   const [preview, setPreview] = useState<string[]>([]);
   const [form, setForm] = useState({
     brand: "",
@@ -38,7 +46,7 @@ export function CarForm() {
     panoramic_roof: false,
   });
 
-  const createCar = async (e: React.FormEvent) => {
+  const updateCar = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const lettersOnly = /^[A-Za-zÀ-ÿ\s-]+$/; // letters, spaces, hyphens
@@ -48,7 +56,7 @@ export function CarForm() {
     const newErrors: string[] = [];
 
     // input validation
-    if (!lettersOnly.test(form.brand.trim()) || form.brand.trim() === '') {
+    if (!lettersOnly.test(form.brand.trim()) || form.brand.trim() === "") {
       newErrors.push("Brand: letters only");
       toast.error("Brand: letters only");
     }
@@ -78,16 +86,17 @@ export function CarForm() {
       toast.error("mileage is required");
     }
 
-    if (files.length === 0) {
+    if (files.length + existingImages.length === 0) {
       newErrors.push("Add at least one photo");
       toast.error("Add at least one photo");
     }
 
-    setErrors(newErrors)
+    setErrors(newErrors);
 
-    if(newErrors.length > 0){
+    if (newErrors.length > 0) {
       return;
     }
+    setUpdating(true);
 
     // upload pics into cloudinary
 
@@ -97,7 +106,7 @@ export function CarForm() {
       files.map(async (file) => {
         // send files into cloudinary using FormData
         const body = new FormData();
-        body.append("file", file);
+        body.append("file", await toWebp(file));
         body.append(
           "upload_preset",
           process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!,
@@ -113,35 +122,53 @@ export function CarForm() {
       }),
     );
 
-    const { status, ...car } = form;
 
     // insert all data into supabase
-    const { error } = await supabase.from("Car").insert({
-      // add rest of data
-      ...car,
-      // add convert into numbers
-      year: Number(form.year),
-      mileage: Number(form.mileage),
-      seats: Number(form.seats),
-      doors: Number(form.doors),
-      price_per_day: Number(form.price_per_day),
-      deposit: Number(form.deposit),
-      images: urls,
-    });
+    const { error } = await supabase
+      .from("Car")
+      .update({
+        // add rest of data
+        ...form,
+        // add convert into numbers
+        year: Number(form.year),
+        mileage: Number(form.mileage),
+        seats: Number(form.seats),
+        doors: Number(form.doors),
+        price_per_day: Number(form.price_per_day),
+        deposit: Number(form.deposit),
+        images: [...existingImages, ...urls],
+      })
+      .eq("id", id);
 
     // check results of res
     if (error) {
       console.error(error?.message);
       return;
     } else {
-      toast.success("Car Created");
-      router.push("/admin/voitures");
+      router.push("/admin/voitures?success=Car+Updated");
     }
+    setUpdating(false);
   };
+
+  // fetch data into the form
+  useEffect(() => {
+    const fetchCar = async () => {
+      const { data } = await supabase
+        .from("Car")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (data) {
+        setForm(data);
+        setExistingImages(data.images ?? []);
+      }
+    };
+    fetchCar();
+  }, [id]);
 
   return (
     <form noValidate className="space-y-6">
-      <Toaster position="top-center" />
       {errors.length > 0 && (
         <div
           role="alert"
@@ -727,16 +754,55 @@ export function CarForm() {
         </div>
         <div className="flex flex-col items-start gap-4 p-5">
           <ul className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
+            {/* LOOP 1: old photos from the database */}
+            {existingImages.map((src, i) => (
+              <li
+                key={src}
+                className="relative aspect-[16/10] overflow-hidden rounded-xl bg-sand"
+              >
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 640px) 50vw, 25vw"
+                  className="object-cover"
+                />
+                <button
+                  type="button"
+                  aria-label={`Remove photo ${i + 1}`}
+                  onClick={() =>
+                    setExistingImages((prev) => prev.filter((_, j) => j !== i))
+                  }
+                  className="absolute top-2 right-2 grid size-7 place-items-center rounded-full bg-surface/90 text-ink shadow hover:bg-surface"
+                >
+                  <svg
+                    className="size-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                </button>
+              </li>
+            ))}
+
+            {/* LOOP 2: newly picked photos (blob previews) */}
             {preview.map((src, i) => (
               <li
                 key={src}
                 className="relative aspect-[16/10] overflow-hidden rounded-xl bg-sand"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={src} alt="" className="size-full object-cover" />
                 <button
                   type="button"
-                  aria-label={`Remove photo ${i + 1}`}
+                  aria-label={`Remove new photo ${i + 1}`}
                   onClick={() => {
                     setFiles((prev) => prev.filter((_, j) => j !== i));
                     setPreview((prev) => prev.filter((_, j) => j !== i));
@@ -760,6 +826,7 @@ export function CarForm() {
               </li>
             ))}
           </ul>
+
           <label className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-line bg-surface px-5 text-sm font-medium transition hover:border-ink/40">
             <svg
               className="size-4"
@@ -783,11 +850,7 @@ export function CarForm() {
               name="images"
               onChange={(e) => {
                 const picked = Array.from(e.target.files ?? []);
-
-                // put the picked files(pics) in state of Files to upload them into cloudinary
                 setFiles((prev) => [...prev, ...picked]);
-
-                // put the picked files(pics) in state of Preview to upload them into preview state
                 setPreview((prev) => [
                   ...prev,
                   ...picked.map((file) => URL.createObjectURL(file)),
@@ -811,10 +874,27 @@ export function CarForm() {
         </Link>
         <button
           type="button"
-          onClick={createCar}
-          className="inline-flex h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-medium text-white transition hover:bg-ink-2"
+          onClick={updateCar}
+          disabled={updating}
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-ink px-5 text-sm font-medium text-white transition hover:bg-ink-2 disabled:opacity-60"
         >
-          Save
+          {updating ? (
+            <>
+              <svg
+                className="size-4 animate-spin"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                aria-hidden
+              >
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+              </svg>
+              Update...
+            </>
+          ) : (
+            "Update"
+          )}
         </button>
       </div>
     </form>
