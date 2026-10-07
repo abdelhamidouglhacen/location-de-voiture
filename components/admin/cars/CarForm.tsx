@@ -99,20 +99,26 @@ export function CarForm() {
       // it creates a new array where each file is replaced by its URL
       files.map(async (file) => {
         // send files into cloudinary using FormData
+        const webp = await toWebp(file);
+        if (webp.type !== "image/webp") throw new Error("Not WebP");
+
         const body = new FormData();
-        body.append("file", await toWebp(file));
+        body.append("file", webp);
         body.append(
           "upload_preset",
           process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!,
         );
 
-        // get Urls from cloudinary
         const res = await fetch(
           `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
           { method: "POST", body },
         );
         const data = await res.json();
-        return data.secure_url as string;
+
+        if (data.format !== "webp") {
+          throw new Error(`Cloudinary stored ${data.format}, not webp`);
+        }
+        return data.secure_url as string; // ends in .webp
       }),
     );
 

@@ -101,27 +101,17 @@ export function EditCarForm() {
     // upload pics into cloudinary
 
     // we use Promise to tell array to wait till data comes in
-    const urls = await Promise.all(
-      // it creates a new array where each file is replaced by its URL
-      files.map(async (file) => {
-        // send files into cloudinary using FormData
-        const body = new FormData();
-        body.append("file", await toWebp(file));
-        body.append(
-          "upload_preset",
-          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!,
-        );
+   const urls = await Promise.all(
+  files.map(async (file) => {
+    const body = new FormData();
+    body.append("file", file);
 
-        // get Urls from cloudinary
-        const res = await fetch(
-          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-          { method: "POST", body },
-        );
-        const data = await res.json();
-        return data.secure_url as string;
-      }),
-    );
-
+    const res = await fetch("/api/upload", { method: "POST", body });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? "Upload failed");
+    return data.url as string;
+  }),
+);
 
     // insert all data into supabase
     const { error } = await supabase
