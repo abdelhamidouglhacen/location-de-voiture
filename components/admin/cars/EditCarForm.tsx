@@ -8,7 +8,6 @@ import { Toaster } from "react-hot-toast";
 import { useParams } from "next/navigation";
 import { Car } from "@/types";
 import Image from "next/image";
-import { toWebp } from "@/lib/toWeb";
 
 export function EditCarForm() {
   const params = useParams();
@@ -47,97 +46,110 @@ export function EditCarForm() {
   });
 
   const updateCar = async (e: React.FormEvent) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const lettersOnly = /^[A-Za-zÀ-ÿ\s-]+$/; // letters, spaces, hyphens
-    const lettersNumbers = /^[A-Za-z0-9À-ÿ\s-]+$/; // + numbers
-    const plate = /^\d{1,5}-[A-Za-z]-\d{1,2}$/; // e.g. 12345-A-33
+      const lettersOnly = /^[A-Za-zÀ-ÿ\s-]+$/; // letters, spaces, hyphens
+      const lettersNumbers = /^[A-Za-z0-9À-ÿ\s-]+$/; // + numbers
+      const plate = /^\d{1,5}-[A-Za-z]-\d{1,2}$/; // e.g. 12345-A-33
 
-    const newErrors: string[] = [];
+      const newErrors: string[] = [];
 
-    // input validation
-    if (!lettersOnly.test(form.brand.trim()) || form.brand.trim() === "") {
-      newErrors.push("Brand: letters only");
-      toast.error("Brand: letters only");
+      // input validation
+      if (!lettersOnly.test(form.brand.trim()) || form.brand.trim() === "") {
+        newErrors.push("Brand: letters only");
+        toast.error("Brand: letters only");
+      }
+
+      if (!lettersNumbers.test(form.model.trim())) {
+        newErrors.push("Model: letters and numbers only");
+        toast.error("Model: letters and numbers only");
+      }
+
+      if (form.color && !lettersOnly.test(form.color.trim())) {
+        newErrors.push("Colour: letters only");
+        toast.error("Colour: letters only");
+      }
+
+      if (!plate.test(form.registration.trim())) {
+        newErrors.push("Plate format: 12345-A-33");
+        toast.error("Plate format: 12345-A-33");
+      }
+
+      if (!form.year) {
+        newErrors.push("Year is required");
+        toast.error("Year is required");
+      }
+
+      if (!form.mileage) {
+        newErrors.push("mileage is required");
+        toast.error("mileage is required");
+      }
+
+      if (files.length + existingImages.length === 0) {
+        newErrors.push("Add at least one photo");
+        toast.error("Add at least one photo");
+      }
+
+      setErrors(newErrors);
+
+      if (newErrors.length > 0) {
+        return;
+      }
+      setUpdating(true);
+
+      // upload pics into cloudinary
+
+      // we use Promise to tell array to wait till data comes in
+      const urls = await Promise.all(
+ files.map(async (file) => {
+  const body = new FormData();
+
+  body.append("file", file);
+
+  const res = await fetch("/api/upload", {
+    method: "POST",
+    body,
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error || "Upload failed");
+  }
+
+  return data.url;
+})
+      );
+
+      // insert all data into supabase
+      const { error } = await supabase
+        .from("Car")
+        .update({
+          // add rest of data
+          ...form,
+          // add convert into numbers
+          year: Number(form.year),
+          mileage: Number(form.mileage),
+          seats: Number(form.seats),
+          doors: Number(form.doors),
+          price_per_day: Number(form.price_per_day),
+          deposit: Number(form.deposit),
+          images: [...existingImages, ...urls],
+        })
+        .eq("id", id);
+
+      // check results of res
+      if (error) {
+        console.error(error?.message);
+        return;
+      } else {
+        router.push("/admin/voitures?success=Car+Updated");
+      }
+      setUpdating(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Upload failed");
     }
-
-    if (!lettersNumbers.test(form.model.trim())) {
-      newErrors.push("Model: letters and numbers only");
-      toast.error("Model: letters and numbers only");
-    }
-
-    if (form.color && !lettersOnly.test(form.color.trim())) {
-      newErrors.push("Colour: letters only");
-      toast.error("Colour: letters only");
-    }
-
-    if (!plate.test(form.registration.trim())) {
-      newErrors.push("Plate format: 12345-A-33");
-      toast.error("Plate format: 12345-A-33");
-    }
-
-    if (!form.year) {
-      newErrors.push("Year is required");
-      toast.error("Year is required");
-    }
-
-    if (!form.mileage) {
-      newErrors.push("mileage is required");
-      toast.error("mileage is required");
-    }
-
-    if (files.length + existingImages.length === 0) {
-      newErrors.push("Add at least one photo");
-      toast.error("Add at least one photo");
-    }
-
-    setErrors(newErrors);
-
-    if (newErrors.length > 0) {
-      return;
-    }
-    setUpdating(true);
-
-    // upload pics into cloudinary
-
-    // we use Promise to tell array to wait till data comes in
-   const urls = await Promise.all(
-  files.map(async (file) => {
-    const body = new FormData();
-    body.append("file", file);
-
-    const res = await fetch("/api/upload", { method: "POST", body });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error ?? "Upload failed");
-    return data.url as string;
-  }),
-);
-
-    // insert all data into supabase
-    const { error } = await supabase
-      .from("Car")
-      .update({
-        // add rest of data
-        ...form,
-        // add convert into numbers
-        year: Number(form.year),
-        mileage: Number(form.mileage),
-        seats: Number(form.seats),
-        doors: Number(form.doors),
-        price_per_day: Number(form.price_per_day),
-        deposit: Number(form.deposit),
-        images: [...existingImages, ...urls],
-      })
-      .eq("id", id);
-
-    // check results of res
-    if (error) {
-      console.error(error?.message);
-      return;
-    } else {
-      router.push("/admin/voitures?success=Car+Updated");
-    }
-    setUpdating(false);
   };
 
   // fetch data into the form
