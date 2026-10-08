@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { useParams } from "next/navigation";
 import { Car } from "@/types";
 import Image from "next/image";
+import { uploadImage } from "@/lib/toWeb";
 
 export function EditCarForm() {
   const params = useParams();
@@ -46,6 +47,7 @@ export function EditCarForm() {
   });
 
   const updateCar = async (e: React.FormEvent) => {
+    setUpdating(true);
     try {
       e.preventDefault();
 
@@ -96,31 +98,11 @@ export function EditCarForm() {
       if (newErrors.length > 0) {
         return;
       }
-      setUpdating(true);
 
       // upload pics into cloudinary
 
       // we use Promise to tell array to wait till data comes in
-      const urls = await Promise.all(
- files.map(async (file) => {
-  const body = new FormData();
-
-  body.append("file", file);
-
-  const res = await fetch("/api/upload", {
-    method: "POST",
-    body,
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.error || "Upload failed");
-  }
-
-  return data.url;
-})
-      );
+      const urls = await Promise.all(files.map(uploadImage));
 
       // insert all data into supabase
       const { error } = await supabase
@@ -139,16 +121,12 @@ export function EditCarForm() {
         })
         .eq("id", id);
 
-      // check results of res
-      if (error) {
-        console.error(error?.message);
-        return;
-      } else {
-        router.push("/admin/voitures?success=Car+Updated");
-      }
+      if (error) throw new Error(error.message);
+      router.push("/admin/voitures?success=Car+Updated");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed");
+    } finally {
       setUpdating(false);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Upload failed");
     }
   };
 

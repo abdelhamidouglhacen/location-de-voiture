@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Toaster } from "react-hot-toast";
-import { toWebp } from "@/lib/toWeb";
+import { uploadImage } from "@/lib/toWeb";
 
 export function CarForm() {
   const router = useRouter();
@@ -41,111 +41,86 @@ export function CarForm() {
   });
 
   const createCar = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const lettersOnly = /^[A-Za-zÀ-ÿ\s-]+$/; // letters, spaces, hyphens
-    const lettersNumbers = /^[A-Za-z0-9À-ÿ\s-]+$/; // + numbers
-    const plate = /^\d{1,5}-[A-Za-z]-\d{1,2}$/; // e.g. 12345-A-33
-
-    const newErrors: string[] = [];
-
-    // input validation
-    if (!lettersOnly.test(form.brand.trim()) || form.brand.trim() === "") {
-      newErrors.push("Brand: letters only");
-      toast.error("Brand: letters only");
-    }
-
-    if (!lettersNumbers.test(form.model.trim())) {
-      newErrors.push("Model: letters and numbers only");
-      toast.error("Model: letters and numbers only");
-    }
-
-    if (form.color && !lettersOnly.test(form.color.trim())) {
-      newErrors.push("Colour: letters only");
-      toast.error("Colour: letters only");
-    }
-
-    if (!plate.test(form.registration.trim())) {
-      newErrors.push("Plate format: 12345-A-33");
-      toast.error("Plate format: 12345-A-33");
-    }
-
-    if (!form.year) {
-      newErrors.push("Year is required");
-      toast.error("Year is required");
-    }
-
-    if (!form.mileage) {
-      newErrors.push("mileage is required");
-      toast.error("mileage is required");
-    }
-
-    if (files.length === 0) {
-      newErrors.push("Add at least one photo");
-      toast.error("Add at least one photo");
-    }
-
-    setErrors(newErrors);
-
-    if (newErrors.length > 0) {
-      return;
-    }
     setSaving(true);
+    try {
+      e.preventDefault();
 
-    // upload pics into cloudinary
+      const lettersOnly = /^[A-Za-zÀ-ÿ\s-]+$/; // letters, spaces, hyphens
+      const lettersNumbers = /^[A-Za-z0-9À-ÿ\s-]+$/; // + numbers
+      const plate = /^\d{1,5}-[A-Za-z]-\d{1,2}$/; // e.g. 12345-A-33
 
-    // we use Promise to tell array to wait till data comes in
-    const urls = await Promise.all(
-      // it creates a new array where each file is replaced by its URL
-      files.map(async (file) => {
-        // send files into cloudinary using FormData
-        const webp = await toWebp(file);
-        if (webp.type !== "image/webp") throw new Error("Not WebP");
+      const newErrors: string[] = [];
 
-        const body = new FormData();
-        body.append("file", webp);
-        body.append(
-          "upload_preset",
-          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!,
-        );
+      // input validation
+      if (!lettersOnly.test(form.brand.trim()) || form.brand.trim() === "") {
+        newErrors.push("Brand: letters only");
+        toast.error("Brand: letters only");
+      }
 
-        const res = await fetch(
-          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-          { method: "POST", body },
-        );
-        const data = await res.json();
+      if (!lettersNumbers.test(form.model.trim())) {
+        newErrors.push("Model: letters and numbers only");
+        toast.error("Model: letters and numbers only");
+      }
 
-        if (data.format !== "webp") {
-          throw new Error(`Cloudinary stored ${data.format}, not webp`);
-        }
-        return data.secure_url as string; // ends in .webp
-      }),
-    );
+      if (form.color && !lettersOnly.test(form.color.trim())) {
+        newErrors.push("Colour: letters only");
+        toast.error("Colour: letters only");
+      }
 
-    const { status, ...car } = form;
+      if (!plate.test(form.registration.trim())) {
+        newErrors.push("Plate format: 12345-A-33");
+        toast.error("Plate format: 12345-A-33");
+      }
 
-    // insert all data into supabase
-    const { error } = await supabase.from("Car").insert({
-      // add rest of data
-      ...car,
-      // add convert into numbers
-      year: Number(form.year),
-      mileage: Number(form.mileage),
-      seats: Number(form.seats),
-      doors: Number(form.doors),
-      price_per_day: Number(form.price_per_day),
-      deposit: Number(form.deposit),
-      images: urls,
-    });
+      if (!form.year) {
+        newErrors.push("Year is required");
+        toast.error("Year is required");
+      }
 
-    // check results of res
-    if (error) {
-      console.error(error?.message);
-      return;
-    } else {
+      if (!form.mileage) {
+        newErrors.push("mileage is required");
+        toast.error("mileage is required");
+      }
+
+      if (files.length === 0) {
+        newErrors.push("Add at least one photo");
+        toast.error("Add at least one photo");
+      }
+
+      setErrors(newErrors);
+
+      if (newErrors.length > 0) {
+        return;
+      }
+
+      // upload pics into cloudinary
+
+      // we use Promise to tell array to wait till data comes in
+      const urls = await Promise.all(files.map(uploadImage));
+
+      const { status, ...car } = form;
+
+      // insert all data into supabase
+      const { error } = await supabase.from("Car").insert({
+        // add rest of data
+        ...car,
+        // add convert into numbers
+        year: Number(form.year),
+        mileage: Number(form.mileage),
+        seats: Number(form.seats),
+        doors: Number(form.doors),
+        price_per_day: Number(form.price_per_day),
+        deposit: Number(form.deposit),
+        images: urls,
+      });
+
+      if (error) throw new Error(error.message);
       router.push("/admin/voitures?success=Car+Created");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   return (
